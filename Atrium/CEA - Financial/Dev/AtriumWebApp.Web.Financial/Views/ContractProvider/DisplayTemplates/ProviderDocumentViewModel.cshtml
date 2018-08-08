@@ -1,6 +1,0 @@
-﻿@model AtriumWebApp.Models.ViewModel.ProviderDocumentViewModel
-<tr>
-    <td>@Html.TextBoxFor(m => m.Description, new { size = "10", data_field = "Description", disabled="disabled" })</td>
-    <td>@Html.DisplayFor(m => m.SavedDate, new { size = "10", data_field = "SavedDate" })</td>
-    <td>@Html.ActionLink(Model.FileName, "StreamDocument", new { id = Model.Id })</td>
-</tr>

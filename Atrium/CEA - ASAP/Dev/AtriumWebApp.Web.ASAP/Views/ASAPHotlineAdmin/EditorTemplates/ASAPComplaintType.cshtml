@@ -1,8 +1,0 @@
-@model AtriumWebApp.Models.ASAPComplaintType
-
-<form asp-action="NewComplaint" asp-controller="ASAPHotlineAdmin">
-    <label>New Complaint Type: </label>
-    <input asp-for="ASAPComplaintTypeDesc" name="ASAPComplaintTypeDesc" />
-    <span asp-validation-for="ASAPComplaintTypeDesc" data-valmsg-for="ASAPComplaintTypeDesc" ></span>
-    <input type="submit" value="Add"  />
-</form>

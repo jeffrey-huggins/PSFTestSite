@@ -1,2 +1,0 @@
-﻿@model DateTime?
-@Html.TextBox("", (Model.HasValue && Model.Value != DateTime.MinValue ? Model.Value.ToString("MM/dd/yyyy") : string.Empty), new { @id = ViewData["id"], @size = ViewData["size"], @class = ViewData["class"] })

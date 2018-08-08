@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using AnimalFanSite.Models;
 using Microsoft.AspNetCore.Mvc;
-using AnimalFanSite.Models;
+using System.Diagnostics;
 
 namespace AnimalFanSite.Controllers
 {
@@ -17,8 +13,6 @@ namespace AnimalFanSite.Controllers
 
         public IActionResult About()
         {
-            ViewData["Message"] = "Your application description page.";
-
             return View();
         }
 
@@ -30,6 +24,16 @@ namespace AnimalFanSite.Controllers
         }
 
         public IActionResult Privacy()
+        {
+            return View();
+        }
+
+        public IActionResult Habitat()
+        {
+            return View();
+        }
+
+        public IActionResult Diet()
         {
             return View();
         }

@@ -1,0 +1,377 @@
+@model EquipmentDetailsViewModel
+<style>
+    .equipmentInfoHead {
+        border-bottom: dotted thin grey;
+    }
+</style>
+<div style="border:solid thin lightgrey">
+    <input type="hidden" asp-for="Equipment.EquipmentId" id="equipmentDetailsId" />
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12 text-center">
+                <h3>Equipment Details</h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3 panel panel-default">
+                <div class="panel-heading">Facility Information</div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label>Facility Name</label>
+                        </div>
+                        <div class="col-md-9">
+                            @Model.Equipment.Community.CommunityFullName
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label>Address</label>
+                        </div>
+                        <div class="col-md-9">
+                            @Model.Equipment.Community.FullAddress
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 panel panel-default">
+                <div class="panel-heading">Vendor Information</div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label>
+                                Vendor
+                            </label>
+                        </div>
+                        <div class="col-md-9">
+                            @Model.Equipment.Vendor.VendorName
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label>Address</label>
+                        </div>
+                        <div class="col-md-9">
+                            @Model.Equipment.Vendor.Address1
+                            @if (!string.IsNullOrEmpty(Model.Equipment.Vendor.Address2))
+                            {
+                                <br />
+                                @Model.Equipment.Vendor.Address2
+                            }
+                            <br />
+                            @Model.Equipment.Vendor.City, @Model.Equipment.Vendor.StateCd @Model.Equipment.Vendor.ZipCode
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-md-3 ">Email</label>
+                        <div class="col-md-9">
+                            @Model.Equipment.Vendor.eMail
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-md-3 ">Phone</label>
+                        <div class="col-md-9">
+                            @Model.Equipment.Vendor.Phone
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-md-3">Fax</label>
+                        <div class="col-md-9">
+                            @Model.Equipment.Vendor.Fax
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 panel panel-default">
+                <div class="panel-heading">Equipment Information</div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <label>Equipment</label>
+                        </div>
+                        <div class="col-md-4">
+                            @Model.Equipment.Description
+                        </div>
+                        <div class="col-md-2">
+                            <label>Condition</label>
+                        </div>
+                        <div class="col-md-4">
+                            @Model.Equipment.Condition
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2">
+                            <label>Model #</label>
+                        </div>
+                        <div class="col-md-4">@Model.Equipment.ModelNbr</div>
+                        <div class="col-md-2">
+                            <label>Serial #</label>
+                        </div>
+                        <div class="col-md-4">
+                            @Model.Equipment.SerialNbr
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2">
+                            <label>Purchased</label>
+                        </div>
+                        <div class="col-md-4">
+                            @Model.Equipment.PurchaseDate.ToString("MM/dd/yyyy")
+                        </div>
+                        <div class="col-md-2">
+                            <label>Installed</label>
+                        </div>
+                        <div class="col-md-4">
+                            @Model.Equipment.InstalledDate.ToString("MM/dd/yyyy")
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label>Two Year Repair Cost</label>
+                        </div>
+                        <div class="col-md-3">
+                            @String.Format("{0:C2}", Model.Repairs.Where(a => a.RepairDate > DateTime.Today.AddYears(-2)).Sum(a => a.RepairCostAmt))
+                        </div>
+                        <div class="col-md-2">
+                            <label>Life Expectancy</label>
+                        </div>
+                        <div class="col-md-4">
+                            @Model.Equipment.LifeExpectancyCnt
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="tabs detailTabs">
+        <ul>
+            <li><a href="#plansTab">Plans</a></li>
+            <li><a href="#inspectionsTab">Inspections (Last @Model.LookbackDays Days)</a></li>
+            <li><a href="#repairsTab">Repairs (Last @Model.LookbackDays Days)</a></li>
+        </ul>
+        <div id="plansTab">
+            <div class="container-fluid">
+                <div class="row equipmentInfoHead">
+                    <div class="col-xs-1">
+                        Plan Id
+                    </div>
+                    <div class="col-xs-3">
+                        Description
+                    </div>
+                    <div class="col-xs-2">
+                        Next Due Date
+                    </div>
+                    <div class="col-xs-1">
+                        Interval
+                    </div>
+                    <div class="col-xs-2">
+                    </div>
+                    <div class="col-xs-1">
+                    </div>
+                </div>
+                @foreach (var plan in Model.Plans)
+                {
+                    var maintDate = plan.NextInspectionDate;
+                    var bgClass = "bg-success";
+                    if (maintDate == DateTime.Today)
+                    {
+                        bgClass = "bg-warning";
+
+                    }
+                    else if (maintDate < DateTime.Today)
+                    {
+                        bgClass = "bg-danger";
+
+                    }
+                    <div class="row @bgClass" planId="@plan.EquipmentMaintenancePlanId">
+                        <div class="col-xs-1">
+                            @plan.EquipmentMaintenancePlanId
+                        </div>
+                        <div class="col-xs-3">
+                            @plan.Description
+                        </div>
+                        <div class="col-xs-2">
+                            @plan.NextInspectionDate.ToString("MM/dd/yyyy")
+                        </div>
+                        <div class="col-xs-1">
+                            @plan.Interval
+                        </div>
+                        <div class="col-xs-2">
+                            @Html.ActionLink("Add Inspection", "EditInspection", new { planId = plan.EquipmentMaintenancePlanId }, new { @class = "newInspection" })
+                        </div>
+                        <div class="col-xs-1">
+                            @Html.ActionLink("Edit", "EditMaintenancePlan", new { equipmentId = Model.Equipment.EquipmentId, planId = plan.EquipmentMaintenancePlanId }, new { @class = "edit" })
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+        <div id="inspectionsTab">
+            <div class="container-fluid">
+                <div class="row equipmentInfoHead">
+                    <div class="col-xs-2">
+                        Plan
+                    </div>
+                    <div class="col-xs-2">
+                        Inspection Vendor
+                    </div>
+                    <div class="col-xs-2">
+                        Inspected By
+                    </div>
+                    <div class="col-xs-2">
+                        Notes
+                    </div>
+                    <div class="col-xs-1">Passed?</div>
+                    <div class="col-xs-1">Date</div>
+                    <div class="col-xs-2">Documents</div>
+                </div>
+                @foreach (var inspection in Model.Inspections.OrderByDescending(a => a.InspectionDate).ToList())
+                {
+                    <div class="row">
+                        <div class="col-xs-2">
+                            @inspection.MaintenancePlan.Description
+                        </div>
+                        <div class="col-xs-2">
+                            @if (inspection.InspectionVendor != null)
+                            {
+                                @Html.ActionLink(inspection.InspectionVendor.VendorName, "ViewVendor", new { id = inspection.InspectionVendor.POVendorId }, new { @class = "vendorInfo" })
+                            }
+                            else
+                            {
+                                @:No Vendor
+                            }
+                        </div>
+                        <div class="col-xs-2">
+                            @inspection.InspectedByName
+                        </div>
+                        <div class="col-xs-2">
+                            @inspection.Notes
+                        </div>
+                        <div class="col-xs-1">
+                            @if (inspection.PassFlg)
+                            {
+                                @:Yes
+                            }
+                            else
+                            {
+                                @:No
+                            }
+                        </div>
+                        <div class="col-xs-1">
+                            @inspection.InspectionDate.ToString("MM/dd/yyyy")
+                        </div>
+                        <div class="col-xs-1">
+                            @if (inspection.Documents.Count > 0)
+                            {
+                                <button class="dataToggle" data-target="#inspectionDoc@(inspection.EquipmentInspectionId)">@inspection.Documents.Count</button>
+
+                            }
+                            else
+                            {
+                                @:None
+
+                            }
+
+                        </div>
+                        <div class="col-xs-1">
+                            @Html.ActionLink("Edit", "EditInspection", new { planId = inspection.EquipmentMaintenancePlanId, inspectionId = inspection.EquipmentInspectionId }, new { @class = "newInspection" })
+                        </div>
+                    </div>
+                    <div style="display:none;" id="inspectionDoc@(inspection.EquipmentInspectionId)">
+                        @foreach (var document in inspection.Documents.Select(a => new { a.DocumentFileName, a.EquipmentInspectionDocumentId }))
+                        {
+                            <div class="row text-right bg-info">
+                                @Html.ActionLink(document.DocumentFileName, "StreamDocument", new { id = document.EquipmentInspectionDocumentId, docSource = "inspection" })
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+        <div id="repairsTab">
+            <div class="container-fluid equipmentInfoContainer">
+                <div class="row equipmentInfoHead">
+                    <div class="col-xs-1">
+                        Date
+                    </div>
+                    <div class="col-xs-2">
+                        Vendor
+                    </div>
+                    <div class="col-xs-2">
+                        Repaired By
+                    </div>
+                    <div class="col-xs-2">
+                        Cost
+                    </div>
+                    <div class="col-xs-3">
+                        Notes
+                    </div>
+                    <div class="col-xs-1">
+                        Documents
+                    </div>
+                    <div class="col-xs-1">
+                    </div>
+                </div>
+                @foreach (var repair in Model.Repairs.OrderByDescending(a => a.RepairDate))
+                {
+                    <div class="row">
+                        <div class="col-xs-1">
+                            @repair.RepairDate.ToString("MM/dd/yyyy")
+                        </div>
+                        <div class="col-xs-2">
+                            @if (repair.Vendor != null)
+                            {
+                                @Html.ActionLink(repair.Vendor.VendorName, "ViewVendor", new { id = repair.Vendor.POVendorId }, new { @class = "vendorInfo" })
+                            }
+                            else
+                            {
+                                @:No Vendor
+                        }
+                        </div>
+                        <div class="col-xs-2">
+                            @repair.RepairByName
+                        </div>
+                        <div class="col-xs-2">
+                            @Html.DisplayFor(a => repair.RepairCostAmt)
+                        </div>
+                        <div class="col-xs-3">
+                            @repair.Notes
+                        </div>
+                        <div class="col-xs-1">
+                            @if (repair.Documents.Count > 0)
+                            {
+                                <button class="dataToggle" data-target="#repairDoc@(repair.EquipmentRepairId)">@repair.Documents.Count</button>
+
+                            }
+                            else
+                            {
+                                @:None
+
+                            }
+
+
+                        </div>
+                        <div class="col-xs-1">
+                            @Html.ActionLink("Edit", "EditRepair", new { equipmentId = Model.Equipment.EquipmentId, repairId = repair.EquipmentRepairId }, new { @class = "newRepair" })
+                        </div>
+                    </div>
+                    <div style="display:none;" id="repairDoc@(repair.EquipmentRepairId)">
+                        @foreach (var document in repair.Documents.Select(a => new { a.DocumentFileName, a.EquipmentRepairDocumentId }))
+                        {
+                            <div class="row text-right bg-info">
+                                @Html.ActionLink(document.DocumentFileName, "StreamDocument", new { id = document.EquipmentRepairDocumentId, docSource = "repair" })
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-offset-10 col-xs-2 text-right">
+            <input type="button" id="closeDetails" class="btn btn-default" value="Close Details">
+        </div>
+    </div>
+
+</div>
+<script src="~/lib/bootstrap/js/collapse.js"></script>

@@ -1,0 +1,28 @@
+﻿@model AtriumWebApp.Web.Survey.Models.ViewModel.MockSurveyFollowUpGroupViewModel
+@{
+    ViewBag.Title = Model.Title;
+}
+<style>
+    textarea {
+        width: 100%;
+    }
+        textarea[readonly] {
+            background-color: lightgray;
+        }
+</style>
+@Html.ActionLink("Back to Survey", "Index")
+<h2>@ViewBag.Title</h2>
+@using (Html.BeginForm("FollowUpGroup", "MockSurvey", new { id = Model.MockSurveyId, groupId = Model.GroupId }, FormMethod.Post,null, new { id = "FollowUp" }))
+{
+    @Html.HiddenFor(m => m.MockSurveyId)
+    @Html.EditorFor(m => m.Citations)
+    @Html.ValidationSummary(false)
+    <input type="submit" class="float-right" value="Save" />
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#Save').click(function () {
+            ShowProgress();
+        });
+    });
+</script>

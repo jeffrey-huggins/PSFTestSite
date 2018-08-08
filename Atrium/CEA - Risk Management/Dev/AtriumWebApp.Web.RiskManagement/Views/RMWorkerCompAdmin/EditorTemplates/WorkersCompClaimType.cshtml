@@ -1,0 +1,14 @@
+@model AtriumWebApp.Web.RiskManagement.Models.WorkersCompClaimType
+
+@if (Model.ClaimTypeId == 0)
+{
+    Model.DataEntryFlg = true;
+
+}
+
+<form asp-action="SaveNewType" asp-controller="RMWorkerCompAdmin">
+    <input asp-for="ClaimTypeDesc" placeholder="Claim Type" />
+    <span asp-validation-for="ClaimTypeDesc" class="text-danger"></span>
+    <input asp-for="DataEntryFlg" hidden="hidden" />
+    <input type="submit" value="Add" />
+</form>

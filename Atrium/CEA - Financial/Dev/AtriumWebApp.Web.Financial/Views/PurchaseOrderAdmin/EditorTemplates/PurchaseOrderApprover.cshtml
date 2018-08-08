@@ -1,0 +1,8 @@
+@model AtriumWebApp.Web.Financial.Models.PurchaseOrderApprover
+
+
+<form asp-action="CreateApprover" asp-controller="PurchaseOrderAdmin">
+    <input asp-for="Name" placeholder="New Approver" />
+    <span asp-validation-for="Name" class="text-danger"></span>
+    <input type="submit" value="Add" id="newPurchaseOrderApprover" />
+</form>

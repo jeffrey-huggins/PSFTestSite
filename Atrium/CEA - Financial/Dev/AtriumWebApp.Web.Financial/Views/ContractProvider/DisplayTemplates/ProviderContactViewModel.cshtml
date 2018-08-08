@@ -1,0 +1,12 @@
+﻿@model AtriumWebApp.Models.ViewModel.ProviderContactViewModel
+<tr>
+    <td>@Html.TextBoxFor(m => m.Name, new { size = "10", data_field = "Name", disabled="disabled" })</td>
+    <td>@Html.TextBoxFor(m => m.Title, new { size = "10", data_field = "Title", disabled="disabled" })</td>
+    <td>@Html.TextBoxFor(m => m.Phone, new { size = "10", data_field = "Phone", disabled="disabled" })</td>
+    <td>@Html.TextBoxFor(m => m.CellPhone, new { size = "10", data_field = "CellPhone", disabled="disabled" })</td>
+    <td>@Html.TextBoxFor(m => m.Fax, new { size = "10", data_field = "Fax", disabled="disabled" })</td>
+    <td>@Html.TextBoxFor(m => m.Email, new { size = "10", data_field = "Email", disabled="disabled" })</td>
+    <td>@Html.DropDownListFor(m => m.ProviderContactTypeId, new SelectList(Model.ProviderContactTypes, "Id", "Name", Model.ProviderContactTypeId), new { data_field = "ProviderContactTypes", @class = "ProviderContactTypes", disabled = "disabled" })
+        @Html.HiddenFor(m => m.ProviderContactTypeId, new { data_field = "ProviderContactTypeId" })</td>
+    <td>
+</tr>

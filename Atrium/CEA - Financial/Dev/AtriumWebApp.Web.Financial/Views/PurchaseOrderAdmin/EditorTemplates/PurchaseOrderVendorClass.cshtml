@@ -1,0 +1,7 @@
+@model AtriumWebApp.Web.Financial.Models.PurchaseOrderVendorClass
+
+<form asp-action="CreateVendorClass" asp-controller="PurchaseOrderAdmin">
+    <input asp-for="Name" placeholder="New Vendor Class" />
+    <span asp-validation-for="Name" class="text-danger"></span>
+    <input type="submit" value="Add" id="newVendorClass" />
+</form>

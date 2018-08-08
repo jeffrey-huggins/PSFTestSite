@@ -1,0 +1,8 @@
+@model AtriumWebApp.Models.ProviderContactType
+
+
+<form asp-action="CreateContactType" asp-controller="ContractAdmin">
+    <input asp-for="Name" placeholder="New Contact Type" />
+    <span asp-validation-for="Name" class="text-danger"></span>
+    <input type="submit" value="Add" id="newContactType" />
+</form>

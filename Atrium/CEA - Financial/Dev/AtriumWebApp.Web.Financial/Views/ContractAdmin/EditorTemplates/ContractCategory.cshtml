@@ -1,0 +1,7 @@
+@model AtriumWebApp.Models.ContractCategory
+
+<form asp-action="CreateCategory" asp-controller="ContractAdmin">
+    <input asp-for="Name" placeholder="New Category" />
+    <span asp-validation-for="Name" class="text-danger"></span>
+    <input type="submit" value="Add" id="newCategory" />
+</form>

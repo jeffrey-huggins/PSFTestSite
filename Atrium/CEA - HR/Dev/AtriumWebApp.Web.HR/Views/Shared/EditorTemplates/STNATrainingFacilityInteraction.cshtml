@@ -1,0 +1,23 @@
+﻿@model AtriumWebApp.Web.HR.Models.STNATrainingFacilityInteraction
+
+@Html.HiddenFor(model => model.STNATrainingFacilityInteractionId)
+<div class="editor-field">
+    @Html.LabelFor(model => model.STNATrainingFacilityId) <br />
+
+    @Html.HiddenFor(model => model.STNATrainingFacilityId)
+    @Html.DropDownList("STNATrainingFacilityList", ViewData["STNATrainingFacilityList"] as SelectList, new { @disabled = true })
+    @Html.ValidationMessageFor(model => model.STNATrainingFacilityId)
+</div>
+
+<div class="editor-field">
+    @Html.LabelFor(model => model.STNATrainingActionItemId) <br />
+    @*@Html.EditorFor(model => model.STNATrainingActionItemId)*@
+    @Html.DropDownListFor(model => model.STNATrainingActionItemId, ViewData["STNATrainingActionItemList"] as SelectList)
+    @Html.ValidationMessageFor(model => model.STNATrainingActionItemId)
+</div>
+
+<div class="editor-field">
+    @Html.LabelFor(model => model.InteractionDate) <br />
+    @Html.EditorFor(model => model.InteractionDate, new { @class = "isDate" })
+    @Html.ValidationMessageFor(model => model.InteractionDate)
+</div>

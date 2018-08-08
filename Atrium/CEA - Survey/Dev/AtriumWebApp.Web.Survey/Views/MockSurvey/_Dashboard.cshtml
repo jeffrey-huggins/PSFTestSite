@@ -1,0 +1,113 @@
+﻿@model AtriumWebApp.Web.Survey.Models.ViewModel.MockSurveyViewModel
+@{
+    object closeCheckboxAttributes;
+    object closeSignatureAttributes = null;
+    if (Model.Close && !Model.CanEditClosed)
+    {
+        closeCheckboxAttributes = new { @class = "float-right", disabled = "disabled" };
+        closeSignatureAttributes = new { disabled = "disabled" };
+    }
+    else
+    {
+        closeCheckboxAttributes = new { @class = "float-right" };
+    }
+    ViewBag.Title = "Customer Service and Compliance Survey";
+}
+<style>
+    .DeficiencyGroup.odd {
+        background-color: #E2E4FF;
+    }
+</style>
+<div class="container_16 margin_separator">
+    <div class="grid_16">
+        <h2>@ViewBag.Title</h2>
+    </div>
+</div>
+@using (Html.BeginForm("Edit", "MockSurvey", FormMethod.Post, new { id = "MockSurvey" }))
+{
+    @Html.HiddenFor(m => m.MockSurveyId)
+    <div class="container_16">
+        <div class="grid_4">
+            <span> 
+                @Html.LabelFor(m => m.MockSurveyDate):
+                @Html.EditorFor(m => m.MockSurveyDate, new { id = "MockSurveyDate", @class = "isDate", size = "10" })
+            </span>
+        </div>
+        <div class="grid_12">
+            <div class="float-right">
+                <span>
+                    @Html.LabelFor(m => m.FollowUpDate):
+                    @Html.EditorFor(m => m.FollowUpDate, new { id = "FollowUpDate", @class = "isDate", size = "10" })
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="margin_separator">
+        <div class="container_16">
+            <div class="grid_16">
+                <h3>Federal Deficiencies</h3>
+            </div>
+        </div>
+        @for (int i = 0; i < Model.FederalGroups.Count; i++)
+        {
+            var federalGroupClass = i % 2 == 0 ? "even" : "odd";
+            <div class="container_16 DeficiencyGroup @(federalGroupClass)">
+                <div class="grid_13">
+                    @Model.FederalGroups[i].Description
+                </div>
+                <div class="grid_3">
+                    @Html.ActionLink("Findings", "Group", new { id = Model.MockSurveyId, groupId = Model.FederalGroups[i].GroupId }, new { @class = "float-right" })
+                </div>
+            </div>
+        }
+        <div class="container_16">
+            <div class="grid_16">
+                <h3>Safety Deficiencies</h3>
+            </div>
+        </div>
+        @for (int i = 0; i < Model.SafetyGroups.Count; i++)
+        {
+            var safetyGroupClass = i % 2 == 0 ? "even" : "odd";
+            <div class="container_16 DeficiencyGroup @(safetyGroupClass)">
+                <div class="grid_13">
+                    @Model.SafetyGroups[i].Description
+                </div>
+                <div class="grid_3">
+                    @Html.ActionLink("Findings", "Group", new { id = Model.MockSurveyId, groupId = Model.SafetyGroups[i].GroupId }, new { @class = "float-right" })
+                </div>
+            </div>
+        }
+    </div>
+    <div class="container_16 margin_separator">
+        <div class="grid_9">&nbsp;</div>
+        <div class="grid_3">
+            <div class="float-right">
+                @Html.LabelFor(m => m.TeamMembers):
+            </div>
+        </div>
+        <div class="grid_4">
+            @Html.TextAreaFor(m => m.TeamMembers)
+        </div>
+    </div>
+    <div class="container_16 margin_separator">
+        <div class="grid_9">&nbsp;</div>
+        <div class="grid_3">
+            <div class="float-right">
+                @Html.LabelFor(m => m.Close)
+                @Html.CheckBoxFor(m => m.Close, closeCheckboxAttributes)
+            </div>
+        </div>
+        <div class="grid_4">
+            <div class="float-right">
+                @Html.LabelFor(m => m.CloseSignature):
+                @Html.TextBoxFor(m => m.CloseSignature, closeSignatureAttributes)
+            </div>
+        </div>
+    </div>
+    @Html.ValidationSummary(false)
+    <div class="container_16 margin_separator">
+        <div class="grid_16">
+            <button id="Save" class="float-right">Save Mock Survey</button>
+        </div>
+    </div>
+}

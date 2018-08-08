@@ -1,0 +1,40 @@
+@model List<UnemploymentBenefit>
+
+<table id="payoutTable">
+    <thead>
+        <tr>
+            <th>
+                Date
+            </th>
+            <th>
+                Amount Paid
+            </th>
+            <th>
+                
+            </th>
+            <th>
+                
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var payment in Model)
+        {
+            <tr>
+                <td>
+                    @payment.BenefitDate.ToString("d")
+                </td>
+                <td>
+                    @payment.BenefitAmt.ToString("C")
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "CreateOrEditPayment", new { claimId = payment.ClaimId, paymentId = payment.BenefitKey }, new { @class = "edit" })
+                </td>
+                <td>
+                    @Html.ActionLink("Delete", "DeletePayment", new { claimId = payment.ClaimId, benefitKey = payment.BenefitKey }, new { @class = "delete" })
+                </td>
+            </tr>
+
+        }
+    </tbody>
+</table>

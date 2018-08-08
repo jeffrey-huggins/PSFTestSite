@@ -1,0 +1,17 @@
+@model AtriumWebApp.Web.Survey.Models.ScopeAndSeverity
+
+<form asp-action="NewSASType" asp-controller="SurveyAdmin">
+    @*<label asp-for="SASCode"></label>*@
+    <input asp-for="SASCode" name="SASCode" placeholder="SAS Code" />
+    <span asp-validation-for="SASCode" class="text-danger" data-valmsg-for="SASCode" ></span>
+    @*<label asp-for="Scope"></label>*@
+    <input asp-for="Scope" name="Scope" placeholder="Scope"/>
+    <span asp-validation-for="Scope" class="text-danger" data-valmsg-for="Scope"></span>
+    @*<label asp-for="SeverityLevel" ></label>*@
+    <input asp-for="SeverityLevel" name="SeverityLevel" placeholder="Level"/>
+    <span asp-validation-for="SeverityLevel" class="text-danger" data-valmsg-for="SeverityLevel"></span>
+    <input type="submit" value="Add"/>
+</form>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,3 @@
+﻿@model DateTime?
+
+@Html.TextBox("", (Model.HasValue ? Model.Value.ToString("MM/dd/yyyy") : string.Empty), new { @id = ViewData["id"], @name = ViewData["id"] })

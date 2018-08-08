@@ -1,0 +1,26 @@
+﻿body {
+}
+.main-content
+{
+    padding-left: 0px !important;
+}
+#window-table_wrapper
+{
+    position: inherit !important;
+}
+#user-info
+{
+    /*float: left;*/
+}
+#img
+{
+    float: left;
+}
+.content-wrapper
+{
+    margin-left: 10px;
+}
+
+img {
+    border: 0;
+}

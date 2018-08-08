@@ -1,0 +1,162 @@
+﻿@model AtriumWebApp.Web.PayrollTransfer.Models.ViewModel.ContractorPayrollEntryViewModel
+
+@{
+    ViewBag.Title = "Edit Contractor Payroll Entry";
+}
+
+<h2>Edit Contractor Payroll Entry</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>EmployeePayrollTransfer</legend>
+        @Html.EditorForModel()
+
+        <div class="half-spacing a-right">
+            <button type="button" id="updatePayrollTransfer" class="action-button">Save</button>
+            @*<input type="submit" value="Save" />*@
+        </div>
+        <div class="half-spacing a-left">
+            <button type="button" id="cancel-button" class="action-button"> Cancel </button>
+        </div>
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @id = "returnUrl", style = "display:none" })
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        var returnUrl;
+        if ($("#returnUrl").attr("href").charAt($("#returnUrl").attr("href").length - 1) != "/") {
+            returnUrl = $("#returnUrl").attr("href") + "/";
+        } else {
+            returnUrl = $("#returnUrl").attr("href");
+        }
+
+        //If you click home link or admin link, reset tab flags
+        $("a.home-link").click(function (e) {
+            $.ajax({
+                url: returnUrl + "ClearTabVariables",
+                cache: false,
+                type: "POST"
+            });
+        });
+
+        if ($("#Id").val() != "") {
+
+            //initialize values
+            $("#ActiveEmployees").val($("#ContractorId").val());
+            $("#SourceCommunity").val($("#SourceCommunityId").val());
+            $("#SourceGLAccount").val($("#SourceGeneralLedgerId").val());
+            //$("#TransferDate").val();
+            //$("#DestinationGLAccount").val($("#DestinationGeneralLedgerId").val());
+            //$("#DestinationCommunity").val($("#DestinationCommunityId").val());
+
+            //Disable employee, source community
+            $("#ActiveEmployees").prop("disabled", true);
+            $("#SourceCommunity").prop("disabled", true);
+        }
+
+        //$("#DestinationCommunity").change(function (e) {
+        //    $("#DestinationCommunityId").val($("#DestinationCommunity option:selected").val());
+        //});
+        //
+        //$("#DestinationGLAccount").change(function (e) {
+        //    $("#DestinationGeneralLedgerId").val($("#DestinationGLAccount option:selected").val());
+        //});
+
+
+        $("fieldset").on("blur", ".contractor-payroll-item .transfer-date", function (data) {
+            var transferDate = $(data.target);
+            if (transferDate.val().length == 6) {
+                var month = transferDate.val().substr(0, 2);
+                var day = transferDate.val().substr(2, 2);
+                var year = "20" + transferDate.val().substr(4, 2);
+
+                var parsedDate = month + "/" + day + "/" + year; //new Date(month + "/" + day + "/" + year);
+
+                transferDate.val(parsedDate);
+
+            }
+        });
+
+        $("#updatePayrollTransfer").click(function (e) {
+            var pti = $($("fieldset").children(".contractor-payroll-item")[0]);
+            ShowProgress();
+            var postUrl = $(e.target).parents("form")[0].action
+            //verify values
+
+            //populate object
+            //var items = [];
+            //for (x = 0; x < payrollTransferItems.length; x++) {
+            //    var pti = $(payrollTransferItems[x]);
+            //    var item = {
+            //        contractorPayrollTransferId: $("#Id").val()
+            //                 , pTContractorId: parseInt(pti.find("#ActiveEmployees option:selected").val())
+            //                 , communityId: parseInt(pti.find("#SourceCommunity option:selected").val())
+            //                 , generalLedgerId: parseInt(pti.find("#SourceGLAccount option:selected").val())
+            //        //, transferDate: pti.find("#TransferDate").val()
+            //        //, destinationGeneralLedgerId: parseInt(pti.find("#DestinationGLAccount option:selected").val())
+            //        //, destinationCommunityId: parseInt(pti.find("#DestinationCommunity option:selected").val())
+            //                 , hourCnt: parseFloat(pti.find("#HourCnt").val())
+            //                 , payAmt: parseFloat(pti.find("#PayAmt").val())
+            //        //, payType: pti.find("#PayType").val()
+            //                 , pBJOnlyFlg: pti.find("#PBJOnlyFlg").prop('checked')
+            //    };
+            //    items.push(item);
+            //}
+
+            //submit
+            $.ajax({
+                url: postUrl,//"EditContractorEntry",
+                dataType: "json",
+                contentType: "application/json",
+                cache: false,
+                type: "POST",
+                data: JSON.stringify({
+                    contractorPayrollTransferId: pti.find("#Id").val()
+                             , pTContractorId: parseInt(pti.find("#ActiveEmployees option:selected").val())
+                             , communityId: parseInt(pti.find("#SourceCommunity option:selected").val())
+                             , generalLedgerId: parseInt(pti.find("#SourceGLAccount option:selected").val())
+                    , transferDate: pti.find("#TransferDate").val()
+                    //, destinationGeneralLedgerId: parseInt(pti.find("#DestinationGLAccount option:selected").val())
+                    //, destinationCommunityId: parseInt(pti.find("#DestinationCommunity option:selected").val())
+                             , hourCnt: parseFloat(pti.find("#HourCnt").val())
+                             , payAmt: parseFloat(pti.find("#PayAmt").val())
+                    //, payType: pti.find("#PayType").val()
+                             , pBJOnlyFlg: pti.find("#PBJOnlyFlg").prop('checked')
+                }),
+                success: function (result) {
+                    alert("Successfully saved.");
+                    window.location.assign(returnUrl);
+                },
+                error: function (data, error, errortext) {
+                    alert("Save failed. Please verify your entries and try again");
+                    HideProgress();
+                }
+            });
+        });
+
+        $("#cancel-button").click(function (e) {
+            e.preventDefault();
+            window.location.assign(returnUrl);
+        });
+
+        $(function () {
+            $("#TransferDate, .isDate").datepicker({
+                beforeShow: function (textbox, instance) {
+                    instance.dpDiv.css({
+                        marginTop: (-textbox.offsetHeight) + "px",
+                        marginLeft: textbox.offsetWidth + "px"
+                    });
+                }
+            });
+        });
+    });
+</script>

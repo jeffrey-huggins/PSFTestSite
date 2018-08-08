@@ -1,0 +1,183 @@
+@model AtriumWebApp.Web.Survey.Models.ViewModel.ReviewAdminViewModel
+@{
+    ViewBag.Title = "Quarterly Systems Review Admin Page";
+}
+<style type="text/css">
+    .content-wrapper {
+        max-width: 1366px;
+    }
+    .dataTables_scrollBody {
+        overflow: auto;
+        height: auto !important;
+        max-height: 300px;
+        width: 100%;
+    }
+    .dataTables_wrapper {
+        border: solid thin black;
+    }
+</style>
+<h2 id="title" style="margin-left: 200px">@ViewBag.Title</h2>
+<div id="tabs" style="min-height:500px;">
+
+        <ul class="adminTabNav">
+            <li>
+                <a href="#communities">Communities</a>
+            </li>
+            <li>
+                <a href="#measures">SOC Measures</a>
+            </li>
+            <li>
+                <a href="#questions">SOC Questions</a>
+            </li>
+            <li>
+                <a href="#genMeasures">General Measures</a>
+            </li>
+            <li>
+                <a href="#genQuestions">General Questions</a>
+            </li>
+        </ul>
+    <div id="admin-body">
+        <div id="measures">
+            <table id="SOCMeasures">
+                <thead>
+                    <tr>
+                        <th>Measure Name</th>
+                        <th>Threshold Bonus Points</th>
+                        <th>Sort Order</th>
+                        <th>Edit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var socMeasure in Model.StandardsOfCareMeasures)
+            {
+                        <tr id="@socMeasure.Id">
+                            <td>@socMeasure.Name</td>
+                            <td>@socMeasure.ThresholdBonusPoints</td>
+                            <td>@socMeasure.SortOrder</td>
+                            <td><a class="edit" href="">Edit</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div id="questions">
+            <table id="SOCQuestions">
+                <thead>
+                    <tr>
+                        <th>Measure Name</th>
+                        <th>Question Text</th>
+                        <th>Max Points</th>
+                        <th>Sort Order</th>
+                        <th>Edit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var socQuestion in Model.StandardsOfCareQuestions)
+            {
+                        <tr id="@socQuestion.Id">
+                            <td class="socMeasure@(socQuestion.MeasureId)">@socQuestion.MeasureName</td>
+                            <td>@socQuestion.Text</td>
+                            <td>@socQuestion.MaxPoints</td>
+                            <td>@socQuestion.SortOrder</td>
+                            <td><a class="edit" href="">Edit</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div id="genMeasures">
+            <table id="GeneralMeasures">
+                <thead>
+                    <tr>
+                        <th>Measure Name</th>
+                        <th>Patient Sample?</th>
+                        <th>Sort Order</th>
+                        <th>Edit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var generalMeasure in Model.GeneralMeasures)
+            {
+                        <tr id="@generalMeasure.Id">
+                            <td>@generalMeasure.Name</td>
+                            <td>
+                                @Html.CheckBox("RequiresPatientSample", generalMeasure.RequiresPatientSample, new { disabled = "disabled" })
+                            </td>
+                            <td>@generalMeasure.SortOrder</td>
+                            <td><a class="edit" href="">Edit</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div id="genQuestions">
+            <table id="GeneralQuestions">
+                <thead>
+                    <tr>
+                        <th>Measure Name</th>
+                        <th>Question Text</th>
+                        <th>Max Points</th>
+                        <th>Sort Order</th>
+                        <th>Edit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var generalQuestion in Model.GeneralQuestions)
+            {
+                        <tr id="@generalQuestion.Id">
+                            <td class="generalMeasure@(generalQuestion.MeasureId)">@generalQuestion.MeasureName</td>
+                            <td>@generalQuestion.Text</td>
+                            <td>@generalQuestion.MaxPoints</td>
+                            <td>@generalQuestion.SortOrder</td>
+                            <td><a class="edit" href="">Edit</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        
+        
+        <div id="communities">
+            <div id="CommunityTableWrapper">
+                <table id="CommunityTable">
+                    <thead>
+                        <tr>
+                            <th>Facility</th>
+                            <th>State</th>
+                            <th>Region</th>
+                            <th>Use in Display</th>
+                            <th>Report Flag</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var com in Model.AdminViewModel.Communities.OrderByDescending(c => c.IsCommunityFlg).ThenBy(c => c.CommunityShortName))
+            {
+                        <tr>
+                            <td>@com.CommunityShortName</td>
+                            <td>@com.StateCd</td>
+                            <td>@Model.AdminViewModel.Regions.Single(r => r.RegionId == com.RegionId).RegionName</td>
+                            <td>@Html.CheckBoxFor(m => m.AdminViewModel.ApplicationCommunityInfos.Single(aci => aci.CommunityId == com.CommunityId).DataEntryFlg, new { id = com.CommunityId, @class = "checkbox" })</td>
+                            <td>@Html.CheckBoxFor(m => m.AdminViewModel.ApplicationCommunityInfos.Single(aci => aci.CommunityId == com.CommunityId).ReportFlg, new { id = com.CommunityId, @class = "checkboxReport" })</td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+<environment names="Development">
+    <script src="~/js/QuarterlySystemsReviewAdmin.js" asp-append-version="true"></script>
+</environment>
+<environment names="Testing,Production,Training">
+    <script src="~/js/QuarterlySystemsReviewAdmin.min.js" asp-append-version="true"></script>
+</environment>
+<script type="text/javascript">
+    $(document).ready(function () {
+        PreparePage();
+    });
+</script>

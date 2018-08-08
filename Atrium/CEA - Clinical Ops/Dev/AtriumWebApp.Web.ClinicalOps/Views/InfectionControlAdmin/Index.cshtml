@@ -1,0 +1,267 @@
+@model AtriumWebApp.Web.ClinicalOps.Models.ViewModel.InfectionControlAdminViewModel
+@using AtriumWebApp.Web.Base.Library
+@{
+    ViewBag.Title = "Infectious Control Admin";
+}
+
+<h2 id="title" style="margin-left: 200px">Infection Control Admin Page</h2>
+@using (Html.BeginForm("SaveLookback", "InfectionControlAdmin", FormMethod.Post, new { id = "SaveLookback" }))
+{
+<table>
+    <thead>
+        <tr style="font-weight: bold">
+            <th>Lookback Days</th>
+        </tr>
+    </thead>
+    <tr>
+        <td>@Html.Label("Adjust Lookback Days:")</td>
+        @{
+            string lookbackDays;
+            Context.Session.TryGetObject("IFCLookbackDays", out lookbackDays);
+        }
+        <td>@Html.TextBox("LookbackDays", lookbackDays)</td>
+        <td><input id="submit" name="submit" type="submit" value="Update" /></td>
+    </tr>
+</table>
+                }
+<div id="tabs" style="min-height:500px">
+
+    <ul class="adminTabNav">
+        <li><a href="#communityTab">Communities</a></li>
+        <li><a href="#requirementsTab">Requirements</a></li>
+        <li><a href="#siteTab">Sites</a></li>
+        <li><a href="#organismTab">Organisms</a></li>
+        <li><a href="#symptomTab">Symptoms</a></li>
+        <li><a href="#diagnosisTab">Diagnosis</a></li>
+        <li><a href="#precautionTab">Precautions</a></li>
+        <li><a href="#antibioticTab">Antibiotics</a></li>
+    </ul>
+
+    <div id="admin-body">
+
+        <div id="requirementsTab">
+            @Html.EditorFor(a => a.Limits)
+        </div>
+
+        <div id="siteTab">
+            <table id="Sites">
+                <thead>
+                    <tr>
+                        <th>Site</th>
+                        <th>Sort Order</th>
+                        <th>Enable/Disable</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var site in Model.Sites)
+                    {
+                    <tr id="@site.PatientIFCSiteId">
+                        <td>@site.PatientIFCSiteName</td>
+                        <td>@site.SortOrder</td>
+                        <td>@Html.CheckBox("EnableDisable", site.DataEntryFlg, new { @class = "EnableDisableSite" })</td>
+                        <td><a class="edit" href="">Edit</a></td>
+                        <td><a class="delete" href="">Delete</a></td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+
+            @Html.EditorFor(a => a.NewSite)
+            
+        </div>
+
+        <div id="organismTab">
+
+            <table id="Organisms">
+                <thead>
+                    <tr>
+                        <th>Organism</th>
+                        <th>Sort Order</th>
+                        <th>Enable/Disable</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var organism in Model.Organisms)
+                    {
+                    <tr id="@organism.PatientIFCOrganismId">
+                        <td>@organism.PatientIFCOrganismName</td>
+                        <td>@organism.SortOrder</td>
+                        <td>@Html.CheckBox("EnableDisable", organism.DataEntryFlg, new { @class = "EnableDisableOrganism" })</td>
+                        <td><a class="edit" href="">Edit</a></td>
+                        <td><a class="delete" href="">Delete</a></td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+
+            @Html.EditorFor(a => a.NewOrganism)
+        </div>
+
+        <div id="symptomTab">
+            <table id="Symptoms">
+                <thead>
+                    <tr>
+                        <th>Symptom</th>
+                        <th>Sort Order</th>
+                        <th>Enable/Disable</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var symptom in Model.Symptoms)
+                    {
+                    <tr id="@symptom.PatientIFCSymptomId">
+                        <td>@symptom.PatientIFCSymptomName</td>
+                        <td>@symptom.SortOrder</td>
+                        <td>@Html.CheckBox("EnableDisable", symptom.DataEntryFlg, new { @class = "EnableDisableSymptom" })</td>
+                        <td><a class="edit" href="">Edit</a></td>
+                        <td><a class="delete" href="">Delete</a></td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+            @Html.EditorFor(a => a.NewSymptom)
+        </div>
+
+        <div id="diagnosisTab">
+            <table id="Diagnoses">
+                <thead>
+                    <tr>
+                        <th>Diagnosis</th>
+                        <th>Sort Order</th>
+                        <th>Enable/Disable</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var diagnosis in Model.Diagnoses)
+                    {
+                    <tr id="@diagnosis.PatientIFCDiagnosisId">
+                        <td>@diagnosis.PatientIFCDiagnosisName</td>
+                        <td>@diagnosis.SortOrder</td>
+                        <td>@Html.CheckBox("EnableDisable", diagnosis.DataEntryFlg, new { @class = "EnableDisableDiagnosis" })</td>
+                        <td><a class="edit" href="">Edit</a></td>
+                        <td><a class="delete" href="">Delete</a></td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+            @Html.EditorFor(a => a.NewDiagnosis)
+        </div>
+
+        <div id="precautionTab">
+            <table id="Precautions">
+                <thead>
+                    <tr>
+                        <th>Precaution</th>
+                        <th>Sort Order</th>
+                        <th>Enable/Disable</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var precaution in Model.Precautions)
+                    {
+                    <tr id="@precaution.PatientIFCTypeOfPrecautionId">
+                        <td>@precaution.PatientIFCTypeOfPrecautionName</td>
+                        <td>@precaution.SortOrder</td>
+                        <td>@Html.CheckBox("EnableDisable", precaution.DataEntryFlg, new { @class = "EnableDisablePrecaution" })</td>
+                        <td><a class="edit" href="">Edit</a></td>
+                        <td><a class="delete" href="">Delete</a></td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+
+            @Html.EditorFor(a => a.NewPrecaution)
+        </div>
+
+        <div id="antibioticTab">
+            <table id="Antibiotics">
+                <thead>
+                    <tr>
+                        <th>Antibiotic</th>
+                        <th>Sort Order</th>
+                        <th>Enable/Disable</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var antibiotic in Model.Antibiotics)
+                    {
+                        <tr id="@antibiotic.PatientIFCAntibioticId">
+                            <td>@antibiotic.PatientIFCAntibioticName</td>
+                            <td>@antibiotic.SortOrder</td>
+                            <td>@Html.CheckBox("EnableDisable", antibiotic.DataEntryFlg, new { @class = "EnableDisableAntibiotic" })</td>
+                            <td><a class="edit" href="">Edit</a></td>
+                            <td><a class="delete" href="">Delete</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            @Html.EditorFor(a => a.NewAntibiotic)
+        </div>
+
+        <div id="communityTab">
+            <table id="CommunityTable">
+                <thead>
+                    <tr>
+                        <th>Facility</th>
+                        <th>State</th>
+                        <th>Region</th>
+                        <th>Use in Display</th>
+                        <th>Report Flag</th>
+                        @foreach (var payer in Model.PayerGroups)
+                        {
+                        <th>@payer.AtriumPayerGroupCode</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var com in Model.AdminViewModel.Communities.OrderByDescending(c => c.IsCommunityFlg).ThenBy(c => c.CommunityShortName))
+                    {
+                    <tr id="@com.CommunityId">
+                        <td>@com.CommunityShortName</td>
+                        <td>@com.StateCd</td>
+                        <td>@Model.AdminViewModel.Regions.Single(r => r.RegionId == com.RegionId).RegionName</td>
+                        <td>@Html.CheckBoxFor(x => x.AdminViewModel.ApplicationCommunityInfos.Single(aci => aci.CommunityId == com.CommunityId).DataEntryFlg, new { id = com.CommunityId, @class = "checkbox" })</td>
+                        <td>@Html.CheckBoxFor(x => x.AdminViewModel.ApplicationCommunityInfos.Single(aci => aci.CommunityId == com.CommunityId).ReportFlg, new { id = com.CommunityId, @class = "checkboxReport" })</td>
+                        @foreach (var payer in Model.PayerGroups)
+                        {
+                            if (Model.CommunityPayerGroupInfo.Any(a => a.AtriumPayerGroupCode == payer.AtriumPayerGroupCode && a.CommunityId == com.CommunityId))
+                            {
+                        <td>@Html.CheckBox(payer.AtriumPayerGroupCode, Model.CommunityPayerGroupInfo.Single(c => c.AtriumPayerGroupCode == payer.AtriumPayerGroupCode && c.CommunityId == com.CommunityId).IncludeFlg, new { id = payer.AtriumPayerGroupCode, @class = "checkboxPayer" })</td>
+                            }
+                            else
+                            {
+                                <td></td>
+
+                            }
+                        }
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<environment names="Development">
+    <script src="~/js/InfectionControlAdmin.js" asp-append-version="true"></script>
+</environment>
+<environment names="Testing,Production,Training">
+    <script src="~/js/InfectionControlAdmin.min.js" asp-append-version="true"></script>
+</environment>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

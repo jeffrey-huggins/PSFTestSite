@@ -1,0 +1,5 @@
+﻿@model ICollection<AtriumWebApp.Web.Survey.Models.ViewModel.SurveyDocumentViewModel>
+@foreach (AtriumWebApp.Web.Survey.Models.ViewModel.SurveyDocumentViewModel sdvm in @Model)
+{
+@Html.EditorForModel()
+}

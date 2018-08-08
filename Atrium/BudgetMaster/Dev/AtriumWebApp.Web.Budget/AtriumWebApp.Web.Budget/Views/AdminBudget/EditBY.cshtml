@@ -1,0 +1,38 @@
+@model AtriumWebApp.Models.Budget.Budget
+
+
+<form id="editBY" asp-action="SaveBY" asp-controller="AdminBudget">
+    <table>
+        <tr>
+            <td>
+                Budget Desc.:
+            </td>
+            <td>
+                <input asp-for="BudgetYr" />
+                <br />
+                <span asp-validation-for="BudgetYr"></span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Year:
+            </td>
+            <td>
+                <input asp-for="BudgetNb" />
+                <br />
+                <span asp-validation-for="BudgetNb"></span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Current Year? <input asp-for="BudgetCurrentYr" />
+            </td>
+            <td>
+                Next Year? <input asp-for="BudgetNextYr" />
+            </td>
+        </tr>
+    </table>
+    <input asp-for="BudgetID" hidden="hidden" />
+    <input type="button" id="saveBudgetYear" value="Save Changes" />
+    <input type="button" id="cancelBudgetYear" value="Cancel" />
+</form>

@@ -1,0 +1,18 @@
+@model AtriumWebApp.Web.ClinicalOps.Models.ViewModel.DocumentViewModel
+
+@if (!(Model.DocumentFileName == null || Model.ContentType == null))
+{
+    @Html.ActionLink(Model.DocumentFileName, "StreamIncidentEventDocument", new { id = Model.Id });
+    <input type="hidden" asp-for="Id" data-field="Id" disabled="disabled" />
+}
+else
+{
+    <input type="file" name="document" id="document" data-field="Document" class="fileSelection" style="display:inline-block;" />
+    <input type="hidden" asp-for="Id" data-field="Id" />
+    <input type="hidden" asp-for="ParentId" data-field="ParentId" />
+    <input type="hidden" asp-for="ContentType" data-field="ContentType" />
+    <input type="hidden" asp-for="DocumentFileName" data-field="DocumentFileName" />
+}
+
+<button type="button" class="delete-item" style="display:inline-block">&times;</button>
+

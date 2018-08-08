@@ -1,0 +1,148 @@
+﻿@using AtriumWebApp.Web.HR.Models.ViewModel
+@using AtriumWebApp.Web.Base.Library
+
+@model STNATrainingIndexViewModel
+@{
+    var appCode = "STNA";
+    ViewBag.Title = "STNA Training";
+}
+<style>
+    .content-wrapper {
+        max-width: none;
+    }
+</style>
+
+<h2>STNA Training</h2>
+<div id="body-STNA">
+    @Html.Partial("~/Views/Partial/SideBarSelectionSTNA.cshtml", new SidebarViewModel { AppCode = appCode, AppController = "STNATraining", ChangeCommunityPath = Url.Content("~/") + "/STNATraining/ChangeCommunity", SideBarDDLActionName = "SideDDL" })
+    <div id="content-STNA">
+        @if (!Context.Session.Contains(appCode + "CurrentTrainingFacilityId"))
+        {
+            <span class="instruction">Select a training facility to continue...</span>
+        }
+        else
+        {
+            string facilityName;
+            Context.Session.TryGetObject(appCode + "CurrentTrainingFacilityName", out facilityName);
+            <h3>STNA Training Facility: @facilityName</h3>
+            <div id="training-facility-tabs">
+                <ul>
+                    @*<li><a href="#training-interactions">Interactions</a></li>*@
+                    <li><a href="#training-classes">Classes</a></li>
+                    <li><a href="#training-note">Notes</a></li>
+                </ul>
+
+                @*<div id="training-interactions">
+                        <h3>Training Facility Interactions</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>
+                                        @Html.DisplayName("Action Item")
+                                    </th>
+                                    <th>
+                                        @Html.DisplayName("Date")
+                                    </th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.TrainingFacilityInteractions)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.STNATrainingActionItemDesc)
+                                        </td>
+                                        <td>
+                                            @String.Format("{0:d}", item.InteractionDate)
+                                        </td>
+                                        <td>
+                                            @Html.ActionLink("Edit", "Edit", new { id = item.STNATrainingFacilityInteractionId }) |
+                                            @Html.ActionLink("Delete", "Delete", new { id = item.STNATrainingFacilityInteractionId })
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                        <p>
+                            @Html.ActionLink("Create New Training Facility Interaction", "Create")
+                        </p>
+                    </div>*@
+
+                <div id="training-classes">
+                    <h3>Training Classes</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Class Type</th>
+                                <th># of Students</th>
+                                <th># Hired</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.TrainingClasses)
+                            {
+                                <tr>
+                                    <td>@String.Format("{0:d}", item.StartDate)</td>
+                                    <td>@String.Format("{0:d}", item.EndDate)</td>
+                                    <td>@item.ClassType </td>
+                                    <td class="a-center">@item.StudentsInClassCnt</td>
+                                    <td class="a-center">@item.StudentsHiredCnt</td>
+                                    <td>
+                                        @Html.ActionLink("Edit", "EditTrainingClass", new { id = item.STNATrainingClassesId }) |
+                                        @Html.ActionLink("Delete", "DeleteTrainingClass", new { id = item.STNATrainingClassesId })
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <p>
+                        @Html.ActionLink("Create New Training Class", "CreateTrainingClass")
+                    </p>
+                </div>
+
+                <div id="training-note">
+                    <h3>Training Facility Notes</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Note</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.TrainingFacilityNotes)
+                            {
+                                <tr>
+                                    <td>@String.Format("{0:d}", item.NoteDate)</td>
+                                    <td>@item.Note</td>
+                                    <td>
+                                        @Html.ActionLink("Edit", "EditTrainingNote", new { id = item.STNATrainingFacilityNoteId }) |
+                                        @Html.ActionLink("Delete", "DeleteTrainingNote", new { id = item.STNATrainingFacilityNoteId })
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <p>
+                        @Html.ActionLink("Create New Training Facility Note", "CreateTrainingNote")
+                    </p>
+                </div>
+
+            </div>
+
+        }
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $("#training-facility-tabs").tabs({
+            active: @Model.CurrentTab
+        });
+
+    });
+</script>

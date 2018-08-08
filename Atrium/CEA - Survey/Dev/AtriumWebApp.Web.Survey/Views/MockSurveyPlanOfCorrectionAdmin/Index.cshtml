@@ -1,0 +1,73 @@
+@model AtriumWebApp.Models.ViewModel.AdminViewModel
+@{
+    ViewBag.Title = "Customer Service and Compliance Survey-Plan of Correction Admin";
+}
+<style>
+    #CommunityTableWrapper {
+        width: 100%;
+    }
+    .dataTables_wrapper {
+        border: solid thin black;
+    }
+    .dataTables_scrollBody {
+        overflow: auto;
+        height: auto !important;
+        max-height: 300px;
+        width: 100%;
+    }
+    .content-wrapper {
+        max-width: 1366px;
+    }
+</style>
+<h2>@ViewBag.Title</h2>
+<div id="tabs" style="min-height:500px;">
+    <ul class="adminTabNav">
+        <li>
+            <a href="#communities">Communities</a>
+        </li>
+    </ul>
+
+
+    <div id="admin-body">
+        <div id="communities">
+            <div id="CommunityTableWrapper">
+                <table id="CommunityTable">
+                    <thead>
+                        <tr>
+                            <th>Facility</th>
+                            <th>State</th>
+                            <th>Region</th>
+                            <th>Use in Display</th>
+                            <th>Report Flag</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var com in Model.Communities.OrderByDescending(c => c.IsCommunityFlg).ThenBy(c => c.CommunityShortName))
+            {
+                            <tr>
+                                <td>@com.CommunityShortName</td>
+                                <td>@com.StateCd</td>
+                                <td>@Model.Regions.Single(r => r.RegionId == com.RegionId).RegionName</td>
+                                <td>@Html.CheckBoxFor(m => m.ApplicationCommunityInfos.Single(aci => aci.CommunityId == com.CommunityId).DataEntryFlg, new { id = com.CommunityId, @class = "checkbox" })</td>
+                                <td>@Html.CheckBoxFor(m => m.ApplicationCommunityInfos.Single(aci => aci.CommunityId == com.CommunityId).ReportFlg, new { id = com.CommunityId, @class = "checkboxReport" })</td>
+                            </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<environment names="Development">
+    <script src="~/js/MockSurveyPlanOfCorrectionAdmin.js" asp-append-version="true"></script>
+</environment>
+<environment names="Testing,Production,Training">
+    <script src="~/js/MockSurveyPlanOfCorrectionAdmin.min.js" asp-append-version="true"></script>
+</environment>
+<script type="text/javascript">
+    $(document).ready(function () {
+        PreparePage();
+    });
+</script>
+

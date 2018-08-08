@@ -1,0 +1,33 @@
+﻿@model AtriumWebApp.Models.ViewModel.HomeViewModel
+@{
+    ViewBag.Title = "Schedule";
+}
+<script>
+    $(document).ready(function () {
+        $("a").on('click', function () {
+            window.ShowProgress();
+        });
+    })
+</script>
+
+<table id="homeButtonTable">
+    <tr>
+        @if (Model.HasAccessTo("SCH"))
+        {
+            <td>
+                <a href="~/Schedule/" id="SCHLink">
+                    <p>Manage Schedule</p>
+                </a>
+            </td>
+            @*if (Model.IsAdministrator)
+            {
+                <td>
+                    <a href="~/ScheduleTemplate/" id="SCHTemplateLink">
+                        <p>Master Schedule</p>
+                    </a>
+                </td>
+            }*@
+        }
+    </tr>
+
+</table>

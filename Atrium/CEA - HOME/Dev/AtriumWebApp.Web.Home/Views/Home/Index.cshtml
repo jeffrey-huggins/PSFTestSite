@@ -1,0 +1,21 @@
+﻿@model AtriumWebApp.Models.ViewModel.HomeViewModel
+@{
+    ViewBag.Title = "Home Page";
+}
+<div style="overflow:hidden;">
+    @{ 
+        string url = "http://wolverine/managementcalendar/SitePages/ManagementCalendar.aspx?isDlg=1";
+    }
+    @if (Context.Request.Scheme == "https")
+    {
+        url = "https://pete.atriumlivingcenters.com/managementcalendar/SitePages/ManagementCalendar.aspx?isDlg=1";
+    }
+    <iframe scrolling="no" src="@url" style="width:100%;height:660px;"></iframe>
+</div>
+<script>
+    $(document).ready(function () {
+        $("a").on('click', function () {
+            window.ShowProgress();
+        });
+    })
+</script>

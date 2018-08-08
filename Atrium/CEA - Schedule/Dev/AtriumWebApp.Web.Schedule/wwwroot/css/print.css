@@ -1,0 +1,10 @@
+﻿header {
+    display: none;
+}
+body {
+    width: 960px;
+}
+
+.printHide {
+    display: none;
+}

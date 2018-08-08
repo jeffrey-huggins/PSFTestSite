@@ -1,0 +1,210 @@
+@model AtriumWebApp.Models.ViewModel.ASAPHotlineViewModel
+@using AtriumWebApp.Web.Base.Library
+@{
+    ViewBag.Title = "ASAP Hotline";
+}
+
+<div class="table-cell">
+    @Html.Partial("~/Views/Partial/SideBarSelectionASAP.cshtml")
+</div>
+<div class="table-cell">
+    <h2 id="title" style="margin-left: 180px">ASAP Hotline</h2>
+
+    @using (Html.BeginForm("SaveASAP", "ASAPHotline", FormMethod.Post, new { id = "SaveASAP", enctype = "multipart/form-data" }))
+    {
+        @Html.Hidden("EditingId");
+        <div class="container_16">
+            <div class="grid_7">
+                <div class="container_16 bottom_pad">
+                    <div class="grid_1">&nbsp;</div>
+                    <div class="grid_2">@Html.Label("Date:")</div>
+                    <div class="grid_2">@Html.TextBox("Date", "", new { @class = "isDate" })</div>
+                </div>
+                <div class="container_16 bottom_pad">
+                    <div class="grid_1">&nbsp;</div>
+                    <div class="grid_2">@Html.Label("Complaint #:")</div>
+                    <div class="grid_2">@Html.TextBox("NumberId", "", new { disabled = "disabled" })</div>
+                </div>
+                <div class="container_16 bottom_pad">
+                    <div class="grid_1">&nbsp;</div>
+                    <div class="grid_2">@Html.Label("Type of Complaint:")</div>
+                    <div class="grid_2">@Html.DropDownList("ComplaintTypes", "Select a Complaint Type")</div>
+                </div>
+                <div class="container_16 bottom_pad">
+                    <div class="grid_1">&nbsp;</div>
+                    <div class="grid_2">@Html.Label("Caller:")</div>
+                    <div class="grid_2">@Html.TextBox("CallerName", "", new { maxlength = "128" })</div>
+                </div>
+                <div class="container_16 bottom_pad">
+                    <div class="grid_1">&nbsp;</div>
+                    <div class="grid_2">@Html.Label("Contact:")</div>
+                    <div class="grid_2">@Html.TextBox("CallerNumber", "", new { maxlength = "128" })</div>
+                </div>
+            </div>
+            <div class="grid_5">
+                <table id="Contacts">
+                    <thead>
+                        <tr>
+                            <th colspan="2">Email List</th>
+                        </tr>
+                        <tr>
+                            <th>Name</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var contact in Model.Contacts)
+                        {
+                            <tr id="@contact.Value">
+                                <td>@contact.Text</td>
+                                <td>@Html.CheckBox("ContactCheckBox")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="container_16 margin_separator">
+            <div class="grid_1">&nbsp;</div>
+            <div class="grid_2">@Html.Label("Complaint:")</div>
+            <div class="grid_6">@Html.TextArea("Complaint", "", 3, 45, new { maxlength = "256" })</div>
+        </div>
+        <div class="container_16 bottom_pad">
+            <div class="grid_1">&nbsp;</div>
+            <div class="grid_2">@Html.Label("Investigation of Complaint:")</div>
+            <div class="grid_6">@Html.TextArea("Investigation", "", 3, 45, new { maxlength = "1024" })</div>
+        </div>
+        <div class="container_16 bottom_pad">
+            <div class="grid_1">&nbsp;</div>
+            <div class="grid_2">@Html.Label("Action taken as a result from the complaint:")</div>
+            <div class="grid_6">@Html.TextArea("Action", "", 3, 45, new { maxlength = "1024" })</div>
+        </div>
+        <div class="container_16 margin_separator">
+            <div class="grid_1">&nbsp;</div>
+            <div class="grid_2">@Html.Label("Summary of findings:")</div>
+            <div class="grid_6">@Html.TextArea("Summary", "", 3, 45, new { maxlength = "1024" })</div>
+        </div>
+        <div id="asap-documents-section">
+            <div class="container_16">
+                <div class="grid_1">&nbsp;</div>
+                <div class="grid_2">@Html.Label("Documents:")</div>
+                <div class="grid_6">&nbsp;</div>
+                <div class="grid_2">&nbsp;</div>
+            </div>
+
+
+
+
+
+            <div class="container_16 margin_separator file-selection">
+                <div class="grid_1">&nbsp;</div>
+                <div class="grid_2">&nbsp;</div>
+                <div class="grid_6"><input type="file" name="files" id="document" data-field="Document" class="fileSelection" /></div>
+            </div>
+        </div>
+
+        <div id="file-link-template" class="container_16 file-link hidden">
+            <div class="grid_1">&nbsp;</div>
+            <div class="grid_2">&nbsp;</div>
+            <div class="grid_6">
+                <a href="" data-action="StreamASAPDocument"></a>
+            </div>
+            <div class="grid_2">
+                <button type="button" class="delete-item">&times;</button>
+                @Html.Hidden("ASAPCallDocumentId")
+            </div>
+        </div>
+
+
+
+        <div class="container_16">
+            <div class="grid_4">&nbsp;</div>
+            <div class="grid_1">
+                <button type="button" id="submitASAP">Save</button>
+            </div>
+            <div class="grid_1">
+                <button type="button" id="clearASAP">Clear</button>
+            </div>
+        </div>
+    }
+
+
+    @using (Html.BeginForm("UpdateRange", "ASAPHotline", FormMethod.Post, new { id = "UpdateRange", style = "margin-left: 175px;" }))
+    {
+        string occuredRangeFrom;
+        Context.Session.TryGetObject("ASAPoccurredRangeFrom", out occuredRangeFrom);
+        string occuredRangeTo;
+        Context.Session.TryGetObject("ASAPoccurredRangeTo", out occuredRangeTo);
+
+        @Html.Label("Call Date Range - From: ")
+        @Html.TextBox("occurredRangeFrom", occuredRangeFrom, new { @Value = occuredRangeFrom, size = "10" })
+        @Html.Label("To: ")
+        @Html.TextBox("occurredRangeTo", occuredRangeTo, new { @Value = occuredRangeTo, size = "10" })
+        @Html.Hidden("returnUrl", Context.UrlPath());
+        <input name="submit" type="submit" value="Update" />
+    }
+    @{
+        string ToDateRangeInvalid;
+        Context.Session.TryGetObject("ToDateRangeInvalid", out ToDateRangeInvalid);
+        string ToDateRangeInFuture;
+        Context.Session.TryGetObject("ToDateRangeInFuture", out ToDateRangeInFuture);
+        string FromDateRangeInvalid;
+        Context.Session.TryGetObject("FromDateRangeInvalid", out FromDateRangeInvalid);
+        string FromDateRangeInFuture;
+        Context.Session.TryGetObject("FromDateRangeInFuture", out FromDateRangeInFuture);
+        string FromAfterTo;
+        Context.Session.TryGetObject("FromAfterTo", out FromAfterTo);
+    }
+
+    @Html.Hidden("ToDateRangeInvalid", ToDateRangeInvalid)
+    @Html.Hidden("ToDateRangeInFuture", ToDateRangeInFuture)
+    @Html.Hidden("FromDateRangeInvalid", FromDateRangeInvalid)
+    @Html.Hidden("FromDateRangeInFuture", FromDateRangeInFuture)
+    @Html.Hidden("FromAfterTo", FromAfterTo)
+    <div class="tableWrapper">
+        <table id="ASAPs">
+            <thead>
+                <tr>
+                    <th>Complaint #</th>
+                    <th>Date</th>
+                    <th>Caller</th>
+                    <th>ContactInfo</th>
+                    <th>ComplaintId</th>
+                    <th>Complaint</th>
+                    <th>Investigation</th>
+                    <th>Action</th>
+                    <th>Summary</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var asap in Model.ASAPCalls)
+                {
+                    <tr id="@asap.ASAPCallId">
+                        <td>@asap.ASAPCallId</td>
+                        <td>@asap.CallDate.ToString("d")</td>
+                        <td>@asap.CallerName</td>
+                        <td>@asap.CallerContactInfo</td>
+                        <td>@asap.ASAPComplaintTypeId</td>
+                        <td>@asap.ComplaintDesc</td>
+                        <td>@asap.InvestigationDesc</td>
+                        <td>@asap.ActionDesc</td>
+                        <td>@asap.SummaryDesc</td>
+                        <td><a class="edit" href="">Edit</a></td>
+                        <td><a class="delete" href="">Delete</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<environment names="Development">
+    <script src="~/js/ASAPHotline.js" asp-append-version="true"></script>
+</environment>
+<environment names="Testing,Production,Training">
+    <script src="~/js/ASAPHotline.min.js" asp-append-version="true"></script>
+</environment>
+
+

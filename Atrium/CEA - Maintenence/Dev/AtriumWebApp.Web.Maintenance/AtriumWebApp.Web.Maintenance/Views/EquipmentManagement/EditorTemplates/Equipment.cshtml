@@ -1,0 +1,145 @@
+@model AtriumWebApp.Web.Maintenance.Models.Equipment
+
+<form asp-action="SaveEquipment" method="post" asp-controller="EquipmentManagement" id="saveEquipmentForm">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12 text-center">
+                <h2>Equipment</h2>
+            </div>
+        </div>
+        <hr />
+        <div class="row" style="display:none;">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="col-sm-2">
+                <label asp-for="EquipmentId"></label>
+            </div>
+            <div class="col-sm-4">
+                <input asp-for="EquipmentId" />
+                <br />
+                <span asp-validation-for="EquipmentId" class="text-danger"></span>
+            </div>
+            <div class="col-sm-2">
+                <label asp-for="CommunityId"></label>
+            </div>
+            <div class="col-sm-4">
+                <input asp-for="CommunityId" />
+                <br />
+                <span asp-validation-for="CommunityId" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2">
+                <label asp-for="SerialNbr"></label>
+            </div>
+            <div class="col-sm-4">
+                <input asp-for="SerialNbr" />
+                <br />
+                <span asp-validation-for="SerialNbr" class="text-danger"></span>
+            </div>
+            <div class="col-sm-2">
+                <label asp-for="ModelNbr"></label>
+            </div>
+            <div class="col-sm-2">
+                <input asp-for="ModelNbr" />
+                <br />
+                <span asp-validation-for="ModelNbr" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2">
+                <label asp-for="Description"></label>
+            </div>
+            <div class="col-sm-4">
+                <textarea asp-for="Description"></textarea>
+                <br />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="col-sm-2">
+                <label asp-for="PurchaseVendorId"></label>
+            </div>
+            <div class="col-sm-4">
+                <select id="vendorDropDown" asp-items="ViewBag.Vendors" asp-for="PurchaseVendorId"></select>
+                <br />
+                <span asp-validation-for="PurchaseVendorId" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2">
+                <label asp-for="PurchaseDate"></label>
+            </div>
+            <div class="col-sm-2">
+                <input asp-for="PurchaseDate" class="date-picker" type="text" asp-format="{0:MM/dd/yyyy}" />
+                <br />
+                <span asp-validation-for="PurchaseDate" class="text-danger"></span>
+            </div>
+            <div class="col-sm-2">
+                <label asp-for="InstalledDate"></label>
+            </div>
+            <div class="col-sm-2">
+                <input asp-for="InstalledDate" class="date-picker" type="text" asp-format="{0:MM/dd/yyyy}" />
+                <br />
+                <span asp-validation-for="InstalledDate" class="text-danger"></span>
+            </div>
+            <div class="col-sm-2">
+                <label asp-for="Condition"></label>
+            </div>
+            <div class="col-sm-2">
+                <select asp-for="Condition">
+                    <option value="New">
+                        New
+                    </option>
+                    <option value="Good">
+                        Good
+                    </option>
+                    <option value="Fair">
+                        Fair
+                    </option>
+                    <option value="Poor">
+                        Poor
+                    </option>
+                </select>
+                <br />
+                <span asp-validation-for="Condition" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-offset-2 col-sm-2 text-right">
+                <input asp-for="DecommissionedFlg" />
+            </div>
+            <div class="col-sm-2 text-left">
+                <label asp-for="DecommissionedFlg"></label>
+            </div>
+            <div class="col-sm-2">
+                <label asp-for="LifeExpectancyCnt"></label>
+            </div>
+            <div class="col-sm-2">
+                <input asp-for="LifeExpectancyCnt" type="text"  data-val-number="Life Expectancy needs to be a number."/>
+                <br />
+                <span asp-validation-for="LifeExpectancyCnt" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-offset-2 col-sm-10">
+                <input id="equipmentSubmit" type="submit" value="Submit" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+</form>
+
+<script src="~/lib/chosen/chosen.jquery.js"></script>
+<link href="~/lib/chosen/chosen.css" rel="stylesheet" />
+<script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+<script>
+    $("#vendorDropDown").chosen({
+        no_results_text: "no matches found!",
+        width: "200px",
+        height: "100px"
+
+    });
+    $.validator.setDefaults({ ignore: [] });
+    $("#saveEquipmentForm").removeData("validator");
+    $("#saveEquipmentForm").removeData("unobtrusiveValidation");
+    $.validator.unobtrusive.parse($("#saveEquipmentForm"));
+    $("#saveEquipmentForm").validate();
+</script>

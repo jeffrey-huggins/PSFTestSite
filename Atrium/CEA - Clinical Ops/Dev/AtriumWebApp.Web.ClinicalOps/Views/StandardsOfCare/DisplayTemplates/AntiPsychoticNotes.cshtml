@@ -1,0 +1,32 @@
+﻿@model List<SOCEventAntiPsychoticNoted>
+
+<table id="antiTable">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Recommendation</th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var noted in Model)
+        {
+            <tr id="@noted.SOCEventAntiPsychoticNotedId">
+                <td class="noteDate">@noted.NotedDate.ToString("d")</td>
+                <td>@noted.RecommendationDesc</td>
+                <td>
+                    @Html.ActionLink("Copy", "EditAntiPsychoticNote", new { socEventId = noted.SOCEventId, noteId = noted.SOCEventAntiPsychoticNotedId }, new { @class = "copy" })
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "EditAntiPsychoticNote", new { socEventId = noted.SOCEventId, noteId = noted.SOCEventAntiPsychoticNotedId }, new { @class = "edit" })
+
+                </td>
+                <td>
+                    @Html.ActionLink("Delete", "DeleteRowAnti", new { rowId = noted.SOCEventAntiPsychoticNotedId}, new { @class="delete" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

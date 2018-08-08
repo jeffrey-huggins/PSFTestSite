@@ -1,0 +1,16 @@
+@model AtriumWebApp.Models.ContractRenewal
+
+@if (Model.Id == 0)
+{
+    Model.IsDataEntry = true;
+    Model.IsReportable = true;
+
+}
+
+<form asp-action="CreateRenewalType" asp-controller="ContractAdmin">
+    <input asp-for="Name" placeholder="New Renewal Type" />
+    <span asp-validation-for="Name" class="text-danger"></span>
+    <input asp-for="IsDataEntry" hidden="hidden" />
+    <input asp-for="IsReportable" hidden="hidden" />
+    <input type="submit" value="Add" id="newRenewalType" />
+</form>

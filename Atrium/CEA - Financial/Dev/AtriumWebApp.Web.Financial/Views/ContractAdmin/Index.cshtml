@@ -1,0 +1,288 @@
+@model AtriumWebApp.Models.ViewModel.ContractAdminViewModel
+@{
+    ViewBag.Title = "Contract Admin Page";
+}
+
+<style type="text/css">
+    .dataTables_scrollBody {
+        overflow: auto;
+        height: auto !important;
+        max-height: 300px;
+        width: 100%;
+    }
+
+    .content-wrapper {
+        max-width: 1366px;
+    }
+
+    .dataTables_wrapper {
+        border: solid thin black;
+    }
+
+    #admin-body {
+        width: 100%;
+    }
+</style>
+
+
+<h2 style="padding-bottom: 30px;">@ViewBag.Title</h2>
+
+<div id="tabs" style="min-height:500px;">
+    <ul>
+        <li>
+            <a href="#addressTab">Address</a>
+        </li>
+        <li>
+            <a href="#contactTab">Contacts</a>
+        </li>
+        <li>
+            <a href="#categoryTab">Categories</a>
+        </li>
+        <li>
+            <a href="#subcategoryTab">Subcategories</a>
+        </li>
+        <li>
+            <a href="#renewalTab">Renewals</a>
+        </li>
+        <li>
+            <a href="#termTab">Term Notice</a>
+        </li>
+        <li>
+            <a href="#paymentTab">Payments</a>
+        </li>
+        <li>
+            <a href="#exportTab">Export</a>
+        </li>
+    </ul>
+    <div id="admin-body">
+        <div id="addressTab">
+            <table id="addressTypesTable">
+                <thead>
+                    <tr>
+                        <th>Address Type</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var addressType in Model.AddressTypes)
+                    {
+                        <tr id="@addressType.Id">
+                            <td>@addressType.Name</td>
+                            <td><a class="edit" href="">Edit</a></td>
+                            <td><a class="delete" href="">Delete</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            @Html.EditorFor(a => a.CurrentAddressType, "newAddressType", "newAddressType")
+
+        </div>
+        <div id="contactTab">
+            <table id="contactTypesTable">
+                <thead>
+                    <tr>
+                        <th>Contact Type</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var contactType in Model.ContactTypes)
+                    {
+                        <tr id="@contactType.Id">
+                            <td>@contactType.Name</td>
+                            <td><a class="edit" href="">Edit</a></td>
+                            <td><a class="delete" href="">Delete</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            @Html.EditorFor(a => a.CurrentContactType,"newContactType", "newContactType")
+        </div>
+        <div id="categoryTab">
+            <table id="categoriesTable">
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var category in Model.Categories)
+                    {
+                        if (!category.IsProvider)
+                        {
+                            <tr id="@category.Id">
+                                <td>@category.Name</td>
+                                <td><a class="edit" href="">Edit</a></td>
+                                @if (category.Children.Count() > 0)
+                                {
+                                    <td></td>
+                                }
+                                else
+                                {
+                                    <td><a class="delete" href="">Delete</a></td>
+
+                                }
+                            </tr>
+                        }
+                        else
+                        {
+                            <tr id="@category.Id">
+                                <td>@category.Name</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+            @Html.EditorFor(a => a.CurrentCategory, "newContractCategory", "newContractCategory")
+        </div>
+        <div id="subcategoryTab">
+            <table id="subCategoryTable">
+                <thead>
+                    <tr>
+                        <th>SubCategory</th>
+                        <th></th>
+                        <th>@Html.DropDownListFor(x => x.Categories, new SelectList(Model.Categories, "Id", "Name", Model.SelectedCategoryId))</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var subCategory in Model.SubCategories)
+                    {
+                        <tr id="@subCategory.Id">
+                            <td>@subCategory.Name</td>
+                            <td><a class="edit" href="">Edit</a></td>
+                            <td><a class="delete" href="">Delete</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            @Html.EditorFor(a => a.CurrentSubCategory, "newContractSubcategory", "newContractSubcategory",new { SelectedCategoryId = Model.SelectedCategoryId })
+            @*@using (Html.BeginForm("CreateSubCategory", "ContractAdmin", FormMethod.Post))
+            {
+                <div>
+                    @Html.Label("New Sub Category")@Html.TextBox("newSubCategoryType")<input id="submitSubCategory" type="submit" value="Save" />
+                    @Html.HiddenFor(m => m.SelectedCategoryId)
+                </div>
+            }*@
+        </div>
+        <div id="renewalTab">
+            <table id="renewalTypesTable">
+                <thead>
+                    <tr>
+                        <th>Renewal</th>
+                        <th>Order</th>
+                        <th>Edit</th>
+                        <th>Report</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var type in Model.RenewalTypes)
+                    {
+                        <tr id="@type.Id">
+                            <td>@type.Name</td>
+                            <td>@type.SortOrder</td>
+                            <td>@Html.CheckBoxFor(a => a.RenewalTypes.Single(b => b.Id == type.Id).IsDataEntry)</td>
+                            <td>@Html.CheckBoxFor(a => a.RenewalTypes.Single(b => b.Id == type.Id).IsReportable)</td>
+                            <td><a class="edit" href="">Edit</a></td>
+                            <td><a class="delete" href="">Delete</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            @Html.EditorFor(a => a.CurrentRenewalType, "newContractRenewal", "newContractRenewal")
+            @*@using (Html.BeginForm("CreateRenewalType", "ContractAdmin", FormMethod.Post))
+            {
+                <div>
+                    @Html.Label("New Renewal Type")@Html.TextBox("NewType")<input type="submit" value="Save" />
+                </div>
+            }*@
+        </div>
+        <div id="termTab">
+            <table id="terminationNoticeTable">
+                <thead>
+                    <tr>
+                        <th>Term Notice</th>
+                        <th>Order</th>
+                        <th>Edit</th>
+                        <th>Report</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var notice in Model.TerminationNotices)
+                    {
+                        <tr id="@notice.Id">
+                            <td>@notice.Name</td>
+                            <td>@notice.SortOrder</td>
+                            <td>@Html.CheckBoxFor(a => a.TerminationNotices.Single(b => b.Id == notice.Id).IsDataEntry)</td>
+                            <td>@Html.CheckBoxFor(a => a.TerminationNotices.Single(b => b.Id == notice.Id).IsReportable)</td>
+                            <td><a class="edit" href="">Edit</a></td>
+                            <td><a class="delete" href="">Delete</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            @Html.EditorFor(a => a.CurrentTerminationNotice, "newTermNotice", "newTermNotice")
+        </div>
+        <div id="paymentTab">
+            <table id="paymentTermTable">
+                <thead>
+                    <tr>
+                        <th>Payment</th>
+                        <th>Order</th>
+                        <th>Edit</th>
+                        <th>Report</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var term in Model.PaymentTerms)
+                    {
+                        <tr id="@term.Id">
+                            <td>@term.Name</td>
+                            <td>@term.SortOrder</td>
+                            <td>@Html.CheckBoxFor(a => a.PaymentTerms.Single(b => b.Id == term.Id).IsDataEntry)</td>
+                            <td>@Html.CheckBoxFor(a => a.PaymentTerms.Single(b => b.Id == term.Id).IsReportable)</td>
+
+                            <td><a class="edit" href="">Edit</a></td>
+                            <td><a class="delete" href="">Delete</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            @Html.EditorFor(a => a.CurrentPaymentTerm, "newPaymentTerm", "newPaymentTerm")
+        </div>
+        <div id="exportTab">
+            <div id="processingSection">
+
+            </div>
+            @{
+                var facilities = new SelectList(Model.Facilities, "CommunityId", "CommunityShortName");
+            }
+            <select multiple asp-items="facilities" id="facilityExport" style="width:auto;height:180px;"></select>
+            <input type="button" value="Export" id="exportContracts" />
+        </div>
+    </div>
+</div>
+
+<environment names="Development">
+    <script src="~/js/ContractAdmin.js" asp-append-version="true"></script>
+    <script src="~/lib/autogrow/autogrow.js"></script>
+</environment>
+<environment names="Testing,Production,Training">
+    <script src="~/js/ContractAdmin.min.js" asp-append-version="true"></script>
+    <script src="~/lib/autogrow/autogrow.min.js"></script>
+</environment>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

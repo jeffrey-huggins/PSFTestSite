@@ -1,0 +1,60 @@
+﻿@model AtriumWebApp.Web.ClinicalOps.Models.ViewModel.VaccinationViewModel
+<div id="flu" class="vaccineModal">
+    <button class="float-right" id="btnClose_Flu">X</button>
+    <h2 class="margin_separator" style="text-align: center">Flu Vaccination</h2>
+    @using (Html.BeginForm("SaveVaccineInfluenza", "Vaccination", FormMethod.Post, new { id = "SaveVaccineFlu" }))
+    {
+        @Html.Hidden("VaccineId")
+        @Html.Hidden("VaccineType")
+        @Html.HiddenFor(m => m.PatientId)
+        @Html.HiddenFor(m => m.IsEmployeeVaccine)
+        @Html.HiddenFor(m => m.RoomId)
+        @Html.HiddenFor(m => m.PayerId)
+        <fieldset class="note">
+            <legend>Flu</legend>
+            <div class="container_16 margin_separator">
+                <div class="grid_4">
+                    <div class="container_16 bottom_pad">
+                        <div class="grid_1" style="text-align: right;">@Html.Label("Date:")</div>
+                        <div class="grid_2">@Html.TextBox("VaccineDate", "", new { @class = "isDate date dateUS", @id = "VaccineDate_Flu" })</div>
+                    </div>
+                    <div class="container_16 bottom_pad">
+                        <div class="grid_1" style="text-align: right;">@Html.Label("Lot #:")</div>
+                        <div class="grid_2">@Html.TextBox("LotNumber", "", new { @id = "LotNumber_Flu", style = "width: 75px;", maxlength = "16" })</div>
+                    </div>
+                </div>
+                <div class="grid_5">
+                    @if (!Model.IsEmployeeVaccine)
+                    {
+                        <div class="container_16" style="margin-left: -9px;">
+                            <div class="grid_3">@Html.Label("Consent Signed:")</div>
+                            <div class="grid_1">@Html.CheckBox("ConsentSignedFlg")</div>
+                        </div>
+                    }
+                    <div class="container_16" style="margin-left: -9px;">
+                        <div class="grid_3">@Html.Label("Offered and Refused:")</div>
+                        <div class="grid_1">@Html.CheckBox("OfferedRefusedFlg")</div>
+                        <div class="grid_2 offeredRefusedDateShow" style="display: none">@Html.TextBox("OfferedRefusedDate", "", new { @class = "isDate date", @id = "OfferedRefusedDate_Flu" })</div>
+                    </div>
+                    @if (!Model.IsEmployeeVaccine)
+                    {
+                        <div class="container_16" style="margin-left: -9px;">
+                            <div class="grid_3">@Html.Label("Prior to Admission:")</div>
+                            <div class="grid_1">@Html.CheckBox("ImmunizationPriorToAdmissionFlg")</div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </fieldset>
+        <br />
+        <div class="container_16 bottom_pad">
+            <div class="grid_3">&nbsp;</div>
+            <div class="grid_2">
+                <button type="button" id="btnSave_Flu">Save</button>
+            </div>
+            <div class="grid_2">
+                <button type="button" id="btnClear_Flu">Clear</button>
+            </div>
+        </div>
+    }
+</div>

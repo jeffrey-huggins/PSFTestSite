@@ -1,0 +1,403 @@
+@model PatientIFCEventViewModel
+@{
+    var infectionSites = new SelectList((List<PatientIFCSite>)ViewData["InfectionSites"], "PatientIFCSiteId", "PatientIFCSiteName");
+
+}
+<div align="center" class="container-fluid" style="min-width:660px;">
+
+    <form method="post" id="saveInfectionControl" asp-controller="InfectionControl" asp-action="SaveInfection" enctype="multipart/form-data">
+        <input type="hidden" asp-for="Event.PatientIFCEventId" />
+        <input type="hidden" asp-for="Event.PatientId" />
+        <input type="hidden" asp-for="Event.RoomId" />
+        <input type="hidden" asp-for="Event.CurrentPayerId" />
+        <hr />
+        <div class="row">
+            <div class="col-sm-6" id="vaccinationList">
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-3 text-left">
+                <label>Infection Control</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-10">
+                <div class="row">
+                    <div class="col-sm-2 text-left">
+                        Onset Date:
+                    </div>
+                    <div class="col-sm-2 text-left">
+                        <input asp-for="Event.OnsetDate" type="text" asp-format="{0:d}" class="isDate" />
+                        <br />
+                        <span asp-validation-for="Event.OnsetDate" class="text-danger"></span>
+                    </div>
+                    <div class="col-sm-2 text-left">
+                        Culture Date:
+                    </div>
+                    <div class="col-sm-2 text-left">
+                        <input asp-for="Event.CultureDate" type="text" asp-format="{0:d}" class="isDate" />
+                        <br />
+                        <span asp-validation-for="Event.CultureDate" class="text-danger"></span>
+                    </div>
+                    <div class="col-sm-3 text-left">
+                        Acquired Prior to Admission:
+                    </div>
+                    <div class="col-sm-1 text-left">
+                        <input asp-for="Event.AcquiredPriorToAdmissionFlg" />
+                        <br />
+                        <span asp-validation-for="Event.AcquiredPriorToAdmissionFlg" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-2 text-left">
+                        X-Ray Date:
+                    </div>
+                    <div class="col-sm-2 text-left">
+                        <input asp-for="Event.XRayDate" type="text" asp-format="{0:d}" class="isDate" />
+                        <br />
+                        <span asp-validation-for="Event.XRayDate" class="text-danger"></span>
+                    </div>
+                    <div class="col-sm-2 text-left">
+                        Re-Culture Date:
+                    </div>
+                    <div class="col-sm-2 text-left">
+                        <a href="#" id="reculture">Enter Re-Culture Dates</a>
+                    </div>
+                    <div class="col-sm-3 text-left">
+                        Hospitalization Required:
+                    </div>
+                    <div class="col-sm-1 text-left">
+                        <input asp-for="Event.HospitalizationRequiredFlg" />
+                        <br />
+                        <span asp-validation-for="Event.HospitalizationRequiredFlg" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-2 text-left">
+                        Site:
+                    </div>
+                    <div class="col-sm-2 text-left">
+                        <select asp-for="Event.PatientIFCSiteId" asp-items="infectionSites">
+                            <option selected="selected" value="">Select a Site</option>
+                        </select>
+                        <br />
+                        <span asp-validation-for="Event.PatientIFCSiteId" class="text-danger"></span>
+                    </div>
+                    <div class="col-sm-2 text-left">
+                        Resolved Date:
+                    </div>
+                    <div class="col-sm-2 text-left">
+                        <input asp-for="Event.ResolvedDate" type="text" asp-format="{0:d}" class="isDate" />
+                        <br />
+                        <span asp-validation-for="Event.ResolvedDate" class="text-danger"></span>
+                    </div>
+                    <div class="col-sm-3 text-left">
+                        Noscomial:
+                    </div>
+                    <div class="col-sm-1 text-left">
+                        <input asp-for="Event.NosocomialFlg" />
+                        <br />
+                        <span asp-validation-for="Event.NosocomialFlg" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-2">
+                Preventative Measures (2048 max):
+                <br />
+                <textarea asp-for="Event.PreventativeMeasuresDetail" style="width:100%"></textarea>
+                <br />
+                <span asp-validation-for="Event.PreventativeMeasuresDetail" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4 tableContainer">
+                <div class="row">
+                    <div class="col-sm-offset-2 col-sm-2">
+                        <a class="clearFilter" href="#">Reset</a>
+                    </div>
+                    <div class="col-sm-8">
+                        <input type="text" class="filter" />
+                    </div>
+                </div>
+                <input type="hidden" disabled asp-for="Limits.OrganismRequiredFlg" class="required" />
+                <input type="hidden" asp-for="Limits.OrganismMax" class="max" data-rule-table-count="true" />
+                <span asp-validation-for="Limits.OrganismMax" class="text-danger"></span>
+                <table id="organismTable">
+                    <thead>
+                        <tr>
+                            <th>
+
+                            </th>
+                            <th>
+                                Organism @Model.GetLimitDisplay("Organism")
+                            </th>
+                            <th>
+
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.Organisms.Count; i++)
+                        {
+                        <tr>
+                            <td>
+                                @Model.Organisms[i].Type.SortOrder
+                            </td>
+                            <td>
+                                
+                                @Model.Organisms[i].Type.PatientIFCOrganismName
+                            </td>
+                            <td>
+                                <input type="hidden" asp-for="Organisms[i].Type.PatientIFCOrganismId" />
+                                <input asp-for="Organisms[i].Selected" />
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-sm-4 tableContainer">
+                <div class="row">
+                    <div class="col-sm-offset-2 col-sm-2">
+                        <a class="clearFilter" href="#">Reset</a>
+                    </div>
+                    <div class="col-sm-8">
+                        <input type="text" class="filter" />
+                    </div>
+                </div>
+                <input type="hidden" disabled asp-for="Limits.SymptomRequiredFlg" class="required" />
+                <input type="hidden" asp-for="Limits.SymptomMax" class="max" data-rule-table-count="true" />
+                <span asp-validation-for="Limits.SymptomMax" class="text-danger"></span>
+                <table id="symptomTable">
+                    <thead>
+                        <tr>
+                            <th>
+
+                            </th>
+                            <th>
+                                Symptom @Model.GetLimitDisplay("Symptom")
+                            </th>
+                            <th>
+
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.Symptoms.Count; i++)
+                        {
+                            <tr>
+                                <td>
+                                    @Model.Symptoms[i].Type.SortOrder
+                                </td>
+                                <td>
+                                    
+                                    @Model.Symptoms[i].Type.PatientIFCSymptomName
+                                </td>
+                                <td>
+                                    <input type="hidden" asp-for="Symptoms[i].Type.PatientIFCSymptomId" />
+                                    <input asp-for="Symptoms[i].Selected" />
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-sm-4 tableContainer">
+                <div class="row">
+                    <div class="col-sm-offset-2 col-sm-2">
+                        <a class="clearFilter" href="#">Reset</a>
+                    </div>
+                    <div class="col-sm-8">
+                        <input type="text" class="filter" />
+                    </div>
+                </div>
+                <input type="hidden" disabled asp-for="Limits.DiagnosisRequiredFlg" class="required" />
+                <input type="hidden" asp-for="Limits.DiagnosisMax" class="max" data-rule-table-count="true" />
+                <span asp-validation-for="Limits.DiagnosisMax" class="text-danger"></span>
+                <table id="diagnosisTable">
+                    <thead>
+                        <tr>
+                            <th>
+
+                            </th>
+                            <th>
+                                Diagnosis @Model.GetLimitDisplay("Diagnosis")
+                            </th>
+                            <th>
+
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.Diagnosis.Count; i++)
+                        {
+                            <tr>
+                                <td>
+                                    @Model.Diagnosis[i].Type.SortOrder
+                                </td>
+                                <td>
+                                    
+                                    @Model.Diagnosis[i].Type.PatientIFCDiagnosisName
+                                </td>
+                                <td>
+                                    <input type="hidden" asp-for="Diagnosis[i].Type.PatientIFCDiagnosisId" />
+                                    <input asp-for="Diagnosis[i].Selected" />
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4 tableContainer">
+                <div class="row">
+                    <div class="col-sm-offset-2 col-sm-2">
+                        <a class="clearFilter" href="#">Reset</a>
+                    </div>
+                    <div class="col-sm-8">
+                        <input type="text" class="filter" />
+                    </div>
+                </div>
+                <input type="hidden" disabled asp-for="Limits.TypeOfPrecautionRequiredFlg" class="required" />
+                <input type="hidden" asp-for="Limits.TypeOfPrecautionMax" data-rule-table-count="true" class="max" />
+                <span asp-validation-for="Limits.TypeOfPrecautionMax" class="text-danger"></span>
+                <table id="precautionTable">
+                    <thead>
+                        <tr>
+                            <th>
+
+                            </th>
+                            <th>
+                                Type of Precaution @Model.GetLimitDisplay("Precaution")
+                            </th>
+                            <th>
+
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.Precautions.Count; i++)
+                        {
+                        <tr>
+                            <td>
+                                @Model.Precautions[i].Type.SortOrder
+                            </td>
+                            <td>
+                                
+                                @Model.Precautions[i].Type.PatientIFCTypeOfPrecautionName
+                            </td>
+                            <td>
+                                <input type="hidden" asp-for="Precautions[i].Type.PatientIFCTypeOfPrecautionId" />
+                                <input asp-for="Precautions[i].Selected" />
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-sm-4 tableContainer">
+                <div class="row">
+                    <div class="col-sm-offset-2 col-sm-2">
+                        <a class="clearFilter" href="#">Reset</a>
+                    </div>
+                    <div class="col-sm-8">
+                        <input type="text" class="filter" />
+                    </div>
+                </div>
+                <input type="hidden" disabled asp-for="Limits.AntibioticRequiredFlg" class="required" />
+                <input type="hidden" asp-for="Limits.AntibioticMax" data-rule-table-count="true" class="max" />
+                <span asp-validation-for="Limits.AntibioticMax" class="text-danger"></span>
+                <table id="antibioticTable">
+                    <thead>
+                        <tr>
+                            <th>
+
+                            </th>
+                            <th>
+                                Antibiotic @Model.GetLimitDisplay("Antibiotic")
+                            </th>
+                            <th>
+
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.Antibiotics.Count; i++)
+                        {
+                        <tr>
+                            <td>
+                                @Model.Antibiotics[i].Type.SortOrder
+                            </td>
+                            <td>
+                                
+                                @Model.Antibiotics[i].Type.PatientIFCAntibioticName
+                            </td>
+                            <td>
+                                <input type="hidden" asp-for="Antibiotics[i].Type.PatientIFCAntibioticId" />
+                                <input asp-for="Antibiotics[i].Selected" />
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 text-center">
+                <input type="submit" value="Save" id="saveInfection" />
+                <input type="button" value="Clear" id="clearInfection" />
+            </div>
+        </div>
+        <hr />
+        <div style="display:none;">
+            <div id="recultureModal">
+                <br />
+                <br />
+                <div class="text-center">
+                    <h2>Re-Culture Dates</h2>
+                    <input type="button" value="Add New Date" id="addRecultureDate" />
+                    <table id="recultureTable">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (var i = 0; i < Model.RecultureDates.Count; i++)
+                            {
+                                <tr data-row="@i">
+                                    <td>
+
+                                        <input asp-for="RecultureDates[i].Reculture.RecultureDate" class="isDate" type="text" asp-format="{0:d}" />
+                                    </td>
+                                    <td>
+                                        <input asp-for="RecultureDates[i].Reculture.PatientIFCEventId" type="hidden" />
+                                        <input asp-for="RecultureDates[i].Reculture.ReCultureId" type="hidden" />
+                                        <input asp-for="RecultureDates[i].DeleteDate" type="hidden" id="deleteDate" />
+                                        <a href="#" class="removeReculture">Remove</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <input type="button" value="Save" id="recultureSave" />
+                </div>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+<script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+<environment names="Development">
+    <script src="~/lib/jquery-form/src/jquery.form.js"></script>
+    <script src="~/js/AdditionalValidation.js"></script>
+</environment>
+<environment names="Testing,Production,Training">
+    <script src="~/lib/jquery-form/dist/jquery.form.min.js"></script>
+    <script src="~/js/AdditionalValidation.min.js"></script>
+</environment>

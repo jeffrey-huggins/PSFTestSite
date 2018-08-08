@@ -1,0 +1,38 @@
+﻿@model AtriumWebApp.Web.HR.Models.STNATrainingFacilityNote
+
+@{
+    ViewBag.Title = "Delete Training Note";
+}
+
+<h2>Delete Training Note</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<fieldset>
+    <legend>STNATrainingFacilityNote</legend>
+    @Html.HiddenFor(model => model.STNATrainingFacilityNoteId)
+    @Html.HiddenFor(model => model.InsertedDate)
+    <div class="editor-field">
+        @Html.LabelFor(model => model.STNATrainingFacilityId)<br />
+        @Html.HiddenFor(model => model.STNATrainingFacilityId)
+        @Html.DropDownList("STNATrainingFacilityList", ViewData["STNATrainingFacilityList"] as SelectList, new { @disabled = true })
+    </div>
+
+    <div class="editor-field">
+        @Html.LabelFor(model => model.NoteDate)<br />
+        @String.Format("{0:d}", Model.NoteDate)
+    </div>
+
+    <div class="editor-field">
+        @Html.LabelFor(model => model.Note)<br />
+
+        @Html.DisplayFor(model => model.Note)
+    </div>
+
+</fieldset>
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    <p>
+        <input type="submit" value="Delete" /> |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+}

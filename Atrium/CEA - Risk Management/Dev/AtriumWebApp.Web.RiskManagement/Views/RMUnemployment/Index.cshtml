@@ -1,0 +1,57 @@
+@model AtriumWebApp.Models.ViewModel.EmployeeSidebarViewModel
+@{
+    ViewBag.Title = "Unemployment Claim";
+    Context.Session.SetTimeout(30);
+}
+<div id="title-div">
+    <h2 id="title" style="margin-left: 180px">Unemployment Claim</h2>
+</div>
+<div id="content">
+    <div class="container">
+        <div class="row">
+            <div id="sideBar" class="col-sm-2">
+                @Html.EditorFor(m => m)
+            </div>
+            <div class="col-sm-6" style="padding-left:50px;">
+                <div class="row">
+                    <span class="instruction">Select an employee to continue...</span>
+                </div>
+                <div id="editForm">
+                </div>
+                <div class="row">
+                    <div class="col-sm-12" id="claimsList">
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4" style="border-left:solid thin black; min-height:470px;">
+                <div class="row">
+                    <div class="col-sm-12" id="payment">
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12" id="paymentList">
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12" id="note">
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12" id="noteList">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/lib/jquery-form/dist/jquery.form.min.js"></script>
+<environment names="Development">
+    <script src="~/js/Unemployment.js" asp-append-version="true"></script>
+</environment>
+<environment names="Testing,Production,Training">
+    <script src="~/js/Unemployment.min.js" asp-append-version="true"></script>
+</environment>

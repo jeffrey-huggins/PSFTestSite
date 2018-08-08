@@ -1,0 +1,46 @@
+@model List<UnemploymentClaimNotes>
+
+<table id="noteTable">
+    <thead>
+        <tr>
+            <th>
+                User
+            </th>
+            <th>
+                Date
+            </th>
+            <th>
+                Notes
+            </th>
+            <th>
+                Edit
+            </th>
+            <th>
+                Delete
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var note in Model)
+        {
+            <tr>
+                <td>
+                    @note.UserName
+                </td>
+                <td>
+                    @note.InsertedDate
+                </td>
+                <td>
+                    @note.Notes
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "CreateOrEditNote", new { claimId = note.ClaimId, noteId = note.ClaimNoteId }, new { @class = "edit" })
+                </td>
+                <td>
+                    @Html.ActionLink("Delete", "DeleteNote", new { noteId = note.ClaimNoteId }, new { @class = "delete" })
+                </td>
+            </tr>
+
+        }
+    </tbody>
+</table>

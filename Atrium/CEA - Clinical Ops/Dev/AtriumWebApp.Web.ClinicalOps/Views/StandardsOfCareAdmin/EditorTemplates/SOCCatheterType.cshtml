@@ -1,0 +1,13 @@
+@model SOCCatheterType
+
+@if (Model.SOCCatheterTypeId == 0)
+{
+    Model.DataEntryFlg = true;
+}
+
+<form asp-action="NewCatheter" asp-controller="StandardsOfCareAdmin">
+    <input asp-for="SOCCatheterTypeName" placeholder="New Catheter Type" />
+    <span asp-validation-for="SOCCatheterTypeName" class="text-danger"></span>
+    <input asp-for="DataEntryFlg" hidden="hidden" />
+    <input type="submit" value="Add" />
+</form>

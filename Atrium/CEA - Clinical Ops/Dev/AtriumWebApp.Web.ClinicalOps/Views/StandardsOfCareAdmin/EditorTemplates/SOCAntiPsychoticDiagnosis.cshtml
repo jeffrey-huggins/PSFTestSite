@@ -1,0 +1,13 @@
+@model SOCAntiPsychoticDiagnosis
+
+@if (Model.AntiPsychoticDiagnosisId == 0)
+{
+    Model.DataEntryFlg = true;
+}
+
+<form asp-action="NewAnti" asp-controller="StandardsOfCareAdmin">
+    <input asp-for="AntiPsychoticDiagnosisDesc" placeholder="New Antipsychotic Diagnosis" />
+    <span asp-validation-for="AntiPsychoticDiagnosisDesc" class="text-danger"></span>
+    <input asp-for="DataEntryFlg" hidden="hidden" />
+    <input type="submit" value="Add" />
+</form>

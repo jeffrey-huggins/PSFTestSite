@@ -1,0 +1,30 @@
+@model DocumentViewModel
+<div class="row documentRow" documentRow="@(ViewData["index"])">
+    @if (Model.Id == 0)
+    {
+        <input asp-for="Document" name="Documents[@(ViewData["index"])].Document" class="col-sm-5" />
+    }
+    else
+    {
+        @Html.ActionLink(Model.DocumentFileName, "StreamDocument", new { id = Model.Id, docSource = Model.Type }, new { @class = "col-sm-9" })
+    }
+    <div class="glyphicon glyphicon-remove removeDocument col-sm-1" docRow="@(ViewData["index"])"></div>
+    <div style="display:none">
+        
+        <input asp-for="ContentType" name="Documents[@(ViewData["index"])].ContentType" />
+        <input asp-for="DocumentFileName" name="Documents[@(ViewData["index"])].DocumentFileName" />
+        <input asp-for="Id" name="Documents[@(ViewData["index"])].Id" />
+        <input asp-for="ParentId" name="Documents[@(ViewData["index"])].ParentId" />
+        <input id="document_Delete" name="Documents[@(ViewData["index"])].Delete" class="deleteFlag" type="checkbox"/>
+    </div>
+    
+</div>
+
+<script>
+    $(".removeDocument").on("click", function () {
+        var docRow = $(this).attr("docRow");
+        $("[documentRow=" + docRow + "]").hide();
+        $("[documentRow=" + docRow + "]").find(".deleteFlag").prop("checked", true);
+        $("[documentRow=" + docRow + "]").find(".deleteFlag").val(true);
+    });
+</script>

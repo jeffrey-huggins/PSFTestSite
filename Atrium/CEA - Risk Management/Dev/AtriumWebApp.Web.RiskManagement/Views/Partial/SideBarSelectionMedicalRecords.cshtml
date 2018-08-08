@@ -1,0 +1,138 @@
+﻿@using AtriumWebApp.Web.Base.Library
+@using AtriumWebApp.Models
+
+
+@{ 
+    string RMMLookbackDate;
+    Context.Session.TryGetObject("RMMLookbackDate", out RMMLookbackDate);
+    string RMMCurrentFacility;
+    Context.Session.TryGetObject("RMMCurrentFacility", out RMMCurrentFacility);
+    string CensusDateInvalid;
+    Context.Session.TryGetObject("CensusDateInvalid", out CensusDateInvalid);
+    string CensusDateInFuture;
+    Context.Session.TryGetObject("CensusDateInFuture", out CensusDateInFuture);
+    IList<Community> FacilityList;
+    Context.Session.TryGetObject("FacilityList", out FacilityList);
+    IList<Patient> ResidentList;
+    Context.Session.TryGetObject("ResidentList", out ResidentList);
+    string RMMCurrentResidentIdString;
+    Context.Session.TryGetObject("RMMCurrentResidentIdString", out RMMCurrentResidentIdString);
+    string RMMCurrentResidentName;
+    Context.Session.TryGetObject("RMMCurrentResidentName", out RMMCurrentResidentName);
+    string RMMCurrentResidentFacility;
+    Context.Session.TryGetObject("RMMCurrentResidentFacility", out RMMCurrentResidentFacility);
+    string RMMCurrentResidentRoom;
+    Context.Session.TryGetObject("RMMCurrentResidentRoom", out RMMCurrentResidentRoom);
+    string RMMCurrentResidentBirthdate;
+    Context.Session.TryGetObject("RMMCurrentResidentBirthdate", out RMMCurrentResidentBirthdate);
+    string RMMCurrentResidentAdmitDate;
+    Context.Session.TryGetObject("RMMCurrentResidentAdmitDate", out RMMCurrentResidentAdmitDate);
+    string RMMCurrentResidentCensusDate;
+    Context.Session.TryGetObject("RMMCurrentResidentCensusDate", out RMMCurrentResidentCensusDate);
+    string RMMCurrentPatientStatus;
+    Context.Session.TryGetObject("RMMCurrentPatientStatus", out RMMCurrentPatientStatus);
+    string RMMCurrentResidentAdmissionDiagnosis;
+    Context.Session.TryGetObject("RMMCurrentResidentAdmissionDiagnosis", out RMMCurrentResidentAdmissionDiagnosis);
+    string RMMCurrentResidentDiagnosis1;
+    Context.Session.TryGetObject("RMMCurrentResidentDiagnosis1", out RMMCurrentResidentDiagnosis1);
+    string RMMCurrentResidentDiagnosis2;
+    Context.Session.TryGetObject("RMMCurrentResidentDiagnosis2", out RMMCurrentResidentDiagnosis2);
+    string RMMCurrentResidentDiagnosis3;
+    Context.Session.TryGetObject("RMMCurrentResidentDiagnosis3", out RMMCurrentResidentDiagnosis3);
+}
+
+<section class="left-column-picker" style="height: 550px; width: 225px;">
+
+    @using (Html.BeginForm("Lookback", "RMMedicalRecords", FormMethod.Post, new { id = "Lookback" }))
+    {
+        @Html.Label("Last Census Date:")<br />
+        @Html.TextBox("LookbackDate", RMMLookbackDate, new { @class = "dateUS", size = "10" })
+        @Html.Hidden("returnUrl", Context.UrlPath());
+        @Html.Hidden("CurrentCommunity", RMMCurrentFacility)
+        <input type="submit" value="Update" onclick="" /> 
+    }
+    @Html.Hidden("CensusDateInvalid", CensusDateInvalid)
+    @Html.Hidden("CensusDateInFuture", CensusDateInFuture)
+    @using (Html.BeginForm("SideDDL", "RMMedicalRecords", FormMethod.Post, new { id = "SideDDL" }))
+    {
+        @Html.Label("Community:")<br />
+        @Html.DropDownList("Communities", FacilityList as SelectList, new { id = "Communities" })
+        <br />
+        <br />
+        @Html.Label("Resident:")<br />
+        @Html.DropDownList("Residents", ResidentList as SelectList, "Select a Resident", new { id = "Residents", onselectedindexchanged = "this.form.submit();" })
+        <br />
+        @Html.Hidden("returnUrl", Context.UrlPath());
+    }
+
+    @Html.Hidden("CurrentResidentId", RMMCurrentResidentIdString)
+
+    @if (RMMCurrentResidentName == null)
+    {
+        <br />
+        <div style="color: red; font-weight: bold;">Please choose a Resident</div>
+    }
+    <br />@Html.Label("","Current Resident", new { style = "font-weight: bold" })
+    <p class="bold">
+        Name/Community:
+        <br />@RMMCurrentResidentName
+        <br />@RMMCurrentResidentFacility
+    </p>
+    <p class="bold">Rm#: @RMMCurrentResidentRoom</p>
+    <p class="bold">Birthdate: @RMMCurrentResidentBirthdate</p>
+    <p class="bold">Admit Date: @RMMCurrentResidentAdmitDate</p>
+    <p class="bold">Last Census Date: @RMMCurrentResidentCensusDate</p>
+    <p class="bold">Patient Status: @RMMCurrentPatientStatus</p>
+    <p class="bold">
+        Admission Diagnosis:<br />
+        @RMMCurrentResidentAdmissionDiagnosis
+    </p>
+    <p class="bold">
+        Diagnosis:
+        <br />
+        1. @RMMCurrentResidentDiagnosis1
+        <br />
+        2. @RMMCurrentResidentDiagnosis2
+        <br />
+        3. @RMMCurrentResidentDiagnosis3
+    </p>
+</section>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#LookbackDate").datepicker({
+            beforeShow: function (textbox, instance) {
+                instance.dpDiv.css({
+                    marginTop: '10px',
+                    marginLeft: '0px'
+                });
+            }
+        });
+        $(function () {
+            if ($("#CensusDateInvalid").val() == "1") {
+                alert("Error: Please enter a valid Last Census Date (mm/dd/yyyy)");
+            }
+            if ($("#CensusDateInFuture").val() == "1") {
+                alert("Error: You can not have a Census date that is in the future");
+            }
+        });
+        var currentCommunity = $("#CurrentCommunity").val();
+        $("#Communities").val(currentCommunity);
+
+        var currentResident = $("#CurrentResidentId").val();
+        $("#Residents").val(currentResident);
+
+        $("#Residents").change(function () {
+            var resident = $("#Residents option:selected").val();
+            if (resident != "") {
+                $("#SideDDL").submit();
+            }
+        });
+        $("#Communities").change(function () {
+            ShowProgress();
+            $.post( path + "RMMedicalRecords/ChangeCommunityForResident", { appCode: "RMM", facilityId: $("#Communities option:selected").val() }).done(function () {
+                window.location.reload();
+            });
+        });
+    });
+</script>

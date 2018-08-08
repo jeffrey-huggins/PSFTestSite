@@ -1,0 +1,38 @@
+﻿@model AtriumWebApp.Models.ViewModel.AdminHomeViewModel
+@{
+    ViewBag.Title = "Admin Page";
+}
+
+<div class="float-left">
+    <div class="container_12">
+        <div class="grid_2 bold">Server Name:</div>
+        <div class="grid_2">@Model.ServerName</div>
+    </div>
+    <div class="container_12">
+        <div class="grid_2 bold">Database Name:</div>
+        <div class="grid_2">@Model.DatabaseName</div>
+    </div>
+
+    <ul id="admin-links">
+@if (Model.HomeViewModel.HasAccessTo("PRTR"))
+{
+    <li><a href="~/PayrollTransferAdmin/">Payroll Transfer Admin Page</a></li>
+}
+        @*@if (Model.HomeViewModel.HasAccessTo("CSU"))
+        {
+            <li><a href="~/ADRAdmin/">Additional Development Request Admin Page</a></li>
+        }
+        @if (Model.HomeViewModel.HasAccessTo("POR"))
+        {
+            <li><a href="~/PurchaseOrderAdmin/">Purchase Order Admin Page</a>
+                <ul>
+                    <li><a href="~/PurchaseOrderAdmin/Vendors/">Vendor Admin Page</a></li>
+                </ul>
+            </li>
+        }
+        @if (Model.HomeViewModel.HasAccessTo("CON")) 
+        {
+            <li><a href="~/ContractAdmin/">Contract Management Admin Page</a></li>
+        }*@
+    </ul>
+</div>

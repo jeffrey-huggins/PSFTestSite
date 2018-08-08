@@ -1,0 +1,46 @@
+@model List<AtriumWebApp.Web.RiskManagement.Models.UnemploymentClaim>
+
+<table id="claimTable">
+    <thead>
+        <tr>
+            <th>
+                Community
+            </th>
+            <th>
+                Application Date
+            </th>
+            <th>
+                Reason for Unemployment
+            </th>
+            <th>
+                Edit
+            </th>
+            <th>
+                Delete
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var claim in Model)
+        {
+            <tr>
+                <td>
+                    @claim.Employee.Community.CommunityShortName
+                </td>
+                <td>
+                    @claim.ApplicationDate.ToString("d")
+                </td>
+                <td>
+                    @claim.Reason.ReasonDesc
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "CreateOrEditClaim", new { employeeId = claim.EmployeeId, claimId = claim.ClaimId }, new { @class = "edit" })
+                </td>
+                <td>
+                    @Html.ActionLink("Delete", "DeleteClaim", new { claimId = claim.ClaimId }, new { @class = "delete" })
+                </td>
+            </tr>
+
+        }
+    </tbody>
+</table>

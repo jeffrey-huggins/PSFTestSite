@@ -1,0 +1,13 @@
+@model AtriumWebApp.Web.ClinicalOps.Models.PatientIFCOrganism
+
+@if(Model.PatientIFCOrganismId == 0)
+{
+    Model.DataEntryFlg = true;
+}
+
+<form asp-action="NewOrganism" asp-controller="InfectionControlAdmin">
+    <input asp-for="PatientIFCOrganismName" placeholder="New Organism" />
+    <span asp-validation-for="PatientIFCOrganismName" class="text-danger"></span>
+    <input asp-for="DataEntryFlg" hidden="hidden" />
+    <input type="submit" value="Add" />
+</form>

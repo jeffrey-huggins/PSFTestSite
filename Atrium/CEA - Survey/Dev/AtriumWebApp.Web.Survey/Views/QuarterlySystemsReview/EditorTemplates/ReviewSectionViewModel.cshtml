@@ -1,0 +1,49 @@
+﻿@model AtriumWebApp.Web.Survey.Models.ViewModel.ReviewSectionViewModel
+@Html.HiddenFor(m => m.Id)
+@Html.HiddenFor(m => m.SectionType)
+<section id="Section@(Model.Id)">
+    <div class="container_16">
+        <div class="grid_10">
+            <strong class="SectionName">@Model.Name</strong>
+        </div>
+        <div class="grid_3">
+            <strong class="float-right">Points Earned: <span class="SectionEarnedPoints">@Model.EarnedPoints</span></strong>
+        </div>
+        <div class="grid_3">
+            <strong class="float-right">Possible Points: <span class="SectionPossiblePoints">@Model.PossiblePoints</span></strong>
+        </div>
+    </div>
+    @for (int i = 0; i < Model.Questions.Count; i++)
+    {
+        var questionDivClass = i % 2 == 0 ? "even" : "odd";
+    <div id="Question@(Model.Questions[i].Id)" class="container_16 Question @(questionDivClass)">
+        <div class="grid_10">
+            <span class="QuestionText">@Model.Questions[i].Text</span>
+        </div>
+        <div class="grid_3 QuestionPointsEarned">
+            <span class="float-right">@Model.Questions[i].EarnedPoints</span>
+        </div>
+        <div class="grid_3 QuestionMaxPoints">
+            <span class="float-right">@Model.Questions[i].MaxPoints</span>
+        </div>
+    </div>
+    }
+    <br />
+    <div class="container_16 margin_separator dock-container">
+        <div class="grid_13">
+            Comments:
+            <br />
+            @Html.TextAreaFor(m => m.Comments)
+        </div>
+        <div class="grid_3 dock-bottom">
+            @if (Model.HasSample || !Model.RequiresSample)
+            {
+            <button class="SectionReviewCriteria float-right" data-button-url="@Url.Action("Audit", new { id = Model.Id, type = Model.SectionType })">Review Criteria</button>
+            }
+            else
+            {
+            <button class="SectionSelectSamples float-right" data-button-url="@Url.Action("Sample", new { id = Model.Id, type = Model.SectionType })">Select Samples</button>
+            }
+        </div>
+    </div>
+</section>

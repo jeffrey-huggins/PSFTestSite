@@ -1,0 +1,46 @@
+﻿@model AtriumWebApp.Web.Utilization.Models.SkilledChartingGuideline
+@{
+    ViewBag.Title = "Documentation Queues";
+}
+
+
+
+@*<h2 id="title" style="margin-left: 200px">@string.Format("{0} Documentation Queues", Model.GuidelineName)</h2>*@
+<h2 id="title">@Model.GuidelineName</h2>
+<div id="admin-body" class="float-left">
+    <table id="DocumentationQueues">
+        <thead>
+            <tr>
+                <th>Documentation Queue</th>
+                <th>Sort Order</th>
+                <th>Data Entry Flag</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody style="vertical-align: top;">
+            @foreach (var queue in Model.DocumentationQueues)
+            {
+                <tr id="@queue.DocumentationQueueId">
+                    <td>@Html.Raw(queue.DocumentationQueueName.Replace("\n", "<br>"))</td>
+                    <td>@queue.SortOrder</td>
+                    <td>@Html.CheckBox("EnableDisable", queue.DataEntryFlg, new { @class = "EnableDisable" })</td>
+                    <td>
+                        <a class="edit" href="">Edit</a>
+                        <a class="delete" href="">Delete</a>
+                    </td>
+                    <td>@queue.DocumentationQueueId</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <br />
+</div>
+@Html.EditorFor(a => a.NewDocQueue,"","")
+<environment names="Development">
+    <script src="~/js/DocumentationQueueAdmin.js" asp-append-version="true"></script>
+</environment>
+<environment names="Testing,Production,Training">
+    <script src="~/js/DocumentationQueueAdmin.min.js" asp-append-version="true"></script>
+</environment>

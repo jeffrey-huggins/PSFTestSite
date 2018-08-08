@@ -1,0 +1,47 @@
+@model PurchaseOrderVendor
+<div class="panel-heading">Vendor Information</div>
+<div class="panel-body">
+    <div class="row">
+        <div class="col-md-3">
+            <label>
+                Vendor
+            </label>
+        </div>
+        <div class="col-md-9">
+            @Model.VendorName
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <label>Address</label>
+        </div>
+        <div class="col-md-9">
+            @Model.Address1
+            @if (!string.IsNullOrEmpty(Model.Address2))
+            {
+                <br />
+                                @Model.Address2
+            }
+            <br />
+            @Model.City, @Model.StateCd @Model.ZipCode
+        </div>
+    </div>
+    <div class="row">
+        <label class="col-md-3 ">Email</label>
+        <div class="col-md-9">
+            @Model.eMail
+        </div>
+    </div>
+    <div class="row">
+        <label class="col-md-3 ">Phone</label>
+        <div class="col-md-9">
+            @Model.Phone
+        </div>
+    </div>
+    <div class="row">
+        <label class="col-md-3">Fax</label>
+        <div class="col-md-9">
+            @Model.Fax
+        </div>
+    </div>
+</div>

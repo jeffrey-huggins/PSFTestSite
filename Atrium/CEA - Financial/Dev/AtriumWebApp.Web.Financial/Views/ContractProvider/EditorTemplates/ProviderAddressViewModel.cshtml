@@ -1,0 +1,17 @@
+﻿@model AtriumWebApp.Models.ViewModel.ProviderAddressViewModel
+<tr>
+    <td>@Html.TextBoxFor(m => m.AddressLineOne, new { size = "10", data_field = "AddressLineOne" })</td>
+    <td>@Html.TextBoxFor(m => m.AddressLineTwo, new { size = "10", data_field = "AddressLineTwo" })</td>
+    <td>@Html.TextBoxFor(m => m.City, new { size = "10", data_field = "City" })</td>
+    <td>@Html.TextBoxFor(m => m.County, new { size = "10", data_field = "County" })</td>
+    <td>@Html.DropDownListFor(m => m.StateId, new SelectList(Model.States, "StateCd", "StateName", Model.StateId), new { data_field = "States", @class = "States" })</td>
+    <td>@Html.TextBoxFor(m => m.ZipCode, new {size = "10", data_field = "ZipCode"})</td>
+    <td>@Html.DropDownListFor(m => m.AddressTypeId, new SelectList(Model.AddressTypes, "Id", "Name", Model.StateId), new { data_field = "AddressTypes", @class = "AddressTypes" })</td>
+    <td>
+        <button type="button" class="delete-item">&times;</button>
+        @Html.HiddenFor(m => m.Id, new { data_field = "Id" })
+        @Html.HiddenFor(m => m.StateId, new { data_field = "StateId" })
+        @Html.HiddenFor(m => m.AddressTypeId, new { data_field = "AddressTypeId" })
+        @Html.HiddenFor(m => m.ContractProviderId, new { data_field = "ContractProviderId" })
+    </td>
+</tr>

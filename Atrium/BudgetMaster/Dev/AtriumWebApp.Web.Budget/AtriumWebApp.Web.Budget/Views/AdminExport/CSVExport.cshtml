@@ -1,0 +1,88 @@
+@model List<AtriumWebApp.Models.Budget.Facility>
+
+<style>
+    #facilityCSVExportTable {
+        border: solid thin gray;
+
+    }
+        #facilityCSVExportTable tr:hover {
+            cursor:pointer;
+        }
+        #facilityCSVExportTable td {
+            border-left: solid thin gray;
+        }
+
+        #facilityCSVExportTable thead {
+            border-bottom: solid thin gray;
+        }
+    .exportButton {
+        max-width: 140px;
+        width: 140px;
+        white-space: normal;
+        max-height: 50px;
+        height: 50px;
+    }
+    #exportButtonContainer{
+        float:right;
+    }
+    #csvExportTableContainer {
+        max-width: 640px;
+        display:inline-block;
+    }
+    .disabledOverlay{
+        background-color: lightgray;
+    }
+</style>
+
+Select Facilities:
+<div style="float:right;display:inline-block">
+    Export All:
+    <input type="checkbox" id="selectAllCSVExport" style="float:right" />
+</div>
+<br />
+<br />
+
+<div>
+    <div id="csvExportTableContainer" style="overflow-y:scroll;height:350px">
+        <table id="facilityCSVExportTable">
+            <thead>
+                <tr>
+                    <td>
+                        State
+                    </td>
+                    <td>
+                        Region
+                    </td>
+                    <td>
+                        Facility Number
+                    </td>
+                    <td>
+                        Facility Name
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var facility in Model)
+            {
+                    <tr rowNum="@facility.FacilityNb">
+                        <td>
+                            @facility.State.StateCd
+                        </td>
+                        <td>
+                            @facility.Region.RegionNm
+                        </td>
+                        <td>
+                            @facility.FacilityNb
+                        </td>
+                        <td style="min-width:340px">
+                            @facility.FacilityNm
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div id="exportButtonContainer">
+        <input type="button" id="csvExport" value="Export Facilities to CSV File" class="exportButton" />
+    </div>
+</div>

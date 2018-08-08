@@ -1,0 +1,71 @@
+@model AtriumWebApp.Models.Budget.ViewModels.OtherRevenueViewModel
+
+<style>
+    .censusField {
+        width: 100px;
+    }
+</style>
+
+@{
+    var glAccount = Model.MonthlyCensus.First().GeneralLedger;
+    SelectList ledgerAccounts = new SelectList(Model.GeneralLedgers.OrderBy(a => a.GLAccountNb).ToList(), "GLAccountIndex", "DisplayName", glAccount.GLAccountIndex);
+}
+<table>
+    <tr>
+        <td>
+            <label>GL Account</label>
+        </td>
+        <td>
+            <select asp-items="ledgerAccounts" id="otherReveGLAccountID" class="glDropdown"></select>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Account Name
+        </td>
+        <td>
+            <input value="@glAccount.GLAccountNm" disabled="disabled" class="glAccountName" />
+        </td>
+    </tr>
+</table>
+
+<br />
+<br />
+Other Revenue Detail 
+<table id="otherRevenue">
+    <thead>
+        <tr>
+            <th>
+                Month
+            </th>
+            <th>
+                Fixed Amt
+            </th>
+            <th>
+                PPD
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var revenue in Model.MonthlyCensus)
+        {
+            SelectList months = new SelectList(Model.Months, "MonthID", "MonthNm", revenue.MonthID);
+            var monthlyADC = revenue.MonthTable.Census.Where(a => a.FacilityID == revenue.FacilityID && a.MonthID == revenue.MonthID).Sum(b => b.AvgDailyCensus);
+            var PPD = revenue.RevenueAmt / (monthlyADC * revenue.MonthTable.NumDaysInMonth);
+            <tr>
+                <td>
+                    <select asp-items="months"></select>
+                </td>
+
+                <td>
+                    @Html.TextBoxFor(m => revenue.RevenueAmt, "{0:C}", new { @class = "censusField" })
+                </td>
+                <td>
+                    @Html.TextBoxFor(m => PPD, "{0:C}", new { disabled = "disabled", @class = "censusField" })
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>

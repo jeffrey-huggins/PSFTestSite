@@ -1,0 +1,14 @@
+@model List<AtriumWebApp.Web.RiskManagement.Models.ViewModel.DocumentViewModel>
+@{ 
+    var newDocument = new AtriumWebApp.Web.RiskManagement.Models.ViewModel.DocumentViewModel();
+}
+<link href="~/lib/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+<div style="max-width:515px;overflow:hidden;">
+    <label class="bold">Sent Documents</label>
+    @Html.EditorFor(a => newDocument, "", "")
+    <hr />
+    @foreach (var document in Model.OrderBy(a => a.SentDate))
+    {
+        @Html.EditorFor(a => document, "", "")
+    }
+</div>

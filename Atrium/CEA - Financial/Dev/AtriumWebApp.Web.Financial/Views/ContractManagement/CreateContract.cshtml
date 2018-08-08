@@ -1,0 +1,5 @@
+﻿@model AtriumWebApp.Models.ViewModel.ContractListViewModel
+@using (Html.BeginForm("CreateContract", "ContractManagement", FormMethod.Post, new { id = "contractEditForm", enctype = "multipart/form-data" }))
+{
+    @Html.EditorForModel()
+}

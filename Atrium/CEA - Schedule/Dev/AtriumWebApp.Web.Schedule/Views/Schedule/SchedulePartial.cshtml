@@ -1,0 +1,924 @@
+﻿@model AtriumWebApp.Web.Schedule.Models.ViewModel.PayPeriodScheduleViewModel
+
+@* Right now we are assuming only SNF for payergroup as per Rick on 3-30-17 *@
+@*@foreach (AtriumWebApp.Web.Schedule.Models.SchdlPayerGroup payerGroup in Model.PayerGroup)*@
+@{
+    AtriumWebApp.Web.Schedule.Models.SchdlPayerGroup payerGroup = Model.PayerGroup.Where(a => a.AtriumPayerGroupCode == "SNF").FirstOrDefault();
+    string payerCode = payerGroup.AtriumPayerGroupCode;
+}
+@Html.HiddenFor(m => m.IsDisabled)
+@Html.HiddenFor(m => payerGroup.Id)
+<div class="grid_20 forcedWidth">
+    @Html.HiddenFor(m => Model.PayPeriod.Id)
+    <table id="coreTable">
+        <tr>
+            <td>
+                <div id="summaryTopTableDIV" class="grid_20 marginLeft marginRight">
+                    <table id="summaryTable">
+                        <tr id="trSummaryOLD">
+                            <td colspan="5" class="coreColumn">
+                                <table id="tblSummaryPPD" class="dataTable">
+                                    <tbody id="thColumnSummaryPPD" class="marginRight">
+                                        <tr>
+                                            <td><label class="right"><strong>PPD:</strong></label></td>
+                                            <td><label class="right"><strong>Budgeted:</strong></label></td>
+                                            <td><label class="right"><strong>Schedule:</strong></label></td>
+                                        </tr>
+                                        <tr><td colspan="3"><hr /></td></tr>
+                                        <tr id="trSum-RN">
+                                            <td>
+                                                <label class="right">RN:</label>
+                                            </td>
+                                            <td>
+                                                <span class="right" id="summaryExpectedPPD_RN">
+                                                    @Model.PPDSummary.First(a => a.PPD == "RN").Budgeted.ToString("0.00")
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="right" id="summaryActualPPD_RN">
+                                                    @Model.PPDSummary.First(a => a.PPD == "RN").Schedule.ToString("0.00")
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr id="trSum-LPN">
+                                            <td>
+                                                <label class="right">LPN:</label>
+                                            </td>
+                                            <td>
+                                                <span class="right" id="summaryExpectedPPD_LPN">
+                                                    @Model.PPDSummary.First(a => a.PPD == "LPN").Budgeted.ToString("0.00")
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="right" id="summaryActualPPD_LPN">
+                                                    @Model.PPDSummary.First(a => a.PPD == "LPN").Schedule.ToString("0.00")
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr id="trSum-CNA">
+                                            <td>
+                                                <label class="right">CNA:</label>
+                                            </td>
+                                            <td>
+                                                <span class="right" id="summaryExpectedPPD_CNA">
+                                                    @Model.PPDSummary.First(a => a.PPD == "CNA").Budgeted.ToString("0.00")
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="right" id="summaryActualPPD_CNA">
+                                                    @Model.PPDSummary.First(a => a.PPD == "CNA").Schedule.ToString("0.00")
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr id="trSum-RN_LPN">
+                                            @{
+                                                decimal RNLPNBudget = Model.PPDSummary.Where(a => a.PPD == "RN" || a.PPD == "LPN").Sum(a => a.Budgeted);
+                                                decimal RNLPNActual = 0;
+                                                if (payerGroup.AvgDailyCensusCnt != 0)
+                                                {
+                                                    RNLPNActual = Model.PPDSummary.Where(a => a.PPD == "RN" || a.PPD == "LPN").Sum(a => a.TotalPPDHours) / (payerGroup.AvgDailyCensusCnt * 14);
+                                                }
+
+                                            }
+                                            <td>
+                                                <label class="right">RN,LPN:</label>
+                                            </td>
+                                            <td>
+                                                <span class="right" id="summaryExpectedPPD_RN_LPN">
+                                                    @RNLPNBudget.ToString("0.00")
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="right" id="summaryActualPPD_RN_LPN">
+                                                    @RNLPNActual.ToString("0.00")
+                                                </span>
+                                            </td>
+                                        </tr>
+
+                                        <tr id="trSum-RN_LPN_CNA">
+                                            @{
+                                                decimal allBudget = Model.PPDSummary.Sum(a => a.Budgeted);
+                                                decimal allActual = 0;
+                                                if (payerGroup.AvgDailyCensusCnt != 0)
+                                                {
+                                                    allActual = Model.PPDSummary.Sum(a => a.TotalPPDHours) / (payerGroup.AvgDailyCensusCnt * 14);
+
+                                                }
+                                            }
+                                            <td>
+                                                <label class="right">RN,LPN,CNA:</label>
+                                            </td>
+                                            <td>
+                                                <span class="right" id="summaryExpectedPPD_RN_LPN_CNA">
+                                                    @allBudget.ToString("0.00")
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="right" id="summaryActualPPD_RN_LPN_CNA">
+                                                    @allActual.ToString("0.00")
+                                                </span>
+                                            </td>
+                                        </tr>
+
+                                        <tr><td colspan="3"><hr /></td></tr>
+                                        <tr class="censusRoww">
+                                            <td>AVG Daily Census:</td>
+                                            <td colspan="2">
+                                                @if (Model.IsDisabled)
+                                                {
+                                                    @Html.TextBoxFor(m => payerGroup.AvgDailyCensusCnt, "{0:0.00}", new { disabled = "Disabled" })
+                                                }
+                                                else
+                                                {
+                                                    @Html.TextBoxFor(m => payerGroup.AvgDailyCensusCnt, "{0:0.00}", new { onchange = "UpdateSummaryHours();" })
+                                                }
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                            <td colspan="5">
+                                <div id="scheduleSummaryScrollDIV">
+                                    <table id="tblSummaryALL" class="dataTable">
+                                        <tbody>
+                                            <tr id="trSummary">
+                                                @{
+                                                    decimal runningTotal = 0.0m;
+                                                    decimal runningPPDTotal = 0.0m;
+                                                    string runningTotalSuffix = "";
+                                                }
+                                                @foreach (var summary in Model.Hours.Where(a => a.PayerGroupCode == payerCode))
+                                                {
+                                                    string keySuffix = summary.Key;
+                                                    runningTotalSuffix += keySuffix + ",";
+                                                    string empTitleId = "EmployeeTitle_" + keySuffix;
+                                                    string sumTabId = "SummaryTAB_" + keySuffix;
+                                                    string sumEmpId = "Employees_" + keySuffix;
+                                                    string sumEmpULId = "EmployeesUl_" + keySuffix;
+                                                    string sumRowTotalId = "SummaryTotalHours_" + keySuffix;
+
+
+                                                    <td class="coreColumn" id="@sumTabId" colspan="5">
+                                                        <table class="dataTable" id="tblSummary">
+                                                            <tbody id="thColumnSummary">
+                                                                <tr id="@empTitleId">
+                                                                    <td>
+                                                                        <label>
+                                                                            <strong>@summary.Key:</strong>
+                                                                        </label>
+                                                                        <hr>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr id="@sumEmpId">
+                                                                    <td>
+                                                                        <div class="columnSummaryScrollDIV">
+                                                                            <ul class="Summary" id="@sumEmpULId">
+                                                                                @if (summary.EmployeeTotals != null && summary.EmployeeTotals.Count > 0)
+                                                                                {
+                                                                                    foreach (KeyValuePair<AtriumWebApp.Models.Employee, decimal> row in summary.EmployeeTotals.OrderBy(a => a.Key.LastName))
+                                                                                    {
+                                                                                        <li>
+                                                                                            @{
+                                                                                        string css = "";
+                                                                                        if (row.Value > 80)
+                                                                                        {
+                                                                                            css = "redText";
+                                                                                        }
+                                                                                            }
+                                                                                            <span class="@css"><label>@row.Key.LastName, @row.Key.FirstName</label></span>
+                                                                                            <span class="right"><label id="EMP/@row.Key.EmployeeId">@row.Value.ToString("0.0")</label></span>
+                                                                                        </li>
+                                                                                    }
+                                                                                }
+
+                                                                            </ul>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr id="@keySuffix">
+                                                                    <td>
+                                                                        <div class="EmployeeTotalHoursDIV">
+                                                                            <label>Total @keySuffix Hours:</label>
+                                                                            <label class="rightAndPadded" id="@sumRowTotalId">@Model.PPDSummary.First(a => a.PPD == keySuffix).TotalEmpHours.ToString("0.0")</label>
+                                                                            <div class="hidden" id="PPDSummaryTotalHours_@keySuffix">@Model.PPDSummary.First(a => a.PPD == keySuffix).TotalPPDHours.ToString("0.0")</div>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                                @if (runningTotal != 0)
+                                                                {
+                                                                    {
+                                                                        runningTotal += Model.PPDSummary.First(a => a.PPD == keySuffix).TotalEmpHours;
+                                                                        runningPPDTotal += Model.PPDSummary.First(a => a.PPD == keySuffix).TotalPPDHours;
+                                                                    }
+                                                                    <tr>
+                                                                        <td id="@runningTotalSuffix.TrimEnd(',')">
+                                                                            <div>
+                                                                                <label class="EmployeeTotalHoursDIV">
+                                                                                    Total @runningTotalSuffix.TrimEnd(',') Hours:
+                                                                                </label>
+                                                                                <label class="rightAndPadded" id="SummaryTotalHours_@runningTotalSuffix.TrimEnd(',').Replace(',','_')">
+                                                                                    @runningTotal.ToString("0.0")
+                                                                                </label>
+                                                                                <div class="hidden" id="PPDSummaryTotalHours_@runningTotalSuffix.TrimEnd(',').Replace(',','_')">
+                                                                                    @runningPPDTotal
+                                                                                </div>
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>
+                                                                }
+                                                                else
+                                                                {
+                                                                    runningTotal += Model.PPDSummary.First(a => a.PPD == keySuffix).TotalEmpHours;
+                                                                    runningPPDTotal += Model.PPDSummary.First(a => a.PPD == keySuffix).TotalPPDHours;
+                                                                }
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                }
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </td>
+
+                        </tr>
+                    </table>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="grid_20">
+                    <div id="tabs">
+                        <ul>
+                            <li>
+                                <a href="#tabsNurses">Nurses</a>
+                            </li>
+                            <li>
+                                <a href="#tabsCNA">CNA</a>
+                            </li>
+
+                            @{
+                                var RNGenLedger = payerGroup.ScheduleLedger.Where(a => a.GeneralLedger.AccountNbr == "5101.00").FirstOrDefault();
+                                var LPNGenLedger = payerGroup.ScheduleLedger.Where(a => a.GeneralLedger.AccountNbr == "5103.00").FirstOrDefault();
+                                var CNAGenLedger = payerGroup.ScheduleLedger.Where(a => a.GeneralLedger.AccountNbr == "5105.00").FirstOrDefault();
+                            }
+                            <li id="tabsNursesPPD">
+                                <table class="tabCensusPPD">
+                                    <tbody>
+                                        <tr>
+                                            <td id="tdCommunityPPD_RN" class="paddingLeftRight">
+                                                <label>Budget PPD RN:</label><br />
+                                                @if (Model.IsDisabled)
+                                                {
+                                                    @Html.TextBoxFor(m => RNGenLedger.HourPPDCnt, new { disabled = "disabled" })
+                                                }
+                                                else
+                                                {
+                                                    @Html.TextBoxFor(m => RNGenLedger.HourPPDCnt, new { onchange = "UpdateSummaryHours();" })
+                                                }
+                                            </td>
+                                            <td id="tdCommunityPPD_LPN" class="paddingLeftRight">
+                                                <label>Budget PPD LPN:</label><br />
+                                                @if (Model.IsDisabled)
+                                                {
+                                                    @Html.TextBoxFor(m => LPNGenLedger.HourPPDCnt, new { disabled = "disabled" })
+                                                }
+                                                else
+                                                {
+                                                    @Html.TextBoxFor(m => LPNGenLedger.HourPPDCnt, new { onchange = "UpdateSummaryHours();" })
+                                                }
+                                            </td>
+                                            <td class="budgetTotal paddingLeftRight">
+                                                <span class="left">Budgeted RN Hours per Week:</span>
+                                                <span class="right"><strong><text id="totalHours_RN" class="right">@Model.PPDSummary.First(a => a.PPD == "RN").BudgetedHoursPerWeek.ToString("0.0")</text></strong></span>
+                                                <br>
+                                                <span class="left">Budgeted LPN Hours per Week:</span>
+                                                <span class="right"><strong><text id="totalHours_LPN" class="right">@Model.PPDSummary.First(a => a.PPD == "LPN").BudgetedHoursPerWeek.ToString("0.0")</text></strong></span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </li>
+                            <li id="tabsCNAPPD" style="display: none;">
+                                <table class="tabCensusPPD">
+                                    <tr>
+                                        <td id="tdCommunityPPD_CNA" class="paddingLeftRight">
+                                            <label>Budget PPD CNA:</label><br />
+                                            @if (Model.IsDisabled)
+                                            {
+                                                @Html.TextBoxFor(m => CNAGenLedger.HourPPDCnt, new { disabled = "disabled" })
+                                            }
+                                            else
+                                            {
+                                                @Html.TextBoxFor(m => CNAGenLedger.HourPPDCnt, new { onchange = "UpdateSummaryHours();" })
+                                            }
+
+                                        </td>
+                                        <td class="budgetTotal paddingLeftRight">
+                                            <span class="left">Budgeted CNA Hours per Week:</span>
+                                            <span class="right"><strong><text id="totalHours_CNA" class="right">@Model.PPDSummary.First(a => a.PPD == "CNA").BudgetedHoursPerWeek.ToString("0.0")</text></strong></span>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </li>
+                            <li class="center right" role="presentation">
+                                Schedule: @Model.PayPeriodStart.ToString("yyyy MMMM d")
+                            </li>
+
+                        </ul>
+                        <div id="tabsNurses">
+
+                            <div class="grid_20 schedule">
+                                <div id="scheduleTableDIV" role="grid">
+                                    <table id="scheduleTableHeader" class="schedule_outer">
+                                        <thead>
+                                            <tr></tr>
+                                            <tr class="thRowHeader">
+                                                <th class="outer"></th>
+                                                <th class="outer"><text>Employees:</text></th>
+                                                <th class="outer">
+                                                    <table id="tblColumnHeaders" class="schedule_inner">
+                                                        <thead>
+                                                            <tr>
+                                                                <th class="removeSlotRowTd">&nbsp;</th>
+                                                                @{
+                                                                    DateTime startDT = Model.PayPeriodStart;
+                                                                    System.Globalization.DateTimeFormatInfo dtfi =
+                                                                    new System.Globalization.DateTimeFormatInfo();
+                                                                    dtfi.ShortDatePattern = "yyyyMMdd";
+
+                                                                    //GetShortestDayName
+                                                                    for (int n = 0; n < 14; n++)
+                                                                    {
+                                                                        DateTime dayDT = startDT.AddDays(n);
+                                                                        <th>@dtfi.GetShortestDayName(dayDT.DayOfWeek)<br />@dayDT.ToString("M/d")</th>
+                                                                    }
+
+                                                                }
+                                                            </tr>
+                                                        </thead>
+                                                    </table>
+                                                </th>
+                                                <th class="outer center cellPadding">Total:</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                    <br />
+                                    <br />
+                                    <div id="scheduleDIV" class="scheduleDIV">
+                                        <table id="scheduleTable" class="scheduleScrollTable schedule_outer">
+                                            <tbody id="scheduleTableBody" class="scheduleScrollBody">
+                                                @{
+                                                    int[] shifts = { 1, 2, 3 };
+                                                    List
+                                                    <string>
+                                                        types = new List<string>
+                                                            ();
+                                                    types.Add("RN");
+                                                    types.Add("LPN");
+                                                    types.Add("RN,LPN");
+                                                }
+                                                @foreach (int shift in shifts)
+                                                {
+
+                                                    foreach (string type in types.Where(a => !a.Contains(',')))
+                                                    {
+                                                        <tr id="SlotRowTitle_@shift" role="row" class="shiftSlotRowTitle">
+                                                            <td id="WorkShiftId" class="center outSR">@shift</td>
+                                                            @{
+                                                        var btnIdIndex = "AddScheduleSlotRow_" + shift.ToString();
+                                                        var shiftAdd = type + "_Shift_" + shift.ToString();
+                                                            }
+                                                            <td id="Shift_Add_@shiftAdd" class="outSR">
+                                                                <div class="selectEmployeeTitle">
+                                                                    <strong>@type Selected Nurses:</strong>
+                                                                    @if (Model.IsDisabled)
+                                                                    {
+                                                                        <input class="center AddScheduleSlotRow btn glyphicon glyphicon-plus" id="@btnIdIndex" type="button" value=" + " title="Click '+' to ADD a Row .." disabled="disabled" />
+                                                                    }
+                                                                    else
+                                                                    {
+
+                                                                        <input class="center AddScheduleSlotRow btn glyphicon glyphicon-plus" id="@btnIdIndex" type="button" value=" + " title="Click '+' to ADD a Row .." onclick="AddSlot(@Model.GetGeneralLedger(type,shift,payerGroup).Id,@shift,'@type')" />
+                                                                    }
+                                                                </div>
+                                                            </td>
+                                                            <td class="slotTd outSR"></td>
+                                                            <td class="center cellPadding outSR"></td>
+                                                        </tr>
+                                                        <tr id="@shift/_@type" role="row" class="shiftSlotRow">
+                                                            <td class="center outSR"></td>
+                                                            <td id="slotTd" class="slotTd outSR" colspan="2">
+
+                                                                @{
+                                                        var slots = Model.GetShiftSlots(type, shift, payerGroup).OrderBy(a => a.SchdlSlotAltId.HasValue ? a.SchdlSlotAltId : 0).ThenBy(b => b.SlotNbr).ToList();
+                                                                }
+
+                                                                @foreach (var slot in slots)
+                                                                {
+                                                                    <table class="slotTable" slotnbr="@slot.SlotNbr">
+                                                                        <tbody>
+                                                                            @{
+                                                                    string rowClass = "";
+                                                                    if (slot.SchdlSlotAlt != null && slot.SchdlSlotAlt.SlotAltCode == "Unass")
+                                                                    {
+                                                                        rowClass = "highlight";
+                                                                    }
+                                                                            }
+                                                                            <tr class="@rowClass">
+                                                                                <td id="Shift_Add_@type/_Shift_@shift/_Index/@slot.SlotNbr" class="outSR">
+                                                                                    @if (slot.EmployeeId.HasValue)
+                                                                                    {
+                                                                                        <label class="slotEmpNm" employeeid="@slot.EmployeeId">
+                                                                                            @slot.Employee.LastName, @slot.Employee.FirstName
+                                                                                        </label>
+                                                                                    }
+                                                                                    else if (slot.SchdlSlotAltId.HasValue)
+                                                                                    {
+                                                                                        <label class="slotEmpNm">
+                                                                                            @slot.SchdlSlotAlt.SlotAltDesc
+                                                                                        </label>
+                                                                                    }
+                                                                                    <br />
+                                                                                    @if (Model.IsDisabled)
+                                                                                    {
+                                                                                        <input class="btnEditSlot btn" type="button" value="Edit" disabled="disabled" />
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        <input class="btnEditSlot btn" type="button" value="Edit" slotid="@slot.Id" />
+                                                                                    }
+
+                                                                                </td>
+                                                                                <td class="removeSlotRowTd">
+                                                                                    @if (Model.IsDisabled)
+                                                                                    {
+                                                                                        <input class="center btn" id="RemoveScheduleSlotRow_@shift/_@slot.SlotNbr" type="button" value=" - " title="Click '-' to REMOVE a Row.." disabled="disabled" />
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        <input class="center btn" id="RemoveScheduleSlotRow_@shift/_@slot.SlotNbr" type="button" value=" - " title="Click '-' to REMOVE a Row.." onclick="RemoveSlot(@slot.Id)" />
+                                                                                    }
+                                                                                </td>
+                                                                                @foreach (var day in slot.Days.OrderBy(a => a.WorkDate))
+                                                                                {
+                                                                                    <td class="day">
+                                                                                        @if (day.ShiftStartTime.HasValue)
+                                                                                        {
+                                                                                            <label class="formatDayInfo">@day.ShiftStartTime.Value.ToString("hhmmt").ToLower()</label>
+                                                                                        }
+                                                                                        else if (day.SchdlHourAltId.HasValue)
+                                                                                        {
+                                                                                            <label class="formatDayInfo">@day.SchdlHourAlt.HourAltCode</label>
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            <label class="formatDayInfo">None</label>
+                                                                                        }
+                                                                                        <br />
+                                                                                        @if (day.ShiftEndTime.HasValue)
+                                                                                        {
+                                                                                            <label class="formatDayInfo">@day.ShiftEndTime.Value.ToString("hhmmt").ToLower()</label>
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            <label class="formatDayInfo">None</label>
+                                                                                        }
+                                                                                        <br />
+                                                                                        @if (day.HourCnt.HasValue)
+                                                                                        {
+                                                                                            <label class="formatDayInfo">@day.HourCnt</label>
+                                                                                        }
+                                                                                        else if (day.SchdlHourAltId.HasValue)
+                                                                                        {
+                                                                                            <label class="formatDayInfo">@day.SchdlHourAlt.HourAltCode</label>
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            <label class="formatDayInfo">0</label>
+                                                                                        }
+                                                                                        @if (day.AtriumPatientGroupId.HasValue)
+                                                                                        {
+                                                                                            <br />
+                                                                                            <label class="formatDayInfo">@day.AtriumPatientGroup.AtriumPatientGroupName</label>
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            <br />
+                                                                                            <label class="formatDayInfo"></label>
+                                                                                        }
+                                                                                    </td>
+                                                                                }
+                                                                            </tr>
+
+                                                                        </tbody>
+                                                                    </table>
+                                                                }
+
+                                                            </td>
+                                                            <td class="center cellPadding outSR">
+                                                                <label id="@type/_shift_total_hours_@shift" class="shift_total_hours">
+                                                                    @Model.SummaryHours(type, shift, payerGroup).Sum(a => a.Value)
+                                                                </label>
+                                                            </td>
+                                                        </tr>
+                                                    }
+
+
+
+                                                    foreach (string type in types)
+                                                    {
+                                                        var totalSums = Model.SummaryHours(type, shift, payerGroup).OrderBy(a => a.Key);
+                                                        <tr class="shiftSlotRowSummary">
+                                                            <td class="center outSR"></td>
+                                                            <td class="outSR">
+                                                                <span class="right">
+                                                                    @type Shift Summary
+                                                                </span>
+                                                            </td>
+                                                            <td colspan="2">
+                                                                <table id="slotTableSummary" class="schedule_inner">
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td class="removeSlotRowTd"></td>
+                                                                            @if (totalSums.Count() == 0)
+                                                                            {
+                                                                                for (int i = 0; i < 14; i++)
+                                                                                {
+                                                                                    <td class="center sum">
+                                                                                        <label id="@shift-@type-@i">
+                                                                                            0.0
+                                                                                        </label>
+                                                                                    </td>
+                                                                                }
+                                                                            }
+                                                                            @{
+                                                        int index = 0;
+                                                                            }
+                                                                            @foreach (var dayTotal in totalSums)
+                                                                            {
+
+
+                                                                                <td class="center sum">
+                                                                                    <label id="@shift-@type-@index">
+                                                                                        @dayTotal.Value
+                                                                                    </label>
+                                                                                </td>
+                                                                                {
+                                                                                    index++;
+                                                                                }
+                                                                            }
+
+                                                                        </tr>
+
+
+
+                                                                    </tbody>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                }
+
+
+
+                                                @*@Html.EditorFor(m => Model.Shifts)*@
+                                            </tbody>
+
+                                        </table>
+
+                                    </div>
+                                    <br />
+                                    <table id="scheduleTableFooter" class="schedule_outer">
+                                        <tfoot>
+                                            <tr>
+                                                <td colspan="2" class="outer">
+                                                    <span class="right">Hours/Day:</span>
+                                                </td>
+                                                <td colspan="1" class="outer">
+                                                    <table id="tblColumnTotals" class="schedule_inner">
+                                                        <thead>
+                                                            <tr>
+                                                                <th class="removeSlotRowTd"></th>
+                                                                @{
+                                                                    int totalIndex = 0;
+                                                                }
+                                                                @foreach (var day in Model.SummaryHours("RN,LPN", null, payerGroup).OrderBy(a => a.Key))
+                                                                {
+
+                                                                    <th class="center cellPadding">
+                                                                        <span id="DayTotal-@totalIndex" class="colSummary">
+                                                                            @day.Value
+                                                                        </span>
+                                                                    </th>
+                                                                    {
+                                                                        totalIndex++;
+                                                                    }
+                                                                }
+                                                            </tr>
+                                                        </thead>
+                                                    </table>
+                                                </td>
+                                                <td class="center cellPadding outer">
+                                                    <span class="TotalHourCount">
+                                                        @Model.SummaryHours("RN,LPN", null, payerGroup).Sum(a => a.Value)
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="tabsCNA">
+                            <div class="grid_20 schedule">
+                                <div id="scheduleTableDIV" role="grid">
+                                    <table id="scheduleTableHeader" class="schedule_outer">
+                                        <thead>
+                                            <tr></tr>
+                                            <tr class="thRowHeader">
+                                                <th class="outer"></th>
+                                                <th class="outer"><text>Employees:</text></th>
+                                                <th class="outer">
+                                                    <table id="tblColumnHeaders" class="schedule_inner">
+                                                        <thead>
+                                                            <tr>
+                                                                <th class="removeSlotRowTd">&nbsp;</th>
+                                                                @{
+                                                                    //GetShortestDayName
+                                                                    for (int n = 0; n < 14; n++)
+                                                                    {
+                                                                        DateTime dayDT = startDT.AddDays(n);
+                                                                        <th>@dtfi.GetShortestDayName(dayDT.DayOfWeek)<br />@dayDT.ToString("M/d")</th>
+                                                                    }
+
+                                                                }
+                                                            </tr>
+                                                        </thead>
+                                                    </table>
+                                                </th>
+                                                <th class="outer center cellPadding">Total:</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                    <br />
+                                    <br />
+                                    <div id="scheduleDIV" class="scheduleDIV">
+                                        <table id="scheduleTable" class="scheduleScrollTable schedule_outer">
+                                            <tbody id="scheduleTableBody" class="scheduleScrollBody">
+                                                @{
+                                                    types = new List
+                                                    <string>
+                                                        ();
+                                                    types.Add("CNA");
+                                                }
+                                                @foreach (int shift in shifts)
+                                                {
+
+                                                    foreach (string type in types.Where(a => !a.Contains(',')))
+                                                    {
+                                                        <tr id="SlotRowTitle_@shift" role="row" class="shiftSlotRowTitle">
+                                                            <td id="WorkShiftId" class="center outSR">@shift</td>
+                                                            @{
+                                                        var btnIdIndex = "AddScheduleSlotRow_" + shift.ToString();
+                                                        var shiftAdd = type + "_Shift_" + shift.ToString();
+                                                            }
+                                                            <td id="Shift_Add_@shiftAdd" class="outSR">
+                                                                <div class="selectEmployeeTitle">
+                                                                    <strong>@type Selected:</strong>
+                                                                    @if (Model.IsDisabled)
+                                                                    {
+                                                                        <input class="center AddScheduleSlotRow btn glyphicon glyphicon-plus" id="@btnIdIndex" type="button" value=" + " title="Click '+' to ADD a Row .." disabled="disabled" />
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <input class="center AddScheduleSlotRow btn glyphicon glyphicon-plus" id="@btnIdIndex" type="button" value=" + " title="Click '+' to ADD a Row .." onclick="AddSlot(@Model.GetGeneralLedger(type,shift,payerGroup).Id,@shift,'@type')" />
+                                                                    }
+                                                                </div>
+                                                            </td>
+                                                            <td class="slotTd outSR"></td>
+                                                            <td class="center cellPadding outSR"></td>
+                                                        </tr>
+                                                        <tr id="@shift/_@type" role="row" class="shiftSlotRow">
+                                                            <td class="center outSR"></td>
+                                                            <td id="slotTd" class="slotTd outSR" colspan="2">
+
+                                                                @{
+                                                        var slots = Model.GetShiftSlots(type, shift, payerGroup).OrderBy(a => a.SchdlSlotAltId.HasValue ? a.SchdlSlotAltId : 0).ThenBy(b => b.SlotNbr).ToList();
+                                                                }
+
+                                                                @foreach (var slot in slots)
+                                                                {
+                                                                    <table class="slotTable" slotnbr="@slot.SlotNbr">
+                                                                        <tbody>
+                                                                            @{
+                                                                    string rowClass = "";
+                                                                    if (slot.SchdlSlotAlt != null && slot.SchdlSlotAlt.SlotAltCode == "Unass")
+                                                                    {
+                                                                        rowClass = "highlight";
+                                                                    }
+                                                                            }
+                                                                            <tr class="@rowClass">
+
+                                                                                <td id="Shift_Add_@type/_Shift_@shift/_Index/@slot.SlotNbr" class="outSR">
+                                                                                    @if (slot.Employee != null)
+                                                                                    {
+                                                                                        <label class="slotEmpNm" employeeid="@slot.EmployeeId">
+                                                                                            @slot.Employee.LastName, @slot.Employee.FirstName
+                                                                                        </label>
+                                                                                    }
+                                                                                    else if (slot.SchdlSlotAlt != null)
+                                                                                    {
+                                                                                        <label class="slotEmpNm">
+                                                                                            @slot.SchdlSlotAlt.SlotAltDesc
+                                                                                        </label>
+                                                                                    }
+                                                                                    <br />
+                                                                                    @if (Model.IsDisabled)
+                                                                                    {
+                                                                                        <input class="btnEditSlot btn" type="button" value="Edit" disabled="disabled" />
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        <input class="btnEditSlot btn" type="button" value="Edit" slotid="@slot.Id" />
+                                                                                    }
+
+                                                                                </td>
+                                                                                <td class="removeSlotRowTd">
+                                                                                    @if (Model.IsDisabled)
+                                                                                    {
+                                                                                        <input class="center btn" id="RemoveScheduleSlotRow_@shift/_@slot.SlotNbr" type="button" value=" - " title="Click '-' to REMOVE a Row.." disabled="disabled" />
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        <input class="center btn" id="RemoveScheduleSlotRow_@shift/_@slot.SlotNbr" type="button" value=" - " title="Click '-' to REMOVE a Row.." onclick="RemoveSlot(@slot.Id)" />
+
+                                                                                    }
+                                                                                </td>
+                                                                                @foreach (var day in slot.Days.OrderBy(a => a.WorkDate))
+                                                                                {
+                                                                                    <td class="day">
+                                                                                        @if (day.ShiftStartTime.HasValue)
+                                                                                        {
+                                                                                            <label class="formatDayInfo">@day.ShiftStartTime.Value.ToString("hhmmt").ToLower()</label>
+                                                                                        }
+                                                                                        else if (day.SchdlHourAltId.HasValue)
+                                                                                        {
+                                                                                            <label class="formatDayInfo">@day.SchdlHourAlt.HourAltCode</label>
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            <label class="formatDayInfo">None</label>
+                                                                                        }
+                                                                                        <br />
+                                                                                        @if (day.ShiftEndTime.HasValue)
+                                                                                        {
+                                                                                            <label class="formatDayInfo">@day.ShiftEndTime.Value.ToString("hhmmt").ToLower()</label>
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            <label class="formatDayInfo">None</label>
+                                                                                        }
+                                                                                        <br />
+                                                                                        @if (day.HourCnt.HasValue)
+                                                                                        {
+                                                                                            <label class="formatDayInfo">@day.HourCnt</label>
+                                                                                        }
+                                                                                        else if (day.SchdlHourAltId.HasValue)
+                                                                                        {
+                                                                                            <label class="formatDayInfo">@day.SchdlHourAlt.HourAltCode</label>
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            <label class="formatDayInfo">0</label>
+                                                                                        }
+                                                                                        @if (day.AtriumPatientGroupId.HasValue)
+                                                                                        {
+                                                                                            <br />
+                                                                                            <label class="formatDayInfo">@day.AtriumPatientGroup.AtriumPatientGroupName</label>
+                                                                                        }
+                                                                                    </td>
+                                                                                }
+                                                                            </tr>
+
+                                                                        </tbody>
+                                                                    </table>
+                                                                }
+
+                                                            </td>
+                                                            <td class="center cellPadding outSR">
+                                                                <label id="@type/_shift_total_hours_@shift" class="shift_total_hours">
+                                                                    @Model.SummaryHours(type, shift, payerGroup).Sum(a => a.Value)
+                                                                </label>
+                                                            </td>
+                                                        </tr>
+                                                    }
+
+
+
+                                                    foreach (string type in types)
+                                                    {
+                                                        var totalSums = Model.SummaryHours(type, shift, payerGroup).OrderBy(a => a.Key);
+                                                        <tr class="shiftSlotRowSummary">
+                                                            <td class="center outSR"></td>
+                                                            <td class="outSR">
+                                                                <span class="right">
+                                                                    @type Shift Summary
+                                                                </span>
+                                                            </td>
+                                                            <td colspan="2">
+                                                                <table id="slotTableSummary" class="schedule_inner">
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td class="removeSlotRowTd"></td>
+                                                                            @if (totalSums.Count() == 0)
+                                                                            {
+                                                                                for (int i = 0; i < 14; i++)
+                                                                                {
+                                                                                    <td class="center sum">
+                                                                                        <label id="@shift-@type-@i">
+                                                                                            0.0
+                                                                                        </label>
+                                                                                    </td>
+                                                                                }
+                                                                            }
+                                                                            @{
+                                                        int index = 0;
+                                                                            }
+                                                                            @foreach (var dayTotal in totalSums)
+                                                                            {
+
+
+                                                                                <td class="center sum">
+                                                                                    <label id="@shift-@type-@index">
+                                                                                        @dayTotal.Value
+                                                                                    </label>
+                                                                                </td>
+                                                                                {
+                                                                                    index++;
+                                                                                }
+                                                                            }
+
+                                                                        </tr>
+
+                                                                    </tbody>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                }
+                                            </tbody>
+
+                                        </table>
+
+                                    </div>
+                                    <br />
+                                    <table id="scheduleTableFooter" class="schedule_outer">
+                                        <tfoot>
+                                            <tr>
+                                                <td colspan="2" class="outer">
+                                                    <span class="right">Hours/Day:</span>
+                                                </td>
+                                                <td colspan="1" class="outer">
+                                                    <table id="tblColumnTotals" class="schedule_inner">
+                                                        <thead>
+                                                            <tr>
+                                                                <th class="removeSlotRowTd"></th>
+                                                                @{
+                                                                    totalIndex = 0;
+                                                                }
+                                                                @foreach (var day in Model.SummaryHours("CNA", null, payerGroup).OrderBy(a => a.Key))
+                                                                {
+                                                                    <th class="center cellPadding">
+                                                                        <span id="DayTotal-@totalIndex" class="colSummary">
+                                                                            @day.Value
+                                                                        </span>
+                                                                    </th>
+                                                                    {
+                                                                        totalIndex++;
+                                                                    }
+                                                                }
+                                                            </tr>
+
+                                                        </thead>
+                                                    </table>
+                                                </td>
+                                                <td class="center cellPadding outer">
+                                                    <span id="TotalHourCount">
+                                                        @Model.SummaryHours("CNA", null, payerGroup).Sum(a => a.Value)
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>

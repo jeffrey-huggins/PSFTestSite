@@ -1,0 +1,29 @@
+@model List<AtriumWebApp.Models.Budget.PayType>
+
+<div id="ptEditor">
+    <div style="border:solid thin black">
+        <div style="display:inline-block" id="ptEditSection">
+            
+            @*@foreach (var generalLedger in Model.GeneralLedgers)
+            {
+                @Html.EditorFor(a => generalLedger, "", "", new { LaborGLGroups = laborGLGroups, AccountTypes = accountTypes, PayGrpCds = payGrpCds })
+            }*@
+        </div>
+    </div>
+    <div class="recordSelection">
+        Record: <i class="fa fa-fast-backward selector" id="payTypeFirst"></i>
+        <i class="fa fa-backward selector" aria-hidden="true" id="payTypeBack"></i>
+        <input id="payTypeSelector" />
+        <i class="fa fa-forward selector" aria-hidden="true" id="payTypeForward"></i>
+        <i class="fa fa-fast-forward selector" aria-hidden="true" id="payTypeLast"></i>
+        <i class="fa fa-plus selector" aria-hidden="true" id="newpayType" style="color:green"></i>
+        <i class="fa fa-times selector" aria-hidden="true" id="deletepayType" style="color:red;"></i>
+        <select id="selectedpayType">
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                var pt = Model[i];
+                @:<option value="@pt.PayTypeCd" rowNum="@(i + 1)">@pt.PayTypeNm</option>
+            }
+        </select>
+    </div>
+</div>

@@ -1,0 +1,96 @@
+﻿@model AtriumWebApp.Models.ViewModel.StandardsOfCareViewModel
+<div id="restraint" align="center">
+    <button class="float-right" id="closeRest">X</button>
+    <h2 class="margin_separator">Restraint Record</h2>
+    @using (Html.BeginForm("SaveRestraint", "StandardsOfCare", FormMethod.Post, new { id = "SaveRestraint" }))
+    {
+        @Html.HiddenFor(m => m.PatientId)
+        @Html.HiddenFor(m => m.RoomId)
+        @Html.HiddenFor(m => m.PatientGroupPayerId)
+        @Html.Hidden("RestraintEditingId")
+        @Html.Hidden("IncludeNote", false, new { @class = "IncludeNote" })
+        <div class="container_16 bottom_pad">
+            <div class="grid_2">&nbsp;</div>
+            <div class="grid_2">@Html.Label("Date Occurred:")</div>
+            <div class="grid_2 date-occurred-container"></div>
+        </div>
+        <div class="clear">&nbsp;</div>
+        <div class="container_16 bottom_pad">
+            <div class="grid_2">&nbsp;</div>
+            <div class="grid_2">@Html.Label("Date Resolved:")</div>
+            <div class="grid_2 date-resolved-container"></div>
+        </div>
+        <div class="clear">&nbsp;</div>
+        <button class="show-note margin_separator">Create Note</button>
+        <fieldset class="note">
+            <legend>Note</legend>
+            <button class="dismiss-note float-right">&times;</button>
+            <div class="container_16 bottom_pad">
+                <div class="grid_2">&nbsp;</div>
+                <div class="grid_2">@Html.Label("Restraint Type:")</div>
+                <div class="grid_2">@Html.DropDownList("RestraintTypes", "Select a Restraint")</div>
+            </div>
+            <div class="container_16 bottom_pad">
+                <div class="grid_1">&nbsp;</div>
+                <div class="grid_3">@Html.Label("Attempted Reduced Date:")</div>
+                <div class="grid_2">@Html.TextBox("DateReduced", "", new { @class = "isDate" })</div>
+            </div>
+            <div class="container_16 bottom_pad">
+                <div class="grid_2">&nbsp;</div>
+                <div class="grid_5">
+                    <div class="float-left">@Html.Label("Diagnosis Supports Restraint (128 max):")@Html.CheckBox("DiagnosisRestraint")</div>
+                </div>
+            </div>
+            <div class="container_16 bottom_pad">
+                <div class="grid_2">&nbsp;</div>
+                <div class="grid_4">@Html.TextArea("DiagnosisRestraintDesc", "", 4, 30, new { @class = "hidden", maxlength = "128" })</div>
+            </div>
+            <div class="container_16 bottom_pad">
+                <div class="grid_2">&nbsp;</div>
+                <div class="grid_3">@Html.Label("Comments (128 max):")</div>
+            </div>
+            <div class="container_16 margin_separator">
+                <div class="grid_2">&nbsp;</div>
+                <div class="grid_4">@Html.TextArea("RestraintComments", "", 4, 30, new { maxlength = "128" })</div>
+            </div>
+        </fieldset>
+        <div class="container_16 bottom_pad">
+            <div class="grid_3">&nbsp;</div>
+            <div class="grid_2">
+                <button type="button" id="saveRest">Save</button>
+            </div>
+            <div class="grid_2">
+                <button type="button" id="clearRest">Clear</button>
+            </div>
+        </div>
+    }
+
+    <table id="restTable">
+        <thead>
+            <tr>
+                <th>Restraint</th>
+                <th>Reduce Attempted</th>
+                <th>Diagnosis Support</th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.SOCEventRestraintNoted != null)
+            {
+                foreach (var restraint in Model.SOCEventRestraintNoted)
+                {
+                <tr id="@restraint.SOCEventRestraintNotedId">
+                    <td>@Model.SOCRestraint.Find(r => r.SOCRestraintId == restraint.SOCRestraintId).SOCRestraintName</td>
+                    <td>@string.Format("{0:d}", restraint.AttemptedReducedDate)</td>
+                    <td>@(restraint.DiagnosisSupportsRestraintFlg ? "Yes" : "No")</td>
+                    <td><a class="copy" href="">Copy</a></td>
+                    <td><a class="edit" href="">Edit</a></td>
+                    <td><a class="delete" href="">Delete</a></td>
+                </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>

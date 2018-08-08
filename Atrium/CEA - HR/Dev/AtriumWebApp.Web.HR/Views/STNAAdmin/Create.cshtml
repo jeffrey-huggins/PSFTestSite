@@ -1,0 +1,89 @@
+﻿@model AtriumWebApp.Web.HR.Models.STNATrainingFacility
+
+<form asp-action="Create" asp-controller="STNAAdmin">
+    <table>
+        <tr>
+            <td>
+                <label asp-for="TrainingFacilityName"></label>
+            </td>
+            <td>
+                <input asp-for="TrainingFacilityName" /><br />
+                <span asp-validation-for="TrainingFacilityName"></span>
+            </td>
+            <td>
+                <label asp-for="ContactName"></label>
+            </td>
+            <td>
+                <input asp-for="ContactName" /><br />
+                <span asp-validation-for="ContactName"></span>
+            </td>
+
+        </tr>
+        <tr>
+            <td>
+                <label asp-for="ContactPhone"></label>
+            </td>
+            <td>
+                <input asp-for="ContactPhone" /><br />
+                <span asp-validation-for="ContactPhone"></span>
+            </td>
+            <td>
+                <label asp-for="ContactEmail"></label>
+            </td>
+            <td>
+                <input asp-for="ContactEmail" /><br />
+                <span asp-validation-for="ContactEmail"></span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label asp-for="Address1"></label>
+            </td>
+            <td>
+                <input asp-for="Address1" /><br />
+                <span asp-validation-for="Address1"></span>
+            </td>
+            <td>
+                <label asp-for="Address2"></label>
+            </td>
+            <td>
+                <input asp-for="Address2" /><br />
+                <span asp-validation-for="Address2"></span>
+            </td>
+
+        </tr>
+        <tr>
+            <td>
+                <label asp-for="City"></label>
+            </td>
+            <td>
+                <input asp-for="City" /><br />
+                <span asp-validation-for="City"></span>
+            </td>
+            <td>
+                <label asp-for="StateCd"></label>
+
+            </td>
+            <td>
+                <select asp-for="StateCd" asp-items="ViewBag.stateCodes"></select>
+            </td>
+
+        </tr>
+        <tr>
+            <td>
+                <label asp-for="ZipCode"></label>
+            </td>
+            <td>
+                <input asp-for="ZipCode" /><br />
+                <span asp-validation-for="ZipCode"></span>
+            </td>
+
+            <td></td>
+            <td></td>
+        </tr>
+    </table>
+    <p>
+        <input class="ui-button" type="submit" value="Create" />
+        <input class="ui-button" type="button" value="Cancel" />
+    </p>
+</form>

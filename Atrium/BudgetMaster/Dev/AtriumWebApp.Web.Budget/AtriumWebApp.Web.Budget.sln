@@ -1,0 +1,45 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.12
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AtriumWebApp.Models.Budget", "AtriumWebApp.Models.Budget\AtriumWebApp.Models.Budget.csproj", "{8BEA1F0B-1D2C-4E3A-A7FB-72619DA194FA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AtriumWebApp.Web.Budget", "AtriumWebApp.Web.Budget\AtriumWebApp.Web.Budget.csproj", "{30C2DC53-8E47-4646-83BF-DF3629EA4C10}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+		Test|Any CPU = Test|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8BEA1F0B-1D2C-4E3A-A7FB-72619DA194FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8BEA1F0B-1D2C-4E3A-A7FB-72619DA194FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8BEA1F0B-1D2C-4E3A-A7FB-72619DA194FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8BEA1F0B-1D2C-4E3A-A7FB-72619DA194FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8BEA1F0B-1D2C-4E3A-A7FB-72619DA194FA}.Test|Any CPU.ActiveCfg = Release|Any CPU
+		{8BEA1F0B-1D2C-4E3A-A7FB-72619DA194FA}.Test|Any CPU.Build.0 = Release|Any CPU
+		{30C2DC53-8E47-4646-83BF-DF3629EA4C10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30C2DC53-8E47-4646-83BF-DF3629EA4C10}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30C2DC53-8E47-4646-83BF-DF3629EA4C10}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30C2DC53-8E47-4646-83BF-DF3629EA4C10}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30C2DC53-8E47-4646-83BF-DF3629EA4C10}.Test|Any CPU.ActiveCfg = Debug|Any CPU
+		{30C2DC53-8E47-4646-83BF-DF3629EA4C10}.Test|Any CPU.Build.0 = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 3
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://atriumlivingcenters.visualstudio.com/
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = AtriumWebApp.Models.Budget\\AtriumWebApp.Models.Budget.csproj
+		SccProjectName1 = AtriumWebApp.Models.Budget
+		SccLocalPath1 = AtriumWebApp.Models.Budget
+		SccProjectUniqueName2 = AtriumWebApp.Web.Budget\\AtriumWebApp.Web.Budget.csproj
+		SccProjectName2 = AtriumWebApp.Web.Budget
+		SccLocalPath2 = AtriumWebApp.Web.Budget
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,175 @@
+@model AtriumWebApp.Web.Utilization.Models.ViewModel.PELIViewModel
+@{
+    var PageTitle = "";
+    string PELICurrentResidentName;
+    if (!Context.Session.TryGetObject("PELICurrentResidentName", out PELICurrentResidentName))
+    {
+        ViewBag.Title = "PELI";
+        PageTitle = "Preferences for Everyday Living Inventory";
+    }
+    else
+    {
+        ViewBag.Title = "PELI for " + PELICurrentResidentName;
+        PageTitle = "Preferences for Everyday Living Inventory for " + PELICurrentResidentName;
+    }
+    string PELICurrentResidentId;
+}
+
+<style type="text/css">
+    .date {
+        width: 75px;
+    }
+
+    #popupModal {
+        /*min-height: 275px;*/
+        width: 700px;
+        display: none;
+        /*padding-bottom: 20px;*/
+        position: fixed;
+        background-color: #EFEEEF;
+        z-index: 999;
+    }
+
+    #title-div {
+        margin-left: 0px;
+        text-align: center;
+    }
+
+    .content-wrapper {
+        max-width: none;
+    }
+
+    .note {
+        height: 120px;
+        padding-bottom: 10px;
+    }
+    /*.note {
+        height: 135px;
+        padding-bottom: 10px;
+    }*/
+    /*#UpdateRange {
+        margin-top: 20px;
+        text-align: right;
+    }*/
+    #PatientPELITable-div {
+        margin-left: -35px;
+        width: 1120px;
+    }
+</style>
+
+<div id="title-div">
+    <h2 id="title">@PageTitle</h2>
+</div>
+<div id="body-IC">
+    @Html.Partial("_SideBarSelection")
+    <div class="container_16" style="height: 100px;">
+        <div class="grid_10 margin_separator" style="margin-left: -35px;">
+            @if (!Context.Session.TryGetObject("PELICurrentResidentId", out PELICurrentResidentId))
+            {
+                <span class="instruction">Select a resident to continue...</span>
+            }
+        </div>
+    </div>
+    <div class="container_12">
+        <div id="PatientPELITable-div" class="grid_12">
+            <table id="PatientPELITable">
+                <thead>
+                    <tr>
+                        <td>PELILogId</td>
+                        <td>PatientId</td>
+                        <th>Admitted</th>
+                        <th>Completed</th>
+                        <th>Reason NOT Complete</th>
+                        <th>Edit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model == null || Model.PatientPELILogs == null || Model.PatientPELILogs.Count == 0)
+                    {
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td>(No records found)</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    }
+                    else
+                    {
+                        foreach (var rec in Model.PatientPELILogs)
+                        {
+                        <tr id="@(rec.PELILogId)">
+                            <td>@Html.HiddenFor(m => rec.PELILogId)</td>
+                            <td>@Html.HiddenFor(m => rec.PatientId)</td>
+                            <td>@if (rec.AdmitDate.HasValue) { @(rec.AdmitDate.Value.ToShortDateString()); }</td>
+                            <td>@if (rec.CompletedDate.HasValue) { @(rec.CompletedDate.Value.ToShortDateString()); }</td>
+                            <td>@(Model.PELITypesALL.Where(i => i.Id == rec.PELITypeId).Select(i => i.Description).FirstOrDefault())</td>
+                            @*<td>@Html.DropDownListFor(m => rec.PELITypeId, new SelectList(Model.PELITypes, "Id", "Description", rec.PELITypeId), new { @class="dropDownStrongText", @disabled = "disabled" })</td>*@
+                            <td><a class="edit" href="">Edit</a></td>
+                        </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@if (Context.Session.TryGetObject("PELICurrentResidentId", out PELICurrentResidentId))
+{
+    <div id="popupModal">
+        <button class="float-right" id="btnClose">X</button>
+        <h2 id="modalTitle" class="margin_separator" style="text-align: center"></h2>
+        @using (Html.BeginForm("SavePELILog", "PELI", FormMethod.Post, new { id = "SavePELILog" }))
+        {
+            @Html.Hidden("PatientId", PELICurrentResidentId)
+            @Html.Hidden("PELILogId")
+            <fieldset class="note">
+                <legend>PELI Log</legend>
+                <div class="container_12">
+                    <div class="grid_6">
+                        <div class="container_12 bottom_pad">
+                            <div class="grid_3" style="text-align: right;">@Html.Label("Admitted Date:")</div>
+                            <div class="grid_3">@Html.TextBox("AdmitDate", "", new { @class = "isDate date dateUS", @disabled = "disabled" })</div>
+                        </div>
+                        <div class="container_12 bottom_pad">
+                            <div class="grid_3" style="text-align: right;">@Html.Label("Completed Date:")</div>
+                            <div class="grid_3">@Html.TextBox("CompletedDate", "", new { @class = "isDate date dateUS" })</div>
+                        </div>
+                        <div class="container_12 bottom_pad">
+                            <div class="grid_3" style="text-align: right;">@Html.Label("Reason NOT Complete:")</div>
+                            <div class="grid_3">@Html.DropDownList("PELITypeId", new SelectList(Model.PELITypes, "Id", "Description"), "Select a Type", new { id = "PELITypeModal" })</div>
+                        </div>
+
+                    </div>
+                    <div class="grid_6">
+                    </div>
+                </div>
+            </fieldset>
+            <br />
+            <div class="container_12 margin_separator">
+                <div class="grid_4">&nbsp;</div>
+                <div class="grid_2">
+                    <button type="button" id="btnSave">Save</button>
+                </div>
+                <div class="grid_2">
+                    <button type="button" id="btnClear">Clear</button>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+<environment names="Development">
+    <script src="~/js/PELI.js" asp-append-version="true"></script>
+</environment>
+<environment names="Testing,Production,Training">
+    <script src="~/js/PELI.min.js" asp-append-version="true"></script>
+</environment>
+
+<script>
+    $(document).ready(function () {
+        PreparePage();
+    });
+</script>

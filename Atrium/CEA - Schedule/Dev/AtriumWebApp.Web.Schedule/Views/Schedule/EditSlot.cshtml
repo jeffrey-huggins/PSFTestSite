@@ -1,0 +1,94 @@
+﻿@model AtriumWebApp.Web.Schedule.Models.ViewModel.SchdlSlotEditViewModel
+@using (Html.BeginForm("SaveSlotEdit", Context.Request.Path, FormMethod.Post, new { id = "SaveSlotEdit", enctype = "multipart/form-data" }))
+{
+    @Html.HiddenFor(m => Model.Slot.Id, new { id="slotId" });
+    @Html.HiddenFor(m => Model.Slot.SlotNbr, new { id = "slotNbr" });
+    foreach (var pair in Model.HourAltMap)
+    {
+        <div id="hourMap-@pair.Key" class="hidden">@pair.Value</div>
+    }
+    
+    <table class="slotTable">
+        <tbody>
+            <tr id="SlotEdit_TitleDrag">
+                <td colspan="14">
+                    <h2 class="center">Edit Employee Schedule</h2>
+                </td>
+                <td colspan="14">
+                    <hr />
+                </td>
+            </tr>
+            <tr>
+                <td colspan="14">&nbsp;</td>
+            </tr>
+            <tr>
+                <td class="outer hidden"></td>
+                <td class="outer" colspan="2">
+                    <div><strong>@Html.DisplayFor(m => Model.Title)</strong></div>
+                </td>
+                <td class="outSR" colspan="4">
+                    @Html.DropDownList("Employees", Model.EmployeeList)
+                </td>
+                <td class="outer" colspan="8"></td>
+            </tr>
+            <tr>
+                <td colspan="14"><hr /></td>
+            </tr>
+            <tr class="schedule_edit">
+                @{
+    DateTime startDT = Model.Slot.Ledger.PayerGroup.PayPeriod.PayPeriodBeginDate;
+    System.Globalization.DateTimeFormatInfo dtfi =
+    new System.Globalization.DateTimeFormatInfo();
+    dtfi.ShortDatePattern = "yyyyMMdd";
+
+    //GetShortestDayName
+    for (int n = 0; n < 14; n++)
+    {
+        DateTime dayDT = startDT.AddDays(n);
+        <th>@dtfi.GetShortestDayName(dayDT.DayOfWeek)<br />@dayDT.ToString("M/d")</th>
+    }
+
+                }
+            </tr>
+            <tr class="schedule_edit schedule_edit_LG">
+                @{
+    int i = 0;
+                }
+
+                @foreach (var day in Model.Slot.Days.OrderBy(a => a.WorkDate))
+                {
+                    i++;
+                    <td class="dayLG">
+                        @Html.HiddenFor(d => day.WorkDate, new { id="date" + i })
+                        <span class="dayDisplay TEMPLATES">
+                            @Html.DropDownList("startShift" + i, Model.StartTime[day.WorkDate], new
+                   {
+                       @class = "fromHours ddFormatHoursLG",
+                       @onchange = "CalculateDayHours();"
+                   })
+                            <br />
+                            @Html.DropDownList("endShift" + i, Model.EndTime[day.WorkDate], new
+                   {
+                       @class = "fromHours ddFormatHoursLG",
+                       @onchange = "CalculateDayHours();"
+                   })
+                            <br />
+                            @Html.TextBoxFor(m => day.HourCnt, new { disabled = "disabled", id = "hourCount" + i, @class = "formatDayInfoLG" })
+                            <br />
+                            @Html.DropDownList("Room" + i, Model.RoomId[day.WorkDate], new { @class = "ddFormatGroupsLG" })
+                        </span>
+                    </td>
+                }
+            </tr>
+            <tr>
+                <td colspan="14"><hr /></td>
+            </tr>
+            <tr>
+                <td colspan="14">
+                    <button id="btnCloseEditSlot" type="button" class="right bottom btn btn-danger" onclick="CloseEditSlotWindow()"> Close </button>
+                    <button id="btnSaveEditSlot" type="button" class="right bottom btn btn-success" onclick="SaveSlotEdit()"> Save </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+}

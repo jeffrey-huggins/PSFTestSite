@@ -1,0 +1,47 @@
+﻿@model List<SOCEventWoundNoted>
+
+<table id="woundNoteTable">
+    <thead>
+        <tr>
+            <th>Date Noted</th>
+            <th>Site</th>
+            <th>Describe/Stage</th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var noted in Model)
+        {
+            <tr id="@noted.SOCEventWoundNotedId">
+                <td class="noteDate">@noted.NotedDate.ToString("d")</td>
+                <td>@noted.SOCEvent.Site</td>
+                <td>
+                    @if (noted.SOCEvent.CompositeWoundDescribeId.HasValue)
+                    {
+                        @noted.SOCEvent.CompositeWoundDescription.CompositeWoundDescribeName
+}
+                    else
+                    {
+                        if (noted.WoundStage != null)
+                        {
+                            @noted.WoundStage.PressureWoundStageName
+}
+                    }
+
+                </td>
+                <td>
+                    @Html.ActionLink("Copy", "EditWoundNote", new { eventId = noted.SOCEventId, noteId = noted.SOCEventWoundNotedId }, new { @class = "copy" })
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "EditWoundNote", new { eventId = noted.SOCEventId, noteId = noted.SOCEventWoundNotedId }, new { @class = "edit" })
+
+                </td>
+                <td>
+                    @Html.ActionLink("Delete", "DeleteRowWound", new { rowId = noted.SOCEventWoundNotedId }, new { @class="delete" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

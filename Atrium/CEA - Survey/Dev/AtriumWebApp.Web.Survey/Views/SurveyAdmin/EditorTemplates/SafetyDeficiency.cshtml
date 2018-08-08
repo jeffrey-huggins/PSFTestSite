@@ -1,0 +1,9 @@
+@model AtriumWebApp.Web.Survey.Models.SafetyDeficiency
+
+<form asp-action="NewSafetyDef" asp-controller="SurveyAdmin">
+    <input asp-for="TagCode" name="TagCode" placeholder="Safety Tag Code" />
+    <span asp-validation-for="TagCode" class="text-danger" data-valmsg-for="TagCode"></span>
+    <textarea asp-for="Description" name="Description" placeholder="Description" ></textarea>
+    <span asp-validation-for="Description" class="text-danger" data-valmsg-for="Description"></span>
+    <input type="submit" value="Add" />
+</form>

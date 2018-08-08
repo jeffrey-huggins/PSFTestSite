@@ -1,0 +1,151 @@
+@model AtriumWebApp.Models.ViewModel.ContractListViewModel
+@{
+    ViewBag.Title = "Contracts";
+}
+<link rel="stylesheet" href="~/lib/chosen/chosen.css" />
+<style>
+    .chosen-container-multi .chosen-choices li a {
+        padding-right: 0px;
+        padding-left: 0px;
+    }
+
+    #ContractCommunityAssociations {
+        width: auto;
+        padding-right: 10px;
+        padding-top: 0px;
+        padding-left: 0px;
+    }
+
+    .contractManagementTitle {
+        text-align: center;
+    }
+
+    .fileSelection {
+        width: 600px;
+    }
+
+    .contractCommunityList {
+        height: 200px;
+    }
+
+    #contractCommunities th {
+        border-bottom: 2px solid black;
+    }
+
+    th {
+        font-size: 0.85em;
+    }
+</style>
+<section id="CommunitySearchArea" class="table-cell">
+    @using (Html.BeginForm("UpdateCurrentCommunity", "ContractManagement", FormMethod.Post, new { id = "CommunitySelectionForm" }))
+    {
+        @Html.LabelFor(m => m.SelectedCommunities)<text>:</text><br />
+        @Html.DropDownList("CommunitySelections",
+            new MultiSelectList(Model.Communities, "Value", "Text", Model.SelectedCommunities),
+            new { @class = "chosen-select", multiple = "multiple" })
+        @Html.Hidden("returnUrl", Context.UrlPath());
+    }
+</section>
+<section class="table-cell">
+    <div id="formContent" style="margin:0; padding:0;">
+        @if (Model.CanEdit && Model.CurrentContract != null)
+        {
+            @Html.Partial("EditContract", Model.CurrentContract)
+        }
+    </div>
+    <div id="ContractsGrid" class="container_16">
+        <h3 class="contractManagementTitle">Contract Search</h3>
+        <div class="grid_16">
+            @if (Model.CanCreateNew)
+            {
+                <div class="grid_12">@Html.ActionLink("Create New Contract", "CreateContract",null,null, new { id = "createContract", @class = "create-link" })</div>
+            }
+            else
+            {
+                <div class="grid_12"></div>
+            }
+            @if (Model.CanManageProviders)
+            {
+                <div class="grid_3">@Html.ActionLink("Manage Providers", "Providers", "ContractProvider")</div>
+            }
+            else
+            {
+
+                <div class="grid_3"></div>
+            }
+        </div>
+        <div class="grid_16">
+            <table id="contractsTable">
+                <thead>
+                    <tr>
+                        <th>Provider</th>
+                        <th>Archived</th>
+                        <th>Category</th>
+                        <th>SubCategory</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th>Files</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var contract in Model.Contracts)
+                    {
+                        <tr id="@contract.Id">
+                            <td>@Html.ActionLink(contract.ContractProviderName, "ViewContract", new { id = contract.Id }, new { @class = "viewContract" })</td>
+                            @*<td>@Html.CheckBoxFor(m => contract.ArchiveFlg, new { @class="checkbox", disabled="disabled"})</td>*@
+                            <td>@(contract.ArchiveFlg ? "Yes" : "")</td>
+                            <td>@(contract.ContractCategoryName ?? "")</td>
+                            <td>@(contract.ContractSubCategoryName ?? "")</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>@contract.DocumentCount</td>
+                            @*<td>@contract.Documents.Count</td>*@
+                            <td>
+                                @(Model.CanEdit ?
+                                @Html.ActionLink("Edit", "EditContract", new { id = contract.Id }, new { @class = "editContract" }) :
+                                @Html.ActionLink("View", "ViewContract", new { id = contract.Id }, new { @class = "viewContract" }))
+                            </td>
+                            <td>
+                                @if (Model.CanDelete)
+                                {
+                                    @Html.ActionLink("Delete", "DeleteContract", new { id = contract.Id }, new { @class = "deleteContract" })
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<environment names="Development">
+    <script src="~/lib/jquery-form/src/jquery.form.js"></script>
+    <script src="~/lib/autogrow/autogrow.js"></script>
+    <script src="~/lib/chosen/chosen.jquery.js"></script>
+    <script src="~/js/ContractManagement.js" asp-append-version="true"></script>
+    <script src="~/js/ContractCommon.js" asp-append-version="true"></script>
+</environment>
+
+<environment names="Testing,Production,Training">
+    <script src="~/lib/autogrow/autogrow.min.js"></script>
+    <script src="~/lib/jquery-form/dist/jquery.form.min.js"></script>
+    <script src="~/lib/chosen/chosen.jquery.js"></script>
+    <script src="~/js/ContractManagement.js" asp-append-version="true"></script>
+    <script src="~/js/ContractCommon.js" asp-append-version="true"></script>
+</environment>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        PreparePage();
+
+        //Chosen configuration (http://harvesthq.github.io/chosen/options.html)
+        $('.chosen-select').chosen({
+            placeholder_text_multiple: "Select Communities"
+        });
+    });
+</script>

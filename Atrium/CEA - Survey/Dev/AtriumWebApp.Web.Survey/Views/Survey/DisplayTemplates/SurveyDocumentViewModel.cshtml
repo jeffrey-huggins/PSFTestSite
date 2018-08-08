@@ -1,0 +1,15 @@
+﻿@model AtriumWebApp.Web.Survey.Models.ViewModel.SurveyDocumentViewModel
+<tr>
+    <td>
+        @Html.ActionLink(Model.FileName, "StreamSurveyDocument", new { id = Model.Id, disabled = "disabled" })
+
+        @Html.HiddenFor(m => m.Id, new { data_field = "Id" })
+        @Html.HiddenFor(m => m.FileName, new { data_field = "FileName" })
+        @Html.HiddenFor(m => m.ContentType, new { data_field = "ContentType" })
+        @Html.HiddenFor(m => m.SurveyCycleId, new { data_field = "SurveyCycleId" })
+        @Html.HiddenFor(m => m.SurveyId, new { data_field = "SurveyId" })
+    </td>
+    @*<td>
+        @Html.CheckBoxFor(m => m.ArchiveFlg, new { data_field = "ArchiveFlg", disabled = "disabled" })
+    </td>*@
+</tr>

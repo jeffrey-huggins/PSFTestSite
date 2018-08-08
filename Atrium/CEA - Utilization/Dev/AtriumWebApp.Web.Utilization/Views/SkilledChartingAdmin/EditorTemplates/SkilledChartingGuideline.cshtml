@@ -1,0 +1,7 @@
+@model AtriumWebApp.Web.Utilization.Models.SkilledChartingGuideline
+
+<form asp-action="SaveGuideline" asp-controller="SkilledChartingAdmin">
+    <input asp-for="GuidelineName" placeholder="New Guideline"/>
+    <span asp-validation-for="GuidelineName"></span>
+    <input type="submit" id="AddDocGuideline" value="Add" />
+</form>

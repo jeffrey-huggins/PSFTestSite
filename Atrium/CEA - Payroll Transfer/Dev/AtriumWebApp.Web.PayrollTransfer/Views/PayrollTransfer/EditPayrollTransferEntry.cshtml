@@ -1,0 +1,74 @@
+﻿@model AtriumWebApp.Web.PayrollTransfer.Models.ViewModel.PayrollTransferIndexViewModel
+@using AtriumWebApp.Web.Base.Library
+
+@{
+    string ToDateRangeInvalid;
+    Context.Session.TryGetObject("ToDateRangeInvalid", out ToDateRangeInvalid);
+    string ToDateRangeInFuture;
+    Context.Session.TryGetObject("ToDateRangeInFuture", out ToDateRangeInFuture);
+    string FromDateRangeInvalid;
+    Context.Session.TryGetObject("FromDateRangeInvalid", out FromDateRangeInvalid);
+    string FromDateRangeInFuture;
+    Context.Session.TryGetObject("FromDateRangeInFuture", out FromDateRangeInFuture);
+    string FromAfterTo;
+    Context.Session.TryGetObject("FromAfterTo", out FromAfterTo);
+    string currentFacility;
+    Context.Session.TryGetObject("PRTRCurrentFacility", out currentFacility);
+    string occuredRangeFrom;
+    string occuredRangeTo;
+    Context.Session.TryGetObject(Model.AppCode + "occurredRangeFrom", out occuredRangeFrom);
+    Context.Session.TryGetObject(Model.AppCode + "occurredRangeTo", out occuredRangeTo);
+}
+
+<div>
+    <div>
+        <section id="workersCompSideBar" class="half-spacing">
+            @using (Html.BeginForm("SideDDL", "AdditionalDevelopmentRequest", FormMethod.Post, new { id = "SideDDL" }))
+            {
+                @Html.Label("Community:")<br />
+                @Html.DropDownList("Communities", new SelectList(Model.Communities, "CommunityId", "CommunityShortName"), "Select a Community", new { id = "Communities" })
+                @Html.Hidden("returnUrl", Context.UrlPath());
+            }
+            @Html.Hidden("CurrentCommunity", currentFacility, new { @class = "CurrentCommunity" })
+        </section>
+
+        <div class="half-spacing a-right">
+            @Html.Label("Date Range - From: ")
+            @Html.TextBox("occurredRangeFrom", occuredRangeFrom, new { @class = "dateUS", size = "10" })
+            @Html.Label(" To: ")
+            @Html.TextBox("occurredRangeTo", occuredRangeTo, new { @class = "dateUS", size = "10" })
+            @Html.Hidden("returnUrl", Context.UrlPath())
+            <button id="UpdateDateRange" name="UpdateDateRange" type="button"> Update </button>
+
+
+            @Html.Hidden("ToDateRangeInvalid", ToDateRangeInvalid)
+            @Html.Hidden("ToDateRangeInFuture", ToDateRangeInFuture)
+            @Html.Hidden("FromDateRangeInvalid", FromDateRangeInvalid)
+            @Html.Hidden("FromDateRangeInFuture", FromDateRangeInFuture)
+            @Html.Hidden("FromAfterTo", FromAfterTo)
+        </div>
+    </div>
+    <div id="content-IC" style="margin-left:0;margin-right:0;display:inline-block;max-width:990px;">
+        <div>
+            <table id="ICwindow-table">
+                <thead>
+                    <tr>
+                        <th>Employee</th>
+                        <th>Source GL</th>
+                        <th>Transfer Date</th>
+                        <th>Destination</th>
+                        <th>Destination GL</th>
+                        <th>Hours</th>
+                        <th>Dollars</th>
+                        <th>Pay Type</th>
+                        <th>PBJ Only</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,286 @@
+@model AtriumWebApp.Web.Schedule.Models.ViewModel.TemplatePayPeriodScheduleViewModel
+@{
+    ViewBag.Title = "Master Schedule";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var year = DateTime.Now.Year.ToString();
+}
+<div id="saveWithNullEmpDiv" class="hidden center NullEmpDiv">
+    <h4>Saved, However please validate Tabs in <strong><span class="redText">RED</span></strong> for incomplete entries.</h4>
+    <br /><br />
+    <span class="dissapearText">The message will disappear ..</span>
+</div>
+
+<section class="table-cell">
+    <div class="grid_20 forcedWidth">
+        <table>
+            <tr>
+                <td>
+                    @Html.ActionLink("Schedules", "Index", "Schedule", null, new { @class = "schedule-home-link" })
+                </td>
+                <td><h2 class="schedule-home-link title-padding">@ViewBag.Title</h2></td>
+                <td>
+                    <div class="grid_5">
+                        @using (Html.BeginForm("UpdateCurrentCommunity", "Schedule", FormMethod.Post, new { id = "CommunitySelectionForm" }))
+                        {
+                            @Html.LabelFor(m => Model.CurrentCommunity)<text>:&nbsp;</text>
+                            @Html.DropDownListFor(m => Model.CurrentCommunity, new SelectList(Model.Communities, "Value", "Text", Model.CurrentCommunity), new { id = "CurrentCommunity", @class = "right" })
+                            @Html.Hidden("returnUrl", "/");
+                        }
+                    </div>
+                </td>
+                <td>
+                    <div class="grid_5">
+
+                    </div>
+                </td>
+                <td>
+                    <div class="grid_5">
+                        <span class="right"><input class="right hide" id="submitScheduleViewModel" name="submitScheduleViewModel" type="button" value="SAVE" onclick="SaveSchedule()"/></span>
+                    </div>
+                </td>
+                <td>
+                    <div class="grid_5">
+                        <span class="right"><input class="right hide" id="deleteScheduleViewModel" name="deleteScheduleViewModel" type="button" value="DELETE" onclick="DeleteSchedule()" /></span>
+
+                    </div>
+                </td>
+                <td>
+                    <div class="grid_1">
+                    </div>
+                </td>
+                <td>
+                    <div id="employeeJobInfo">
+
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div id="scheduleInfo">
+
+    </div>
+    <div id="SlotEdit" align="center" class="fade center">
+
+    </div>
+</section>
+
+<div id="copyPreviousPayPeriodModal" align="center" class="hidden" style="display: none;">
+    <button class="right top noBorderMarginPadding" id="closeCopyPreviousPayPeriodModal">X</button>
+    <table id="tableCopyPreviousPayPeriodModal" align="center">
+        <tbody>
+            <tr>
+                <td colspan="3">
+                    <h2>Copy Existing Schedule for <span id="payPeriodComm"></span> or Continue</h2>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3"><br /></td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <div class="grid_5">
+                        <div class="grid_2">@Html.Label("Select Date of Existing Schedule:")</div>
+                        <div class="grid_1">@Html.Editor("ExistingPayPeriod", new { id = "ExistingPayPeriod", @class = "isDate right", size = "8", @Value = "(Click to select ..)" })</div>
+                        <div class="grid_2"><button id="btnContinueDefaultSchedule" type="submit" class="right bottom" title="Does NOT copy an existing schedule ..">Create Blank</button></div>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div id="blankRow" class="hidden">
+    <table class="slotTable" slotnbr="@("@slot.SlotNbr")">
+        <tbody>
+            <tr class="">
+                <td id="Shift_Add_@("@type")/_Shift_@("@shift")/_Index/@("@slot.SlotNbr")" class="outSR">
+                    <label class="slotEmpNm">
+                        Open Position
+                    </label>
+                    <br />
+                    <input class="btnEditSlot btn" type="button" value="Edit" slotid="@("@slot.Id")" />
+                </td>
+                <td class="removeSlotRowTd">
+                    <input class="center btn" id="RemoveScheduleSlotRow_@("@shift")/_@("@slot.SlotNbr")" type="button" value=" - " title="Click '-' to REMOVE a Row.." onclick="RemoveSlot(@("@slot.Id"))" />
+                </td>
+                <td class="day">
+                    <label class="formatDayInfo">None</label>
+                    <br />
+                    <label class="formatDayInfo">None</label>
+                    <br />
+                    <label class="formatDayInfo">0</label>
+                    <br />
+                    <label class="formatDayInfo"></label>
+                </td>
+                <td class="day">
+                    <label class="formatDayInfo">None</label>
+                    <br />
+                    <label class="formatDayInfo">None</label>
+                    <br />
+                    <label class="formatDayInfo">0</label>
+                    <br />
+                    <label class="formatDayInfo"></label>
+                </td>
+                <td class="day">
+                    <label class="formatDayInfo">None</label>
+                    <br />
+                    <label class="formatDayInfo">None</label>
+                    <br />
+                    <label class="formatDayInfo">0</label>
+                    <br />
+                    <label class="formatDayInfo"></label>
+                </td>
+                <td class="day">
+                    <label class="formatDayInfo">None</label>
+                    <br />
+                    <label class="formatDayInfo">None</label>
+                    <br />
+                    <label class="formatDayInfo">0</label>
+                    <br />
+                    <label class="formatDayInfo"></label>
+                </td>
+                <td class="day">
+                    <label class="formatDayInfo">None</label>
+                    <br />
+                    <label class="formatDayInfo">None</label>
+                    <br />
+                    <label class="formatDayInfo">0</label>
+                    <br />
+                    <label class="formatDayInfo"></label>
+                </td>
+                <td class="day">
+                    <label class="formatDayInfo">None</label>
+                    <br />
+                    <label class="formatDayInfo">None</label>
+                    <br />
+                    <label class="formatDayInfo">0</label>
+                    <br />
+                    <label class="formatDayInfo"></label>
+                </td>
+                <td class="day">
+                    <label class="formatDayInfo">None</label>
+                    <br />
+                    <label class="formatDayInfo">None</label>
+                    <br />
+                    <label class="formatDayInfo">0</label>
+                    <br />
+                    <label class="formatDayInfo"></label>
+                </td>
+                <td class="day">
+                    <label class="formatDayInfo">None</label>
+                    <br />
+                    <label class="formatDayInfo">None</label>
+                    <br />
+                    <label class="formatDayInfo">0</label>
+                    <br />
+                    <label class="formatDayInfo"></label>
+                </td>
+                <td class="day">
+                    <label class="formatDayInfo">None</label>
+                    <br />
+                    <label class="formatDayInfo">None</label>
+                    <br />
+                    <label class="formatDayInfo">0</label>
+                    <br />
+                    <label class="formatDayInfo"></label>
+                </td>
+                <td class="day">
+                    <label class="formatDayInfo">None</label>
+                    <br />
+                    <label class="formatDayInfo">None</label>
+                    <br />
+                    <label class="formatDayInfo">0</label>
+                    <br />
+                    <label class="formatDayInfo"></label>
+                </td>
+                <td class="day">
+                    <label class="formatDayInfo">None</label>
+                    <br />
+                    <label class="formatDayInfo">None</label>
+                    <br />
+                    <label class="formatDayInfo">0</label>
+                    <br />
+                    <label class="formatDayInfo"></label>
+                </td>
+                <td class="day">
+                    <label class="formatDayInfo">None</label>
+                    <br />
+                    <label class="formatDayInfo">None</label>
+                    <br />
+                    <label class="formatDayInfo">0</label>
+                    <br />
+                    <label class="formatDayInfo"></label>
+                </td>
+                <td class="day">
+                    <label class="formatDayInfo">None</label>
+                    <br />
+                    <label class="formatDayInfo">None</label>
+                    <br />
+                    <label class="formatDayInfo">0</label>
+                    <br />
+                    <label class="formatDayInfo"></label>
+                </td>
+                <td class="day">
+                    <label class="formatDayInfo">None</label>
+                    <br />
+                    <label class="formatDayInfo">None</label>
+                    <br />
+                    <label class="formatDayInfo">0</label>
+                    <br />
+                    <label class="formatDayInfo"></label>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+
+<environment names="Development">
+    <script type="text/javascript" src="~/js/TemplateIndex.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/lib/moment/moment.js"></script>
+</environment>
+<environment names="Testing,Production,Training">
+    <script type="text/javascript" src="~/js/TemplateIndex.min.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/lib/moment/min/moment.min.js"></script>
+</environment>
+
+<script type="text/javascript">
+    // Resizing global.
+    var arrayResizeTimeoutIds = [];
+
+    // KEEP HERE - otherwise after first selection, dates are CLEARED.
+    var PayPeriodDates = null;
+    var existingPayPeriodDates = null;
+
+    var timeout = 1800;
+    var idleAutoSaveCount = 0;
+    var idleAutoSaveLimit = 4;
+    var thresholdTime = moment('2:00', 'h:mma');
+
+    $(document).ready(function () {
+        //$('#submit');
+        //$('#coreTable').hide();
+        //$('#textOpenShift').hide();
+        //$('#TextOpenShiftModal').hide();
+        //$('#SlotEdit').hide();
+        $("#CurrentCommunity").off('change');
+        $("#CurrentCommunity").on('change', function (e) {
+            DoesScheduleExist();
+        });
+
+        ActivateCountDown("CountDownPanel", timeout);
+
+        // check time every FIFTEEN Seconds.
+        window.setInterval(function () {
+            if ($('#submitScheduleViewModel').is(':visible') &&
+                (idleAutoSaveCount < idleAutoSaveLimit)) {
+                var time = $('#CountDownPanel').text();
+                var current = moment(time, 'h:mma');
+            };
+        }, 15000);
+
+        // Finally trigger change for dates to be filled for first Community
+        $("#CurrentCommunity").trigger('change');
+    });
+</script>
+

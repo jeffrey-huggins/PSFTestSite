@@ -1,0 +1,362 @@
+/*--------------Layout------------------*/
+html {
+    background-color: #EFEEEF !important;
+    height: 100%;
+}
+
+body {
+    background-color: #EFEEEF !important;
+    width: 1366px; 
+    height: 100%;
+    border-top: 0 !important;
+}
+
+#body {
+    overflow: hidden;
+    height: 100% !important;
+}
+
+.content-wrapper {
+    margin: 0;
+}
+
+/*Banner*/
+#banner {
+    background-color: #968f89;
+}
+
+#img-banner {
+    float: left;
+}
+
+#banner-table {
+    margin-top: 0;
+}
+
+    #banner-table td {
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+
+
+.home-link {
+    color: white !important;
+    margin-left: 10px;
+}
+
+.img-banner {
+    margin: 0 auto;
+}
+
+/*Loading Modal*/
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 99;
+    background: rgb(0, 0, 0);
+    background: rgba(0, 0, 0, .2);
+    opacity: 0.8;
+    filter: alpha(opacity=80);
+    min-height: 100%;
+    width: 100%;
+}
+
+.loading {
+    font-family: Arial;
+    font-size: 10pt;
+    border: 5px solid #67CFF5;
+    width: 200px;
+    height: 100px;
+    display: none;
+    position: fixed;
+    background-color: White;
+    z-index: 999;
+}
+
+.modal_black {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 99;
+    background: rgb(0, 0, 0);
+    min-height: 100%;
+    width: 100%;
+}
+
+
+.timeout {
+    font-family: Arial;
+    font-size: 10pt;
+    border: 5px solid red;
+    width: 200px;
+    height: 100px;
+    display: none;
+    position: fixed;
+    background-color: White;
+    z-index: 999;
+}
+
+/*--------------Home Page------------------*/
+
+#homeButtonTable {
+    margin: 60px auto 0;
+}
+
+a:hover img {
+    border: none !important;
+}
+
+#homepage-links {
+    font-size: 20px;
+    float: left;
+}
+
+#admin-links {
+    margin-top: 50px;
+    font-size: 20px;
+    float: left;
+}
+
+/*--------------Standards of Care------------------*/
+
+#right-side {
+    overflow: hidden;
+}
+
+#left-col {
+    float: left;
+    margin-left: 10px;
+}
+/*Window CSS*/
+#window-div {
+    float: left;
+    clear: left;
+}
+
+#window {
+    width: 900px;
+    font-size: 16px;
+    margin-left: 20px;
+}
+
+#window-table {
+    table-layout: fixed;
+    top: 10px;
+    border-collapse: collapse;
+}
+
+    #window-table th:last-child {
+        left: 10px;
+    }
+
+#UpdateRange {
+    margin-top: 50px;
+    margin-left: 450px;
+    margin-bottom: 10px;
+}
+
+/*--------------Hospital Discharge------------------*/
+
+#body-HD {
+    overflow: hidden;
+    width: 1500px;
+    float: left;
+}
+
+#HDwindow-table {
+    width: 100%;
+}
+
+#UpdateRangeHD {
+    margin-top: 20px;
+    margin-left: 700px;
+    margin-bottom: 10px;
+}
+
+/*--------------Incident Tracking------------------*/
+
+#body-IT {
+    overflow: hidden;
+    width: 1500px;
+    float: left;
+}
+
+#ITwindow-table {
+    width: 100%;
+}
+
+#ITwindow {
+    width: 1000px;
+}
+
+#UpdateRangeIT {
+    margin-top: 50px;
+    margin-left: 500px;
+    margin-bottom: 10px;
+}
+
+.dateReportedHide {
+    line-height: 10px;
+}
+
+/*--------------Infection Control------------------*/
+
+#body-IC {
+    overflow: hidden;
+    width: 1500px;
+    float: left;
+}
+
+#content-IC {
+    margin-left: 10px;
+}
+
+#VaccinationHistoryTable-div {
+    /*height: 110px;*/
+    width: 450px;
+}
+
+#VaccinationHistoryTable {
+    width: 100%;
+}
+
+#UpdateRangeIC {
+    margin-left: 500px;
+    margin-bottom: 10px;
+}
+
+#ICwindow {
+    width: 1000px;
+}
+
+#ICwindow-table {
+    width: 100%;
+}
+
+#SaveInfection table {
+    margin-top: 0;
+}
+
+/*--------------CCA------------------*/
+
+#body-CCA {
+    overflow: hidden;
+    width: 1500px;
+    float: left;
+}
+
+#content-CCA {
+    overflow: hidden;
+    float: left;
+}
+
+#CNATableWrapper {
+    margin-left: 20px;
+    width: 600px;
+}
+
+#UpdateRangeCCA {
+    margin-top: 50px;
+    margin-left: 100px;
+}
+
+/*--------------Admin Pages------------------*/
+
+.tableWrapperWND {
+    width: 700px;
+}
+
+.tableWrapper {
+    width: 600px;
+}
+
+/*--------------Shared------------------*/
+
+h2#title {
+    padding-bottom: 15px;
+    margin: auto;
+}
+
+#title-div {
+    margin-left: 250px;
+}
+
+/*Main Content*/
+#content {
+    width: 1200px;
+}
+
+#content-IT {
+    margin-left: 10px;
+}
+
+section.left-column-picker {
+    float: left;
+    clear: left;
+    margin: 0 auto;
+    border-right: 1px solid black;
+    padding-right: 20px;
+    height: 100%;
+    -ms-word-wrap: break-word;
+    word-wrap: break-word;
+    width: 225px;
+    max-width: 225px;
+    min-width: 225px;
+}
+
+/*---------------CSS Classes-----------------*/
+
+.centerInGrid {
+    margin: 0 auto;
+}
+
+.margin_separator { 
+    margin-bottom: 20px;
+}
+
+.border_top {
+    border-top: 1px solid black;
+    padding-top: 25px;
+}
+
+.fixed_height {
+    height: 110px;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.bottom_pad {
+    padding-bottom: 5px;
+}
+
+.table-cell {
+    display: table-cell;
+}
+
+.table-row {
+    display: table-row;
+}
+
+.table {
+    display: table;
+}
+
+.hidden {
+    display: none;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

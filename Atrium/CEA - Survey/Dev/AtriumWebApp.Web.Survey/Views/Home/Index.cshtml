@@ -1,0 +1,50 @@
+﻿@model AtriumWebApp.Models.ViewModel.HomeViewModel
+@{
+    ViewBag.Title = "Survey";
+}
+<script>
+    $(document).ready(function () {
+        $("a").live('click', function () {
+            window.ShowProgress();
+        });
+    })
+</script>
+
+<table id="homeButtonTable">
+    <tr>
+        <td>
+            @if (Model.HasAccessTo("CSU"))
+            {
+                <a href="~/Survey/">
+                    <p>Survey</p>
+                </a>
+            }
+        </td>
+        <td>
+            @if (Model.HasAccessTo("QSR"))
+            {
+                <a href="~/QuarterlySystemsReview/">
+                    <p>Quarterly Systems Review</p>
+                </a>
+            }
+        </td>
+    </tr>
+    <tr>
+        <td>
+            @if (Model.HasAccessTo("MSU"))
+            {
+                <a href="~/MockSurvey/">
+                    <p>Customer Service and Compliance Survey</p>
+                </a>
+            }
+        </td>
+        <td>
+            @if (Model.HasAccessTo("MSUPOC"))
+            {
+                <a href="~/MockSurveyPlanOfCorrection/">
+                    <p>Customer Service and Compliance Survey<br /><em>Plan of Correction</em></p>
+                </a>
+            }
+        </td>
+    </tr>
+</table>

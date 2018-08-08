@@ -1,0 +1,44 @@
+@model AtriumWebApp.Web.RiskManagement.Models.ViewModel.DocumentViewModel
+<div class="row">
+        <div class="col-sm-8">
+            @if (Model.Id == 0)
+            {
+                <input type="file" asp-for="Document" multiple id="newDocument"/>
+                <br />
+                <span asp-validation-for="Document" id="documentValidation" class="field-validation-error"></span>
+                <input asp-for="SentDate" asp-format="{0:d}" type="hidden"/>
+            }
+            else
+            {
+                <input asp-for="Document" style="display:none;" id="docUpload" disabled="disabled" />
+                @Html.ActionLink(Model.DocumentFileName, "StreamDocument", new { id = Model.Id })
+                @Html.ActionLink("", "DeleteDocument", new { documentId = Model.Id }, new { @class = "fa fa-times deleteFile", style = "color:red" })
+            }
+        </div>
+        @if (Model.Id != 0)
+        {
+            <div class="col-sm-4">
+                <span>Sent Date:</span>
+                <input asp-for="SentDate" class="isDate" asp-format="{0:d}" type="text" style="width:120px;" id="sent@(Model.Id)" />
+                <br />
+                <span asp-validation-for="SentDate" id="SentDateValid@(Model.Id)" class="field-validation-error"></span>
+            </div>
+        }
+            <input type="hidden" asp-for="ContentType" />
+            <input type="hidden" asp-for="DocumentFileName" />
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="Requestid" />
+</div>
+
+
+
+@*<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+    <script>
+        $.validator.setDefaults({ ignore: [] });
+        $("#saveDocument@(Model.Id)").removeData("validator");
+        $("#saveDocument@(Model.Id)").removeData("unobtrusiveValidation");
+        $.validator.unobtrusive.parse($("#saveDocument@(Model.Id)"));
+        $("#saveDocument@(Model.Id)").validate();
+    </script>*@

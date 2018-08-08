@@ -1,0 +1,261 @@
+@model AtriumWebApp.Web.Financial.Models.ViewModel.PurchaseOrderViewModel
+<h3>Purchase Order</h3>
+<div class="container_16 margin_separator">
+    <div class="grid_6">
+        <div class="container_16">
+            <div class="grid_2">@Html.Label("Facility Name")</div>
+            <div class="grid_4"><span id="CommunityName">@(Model.Community.CommunityFullName)</span></div>
+        </div>
+        <div class="container_16">
+            <div class="grid_2">@Html.Label("Address")</div>
+            <div class="grid_4"><span id="CommunityAddress">@Html.Raw(Model.Community.FullAddressRaw)</span></div>
+        </div>
+    </div>
+    <div class="grid_6">
+        <div class="container_16">
+            <div class="grid_2">@Html.Label("Vendor")</div>
+            <div class="grid_4">@Html.TextBoxFor(m => m.VendorId, Model.Vendor.VendorName, new { @readonly = "readonly" })</div>
+        </div>
+        <div class="container_16">
+            <div class="grid_2">@Html.Label("Address")</div>
+            <div class="grid_4"><span id="VendorAddress">@Html.Raw(Model.Vendor.FullAddressRaw)</span></div>
+        </div>
+        <div class="container_16">
+            <div class="grid_2">@Html.Label("Email")</div>
+            <div class="grid_4"><span id="VendorEmail">@(Model.Vendor.Email)</span></div>
+        </div>
+        <div class="container_16">
+            <div class="grid_2">@Html.Label("Fax")</div>
+            <div class="grid_4"><span id="VendorFax">@(Model.Vendor.Fax)</span></div>
+        </div>
+        <div class="container_16">
+            <div class="grid_2">@Html.Label("Vendor Class")</div>
+            <div class="grid_4"><span id="VendorClass">@(Model.Vendor.VendorClass.Name)</span></div>
+        </div>
+    </div>
+    <div class="grid_4">
+        <div class="container_16">
+            <div class="grid_2">@Html.LabelFor(m => m.IsPurchaseOrder)</div>
+            <div class="grid_2">@Html.CheckBoxFor(m => m.IsPurchaseOrder, new { disabled = "disabled" })</div>
+        </div>
+        <div class="container_16">
+            <div class="grid_2">@Html.LabelFor(m => m.IsCapitalExpense)</div>
+            <div class="grid_2">@Html.CheckBoxFor(m => m.IsCapitalExpense, new { disabled = "disabled" })</div>
+        </div>
+        <div class="container_16">
+            <div class="grid_2">@Html.LabelFor(m => m.IsEmergency)</div>
+            <div class="grid_2">@Html.CheckBoxFor(m => m.IsEmergency, new { disabled = "disabled" })</div>
+        </div>
+
+        <div class="container_16 ">
+            <div class="grid_2">@Html.LabelFor(m => m.IsSpecialProject)</div>
+            <div class="grid_2">@Html.CheckBoxFor(m => m.IsSpecialProject, new { disabled = "disabled" })</div>
+        </div>
+
+        <div class="container_16">
+            <div class="grid_2">@Html.LabelFor(m => m.PurchaseOrderId)</div>
+            <div class="grid_2"><span id="SpanPurchaseOrderId">@Model.PurchaseOrderId</span></div>
+        </div>
+        <div class="container_16">
+            <div class="grid_2">@Html.LabelFor(m => m.CustomPurchaseOrderNumber)</div>
+            <div class="grid_2">@Html.TextBoxFor(m => m.CustomPurchaseOrderNumber, new { @readonly = "readonly" })</div>
+        </div>
+    </div>
+</div>
+<div class="container_16">
+    <div class="grid_2">@Html.LabelFor(m => m.EnterDate)</div>
+    <div class="grid_2">@Html.LabelFor(m => m.PurchaseDate)</div>
+    <div class="grid_3">@Html.LabelFor(m => m.FreightOnBoard)</div>
+    <div class="grid_3">@Html.LabelFor(m => m.ShipVia)</div>
+    <div class="grid_2">@Html.LabelFor(m => m.StartShipping)</div>
+    <div class="grid_4">@Html.LabelFor(m => m.CompleteShipping)</div>
+</div>
+<div class="container_16 margin_separator">
+    <div class="grid_2">@Html.DisplayFor(m => m.EnterDate)</div>
+    <div class="grid_2">@Html.DisplayFor(m => m.PurchaseDate)</div>
+    <div class="grid_3">@Html.TextBoxFor(m => m.FreightOnBoard, new { size = "20", @class = "OrderStatus", @readonly = "readonly" })</div>
+    <div class="grid_3">@Html.TextBoxFor(m => m.ShipVia, new { size = "20", @class = "OrderStatus", @readonly = "readonly" })</div>
+    <div class="grid_2">@Html.DisplayFor(m => m.StartShipping)</div>
+    <div class="grid_4">@Html.DisplayFor(m => m.CompleteShipping)</div>
+</div>
+<div class="container_16">
+    <div class="grid_15">@Html.LabelFor(m => m.Terms)</div>
+</div>
+<div class="container_16 margin_separator">
+    <div class="grid_15">@Html.TextBoxFor(m => m.Terms, new { size = "90", @class = "Terms", @readonly = "readonly", @maxlength = "54" })</div>
+</div>
+<div class="container_16 bottom_pad">
+    <div class="grid_16">Internal Office Use:</div>
+</div>
+<div class="container_16 margin_separator">
+    <div class="grid_2">@Html.LabelFor(m => m.PurchaseOrderTypeId)</div>
+    <div class="grid_3">@Html.TextBox("PurchaseOrderType", Model.PurchaseOrderTypes.Single(t => t.Id == Model.PurchaseOrderTypeId).Name, new { @readonly = "readonly" })</div>
+    <div class="grid_2">@Html.LabelFor(m => m.PurchaseOrderAssetClassId)</div>
+    <div class="grid_3">@Html.TextBox("AssetClass", Model.AssetClasses.Single(t => t.Id == Model.PurchaseOrderAssetClassId).Name, new { @readonly = "readonly" })</div>
+</div>
+<div class="container_16 margin_separator">
+    <div class="grid_2">@Html.LabelFor(m => m.Description)</div>
+    <div class="grid_14">@Html.TextBoxFor(m => m.Description, new { size = "50", @class = "Description", @readonly = "readonly" })</div>
+</div>
+<h3>Purchase Order Items</h3>
+<table id="purchaseItems" class="margin-separator">
+    <thead>
+        <tr>
+            <th>Quantity Ordered</th>
+            <th>Stock Number</th>
+            <th>Item Description (256)</th>
+            <th>Account Number</th>
+            <th>P.O. Cost</th>
+            <th>Unit</th>
+            <th>Total Cost</th>
+        </tr>
+    </thead>
+    <tbody>
+        @Html.DisplayFor(m => m.Items)
+    </tbody>
+</table>
+<h3>Authorization</h3>
+<div class="container_16 bottom_pad">
+    <div class="grid_4">@Html.LabelFor(m => m.Level1Approver):</div>
+    <div class="grid_3">@Html.DisplayFor(m => m.Level1Approver)</div>
+    <div class="grid_3">@Html.LabelFor(m => m.Level1ApprovalDate): @Html.DisplayFor(m => m.Level1ApprovalDate)</div>
+    <div class="grid_2">Subtotal:</div>
+    <div class="grid_4">
+        <span id="Subtotal" class="calculated">@Html.DisplayFor(m => m.Subtotal)</span>
+    </div>
+</div>
+<div class="container_16 bottom_pad">
+    <div class="grid_4">@Html.LabelFor(m => m.IsLevel2MarkedForApproval):</div>
+    @if (Model.IsLevel2Approved)
+    {
+        <div class="grid_3">@Html.DisplayFor(m => m.Level2Approver)</div>
+        <div class="grid_3">@Html.LabelFor(m => m.Level2ApprovalDate): @Html.DisplayFor(m => m.Level2ApprovalDate)</div>
+    }
+    else
+    {
+        <div class="grid_6">&nbsp;</div>
+    }
+    <div class="grid_2">@Html.LabelFor(m => m.EstimatedTaxCost):</div>
+    <div class="grid_2">@Html.DisplayFor(m => m.EstimatedTaxCost, new { id = "EstimatedTaxCost", size = "8" })</div>
+    <div class="grid_2">
+        @Html.LabelFor(m => m.IsTaxIncluded) @Html.CheckBoxFor(m => m.IsTaxIncluded, new { disabled = "disabled" })
+    </div>
+</div>
+<div class="container_16 bottom_pad">
+    <div class="grid_4">@Html.LabelFor(m => m.IsLevel3MarkedForApproval):</div>
+    @if (Model.IsLevel3Approved)
+    {
+        <div class="grid_3">@Html.DisplayFor(m => m.Level3Approver)</div>
+        <div class="grid_3">@Html.LabelFor(m => m.Level3ApprovalDate): @Html.DisplayFor(m => m.Level3ApprovalDate)</div>
+    }
+    else
+    {
+        <div class="grid_6">&nbsp;</div>
+    }
+    <div class="grid_2">@Html.LabelFor(m => m.EstimatedFreightCost):</div>
+    <div class="grid_2">@Html.DisplayFor(m => m.EstimatedFreightCost, new { id = "EstimatedFreightCost", size = "8" })</div>
+    <div class="grid_2">
+        @Html.LabelFor(m => m.IsFreightIncluded) @Html.CheckBoxFor(m => m.IsFreightIncluded, new { disabled = "disabled" })
+    </div>
+</div>
+<div class="container_16 bottom_pad">
+    <div class="grid_4">@Html.LabelFor(m => m.IsLevel4MarkedForApproval):</div>
+    @if (Model.IsLevel4Approved)
+    {
+        <div class="grid_3">@Html.DisplayFor(m => m.Level4Approver)</div>
+        <div class="grid_3">@Html.LabelFor(m => m.Level4ApprovalDate): @Html.DisplayFor(m => m.Level4ApprovalDate)</div>
+    }
+    else
+    {
+        <div class="grid_6">&nbsp;</div>
+    }
+    <div class="grid_2">Total:</div>
+    <div class="grid_4">
+        <span id="EstimatedTotalCost" class="calculated">@Html.DisplayFor(m => m.EstimatedTotalCost)</span>
+    </div>
+</div>
+@if (Model.IsDenied)
+{
+    <div class="container_16 bottom_pad">
+        <div class="grid_4">@Html.LabelFor(m => m.IsMarkedForDenial):</div>
+        <div class="grid_3">@Html.DisplayFor(m => m.Denier)</div>
+        <div class="grid_3">@Html.LabelFor(m => m.DenialDate): @Html.DisplayFor(m => m.DenialDate)</div>
+    </div>
+    <div class="container_16 bottom_pad" id="denialComments">
+        <div class="grid_2">@Html.LabelFor(m => m.DenialComments):</div>
+        <div class="grid_14">@Html.TextBoxFor(m => m.DenialComments, new { size = "75", @class = "Comments", @readonly = "readonly" })</div>
+    </div>
+}
+@if (Model.HasFinalApproval)
+{
+    <div class="container_16 margin_separator">
+        <div class="grid_4">@Html.LabelFor(m => m.IsMarkedForFinalApproval):</div>
+        <div class="grid_3">@Html.DisplayFor(m => m.FinalApprover)</div>
+        <div class="grid_3">@Html.LabelFor(m => m.FinalApprovalDate): @Html.DisplayFor(m => m.FinalApprovalDate)</div>
+    </div>
+    <div class="container_16 margin_separator">
+        <div class="grid_2">@Html.LabelFor(m => m.Comments):</div>
+        <div class="grid_14">@Html.TextBoxFor(m => m.Comments, new { size = "75", @class = "Comments", @readonly = "readonly" })</div>
+    </div>
+}
+<div class="container_16 margin_separator">
+    <div class="grid_9">&nbsp;</div>
+    <div class="grid_5"><span class="right"><strong>Office Use Only:</strong>&nbsp;@Html.LabelFor(m => m.ActualInvoiceCost, new { @class = "right" })</span></div>
+    <div class="grid_2 right">@Html.EditorFor(m => m.ActualInvoiceCost, new { size = "8", @class = "ActualInvoiceCost" })@Html.ValidationMessageFor(m => m.ActualInvoiceCost)</div>
+</div>
+<h3>Supporting Documents</h3>
+<table id="purchaseOrderDocuments" class="margin-separator">
+    <thead>
+        <tr>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @Html.DisplayFor(m => m.Documents)
+    </tbody>
+</table>
+
+<environment names="Development">
+    <script src="~/lib/jquery-form/src/jquery.form.js"></script>
+    <script src="~/lib/autogrow/autogrow.js"></script>
+    <script src="~/js/PurchaseOrder.js" asp-append-version="true"></script>
+</environment>
+
+<environment names="Testing,Production,Training">
+    <script src="~/lib/autogrow/autogrow.min.js"></script>
+    <script src="~/lib/jquery-form/dist/jquery.form.min.js"></script>
+    <script src="~/js/PurchaseOrder.js" asp-append-version="true"></script>
+</environment>
+
+<script>
+    $(document).ready(function () {
+        CapitalExpenseLevel2(this);
+
+        $('#IsCapitalExpense').on('change', function (e) {
+            CapitalExpenseLevel2(this);
+        });
+        $('input#IsMarkedForFinalApproval').on('change', function (e) {
+            RemoveApprovalEvents(this);
+            if (CapitalExpenseLevel2(this) == false) {
+                ApprovalRules(this);
+                NoneApproved(this);
+            };
+            AddApprovalEvents(this);
+        });
+        $('input[id$=MarkedForApproval]').on('change', function (e) {
+            RemoveApprovalEvents(this);
+            if (CapitalExpenseLevel2(this) == false) {
+                NoneApproved(this);
+            };
+            AddApprovalEvents(this);
+        });
+        $('#IsMarkedForDenial').on('change', function (e) {
+            RemoveApprovalEvents(this);
+            DenyChecked(e);
+            CapitalExpenseLevel2(this);
+            AddApprovalEvents(this);
+        });
+    });
+</script>
+

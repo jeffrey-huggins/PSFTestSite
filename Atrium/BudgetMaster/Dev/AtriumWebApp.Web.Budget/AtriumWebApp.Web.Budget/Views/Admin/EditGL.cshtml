@@ -1,0 +1,162 @@
+@model AtriumWebApp.Models.Budget.GeneralLedger
+<form id="editGL" asp-action="SaveGL" asp-controller="Admin">
+    <table>
+        <tr>
+            <td>
+                Account #
+            </td>
+            <td>
+                @if (String.IsNullOrEmpty(Model.GLAccountNb))
+                {
+                    <input asp-for="GLAccountNb" />
+
+                }
+                else
+                {
+                    <input asp-for="GLAccountNb" disabled="disabled" />
+                    <input asp-for="GLAccountNb" hidden="hidden" />
+
+                }
+
+                <br />
+                <span asp-validation-for="GLAccountNb"></span>
+            </td>
+            <td>
+                GL Account Type
+            </td>
+            <td>
+                <select asp-for="GLAccountTypeID" asp-items="ViewBag.AccountTypes"></select>
+                <br />
+                <span asp-validation-for="GLAccountTypeID"></span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Account Name
+            </td>
+            <td colspan="3">
+                <input asp-for="GLAccountNm" style="width:100%" />
+                <br />
+                <span asp-validation-for="GLAccountNm"></span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Report Name
+            </td>
+            <td colspan="3">
+                <input asp-for="GLAccountSimpleNm" style="width:100%" />
+                <br />
+                <span asp-validation-for="GLAccountSimpleNm"></span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="glLabor">
+                    Payer Group
+                </div>
+
+            </td>
+            <td>
+                <div class="glLabor">
+                    <select asp-for="PayGrpCd" asp-items="ViewBag.PayGrpCds">
+                        <option disabled selected></option>
+                    </select>
+                    <br />
+                    <span asp-validation-for="PayGrpCd"></span>
+                </div>
+            </td>
+            <td>
+                GLAccount Index
+            </td>
+            <td>
+                <input asp-for="GLAccountIndex" disabled="disabled" />
+                <input asp-for="GLAccountIndex" hidden="hidden" />
+            </td>
+        </tr>
+        <tr>
+            <td class="glLabor">
+                <div class="glLabor">
+                    Labor Expense Group
+                </div>
+            </td>
+            <td class="glLabor">
+                <div class="glLabor">
+                    <select asp-for="LaborExpenseGLGrpID" asp-items="ViewBag.LaborGLGroups">
+                        <option disabled selected></option>
+                    </select>
+                </div>
+            </td>
+            <td>
+
+                @*GLAccountNb*@
+            </td>
+            <td></td>
+        </tr>
+    </table>
+    @if (String.IsNullOrEmpty(Model.GLAccountNb))
+    {
+        <input type="button" value="Add" id="GLAddNeww" />
+
+    }
+</form>
+<script>
+    @if(Model.GLAccountTypeID != 3)
+    {
+        @:$(".glLabor").hide();
+
+    }
+    @if (String.IsNullOrEmpty(Model.GLAccountNb))
+    {
+        @:var newGLAccount = true;
+    }
+    else
+    {
+        @:var newGLAccount = false;
+
+    }
+    $("#GLAccountTypeID").change(function () {
+        if ($(this).val() == "3") {
+            $(".glLabor").show();
+        }
+        else {
+            $(".glLabor").hide();
+
+        }
+    });
+
+    $("#editGL").on("change", "input, select", function () {
+        if (newGLAccount) {
+            return;
+        }
+        saveGL(this);
+    });
+    $("#GLAddNeww").click(function () {
+        saveGL(this);
+
+    });
+    function saveGL(element) {
+        var form = $(element).closest("form");
+        var url = form.attr("action");
+        if (form.valid()) {
+            $.post(url, form.serialize(), function (data) {
+                if (data.Success) {
+
+                } else {
+                    alert(data.Message);
+                }
+            }).fail(function () {
+                alert("Server is not responding, please try again.");
+            });
+        }
+        if (newGLAccount) {
+            $("#adminGL").click();
+        }
+    }
+
+    $.validator.setDefaults({ ignore: [] });
+    $("#editGL").removeData("validator");
+    $("#editGL").removeData("unobtrusiveValidation");
+    $.validator.unobtrusive.parse($("#editGL"));
+    $("#editGL").validate();
+</script>

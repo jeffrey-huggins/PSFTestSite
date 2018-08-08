@@ -1,0 +1,67 @@
+﻿@model AtriumWebApp.Models.ViewModel.ContractViewModel
+@Html.HiddenFor(m => m.Id)
+<section id="ContractCommunityAssociations" class="table-cell"></section>
+<section class="table-cell">
+    <h3 class="contractManagementTitle">Edit/Create Contract</h3>
+    <div class="container_16">
+        <div class="grid_7">@Html.LabelFor(m => m.Providers)</div>
+        <div class="grid_3">@Html.LabelFor(m => m.ContractCategoryId)</div>
+        <div class="grid_3">@Html.LabelFor(m => m.ContractSubCategoryId)</div>
+        <div class="grid_2">@Html.LabelFor(m => m.ArchiveFlg, "Archive Contract")</div>
+    </div>
+    <div class="container_16 bottom_pad">
+        <div class="grid_7">@Html.DropDownListFor(m => m.ContractProviderId, new SelectList(Model.Providers, "Id", "Name", Model.ContractProviderId), new { @class = "Providers", style = "max-width: 400px;" })</div>
+        <div class="grid_3">@Html.DropDownListFor(m => m.ContractCategoryId, new SelectList(Model.Categories, "Id", "Name", Model.ContractCategoryId), new { @style = "max-width: 165px;" })</div>
+        <div class="grid_3">@Html.DropDownListFor(m => m.ContractSubCategoryId, new SelectList(Model.SubCategories, "Id", "Name", Model.ContractSubCategoryId), new { @style = "max-width: 180px;" })</div>
+        <div class="grid_2">@Html.CheckBoxFor(m => m.ArchiveFlg)</div>
+    </div>
+    <h3>Communities <button type="button" id="addContractCommunity">Add</button></h3>
+    <table id="contractCommunities" class="margin-separator">
+        <thead>
+            <tr>
+                <th>Community</th>
+                <th>Start <br />@Html.TextBox("AllStartDate", "", "{0:MM/dd/yyyy}", new { size = "10", data_field = "StartDate", @class = "isDate columnValue" })</th>
+                <th>End <br />@Html.TextBox("AllEndDate", "", "{0:MM/dd/yyyy}", new { size = "10", data_field = "EndDate", @class = "isDate columnValue" })</th>
+                <th>Renewal <br />@Html.DropDownList("AllRenewals", new SelectList(Model.Renewals, "Id", "Name", null), new { @class = "columnValue", data_field = "SelectedRenewal" })</th>
+                <th>Term Notice <br />@Html.DropDownList("AllTerminationNotices", new SelectList(Model.TerminationNotices, "Id", "Name", null), new { @class = "columnValue", data_field = "SelectedTerminationNotice" })</th>
+                <th>Payment Term<br />@Html.DropDownList("AllPaymentTerms", new SelectList(Model.PaymentTerms, "Id", "Name", null), new { @class = "columnValue", data_field = "SelectedPaymentTerm" })</th>
+                
+                <th>Credentialling <br />@Html.TextBox("AllCredentiallingDate", "", "{0:MM/dd/yyyy}", new { size = "10", data_field = "CredentialingDate", @class = "isDate columnValue" })</th>
+                <th>Re-Credentialling <br />@Html.TextBox("AllReCredentiallingDate", "", "{0:MM/dd/yyyy}", new { size = "10", data_field = "ReCredentialingDate", @class = "isDate columnValue" })</th>
+                <th><span id="AllArchiveFLAG">Archive <br />@Html.CheckBox("AllArchiveFlg")</span></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @Html.EditorFor(m => m.ContractCommunities)
+        </tbody>
+    </table>
+    <h3>Documents <button type="button" id="addContractDocument">Add</button></h3>
+    <table id="contractDocuments" class="margin-separator">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Archive Document</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @Html.EditorFor(m => m.Documents)
+        </tbody>
+    </table>
+    <div class="clear"></div>
+    <ul id="ErrorResult" class="validation-summary-errors"></ul>
+    @Html.ValidationSummary(false)
+    <div class="container_16 top_pad bottom_pad"></div>
+    <div class="container_16">
+        <div class="grid_7"><br /></div>
+        <div class="grid_3"><input type="submit" id="submitContract" value="Save" /></div>
+        <div class="grid_3"><button type="button" id="clearContract">Cancel</button></div>
+        <div class="grid_3"></div>
+    </div>
+</section>
+<script type="text/javascript">
+    $(document).ready(function () {
+        ArchiveFlg();
+    });
+</script>

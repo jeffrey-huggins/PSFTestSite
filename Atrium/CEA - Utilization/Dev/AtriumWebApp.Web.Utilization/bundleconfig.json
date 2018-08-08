@@ -1,0 +1,100 @@
+[
+  {
+    "outputFileName": "wwwroot/css/site.min.css",
+    "inputFiles": [
+      "wwwroot/css/site.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/site.min.js",
+    "inputFiles": [
+      "wwwroot/js/site.js",
+      "wwwroot/js/Countdown.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    }
+  },
+  {
+    "outputFileName": "wwwroot/css/CustomStyle_v1.min.css",
+    "inputFiles": [
+      "wwwroot/css/CustomStyle_v1.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/css/CustomStyleIE.min.css",
+    "inputFiles": [
+      "wwwroot/css/CustomStyleIE.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/lib/jquery-ui/themes/base/bundle.css",
+    "inputFiles": [
+      "wwwroot/lib/jquery-ui/themes/base/accordion.css",
+      "wwwroot/lib/jquery-ui/themes/base/all.css",
+      "wwwroot/lib/jquery-ui/themes/base/autocomplete.css",
+      "wwwroot/lib/jquery-ui/themes/base/base.css",
+      "wwwroot/lib/jquery-ui/themes/base/button.css",
+      "wwwroot/lib/jquery-ui/themes/base/checkboxradio.css",
+      "wwwroot/lib/jquery-ui/themes/base/controlgroup.css",
+      "wwwroot/lib/jquery-ui/themes/base/core.css",
+      "wwwroot/lib/jquery-ui/themes/base/datepicker.css",
+      "wwwroot/lib/jquery-ui/themes/base/dialog.css",
+      "wwwroot/lib/jquery-ui/themes/base/draggable.css",
+      "wwwroot/lib/jquery-ui/themes/base/menu.css",
+      "wwwroot/lib/jquery-ui/themes/base/progressbar.css",
+      "wwwroot/lib/jquery-ui/themes/base/resizable.css",
+      "wwwroot/lib/jquery-ui/themes/base/selectable.css",
+      "wwwroot/lib/jquery-ui/themes/base/selectmenu.css",
+      "wwwroot/lib/jquery-ui/themes/base/slider.css",
+      "wwwroot/lib/jquery-ui/themes/base/sortable.css",
+      "wwwroot/lib/jquery-ui/themes/base/spinner.css",
+      "wwwroot/lib/jquery-ui/themes/base/tabs.css",
+      "wwwroot/lib/jquery-ui/themes/base/theme.css",
+      "wwwroot/lib/jquery-ui/themes/base/tooltip.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/PASRR.min.js",
+    "inputFiles": [
+      "wwwroot/js/PASRR.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/PELI.min.js",
+    "inputFiles": [
+      "wwwroot/js/PELI.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/PELIAdmin.min.js",
+    "inputFiles": [
+      "wwwroot/js/PELIAdmin.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/SkilledCharting.min.js",
+    "inputFiles": [
+      "wwwroot/js/SkilledCharting.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/PASRRAdmin.min.js",
+    "inputFiles": [
+      "wwwroot/js/PASRRAdmin.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/SkilledChartingAdmin.min.js",
+    "inputFiles": [
+      "wwwroot/js/SkilledChartingAdmin.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/DocumentationQueueAdmin.min.js",
+    "inputFiles": [
+      "wwwroot/js/DocumentationQueueAdmin.js"
+    ]
+  }
+]

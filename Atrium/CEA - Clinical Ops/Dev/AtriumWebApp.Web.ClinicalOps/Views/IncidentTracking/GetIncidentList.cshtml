@@ -1,0 +1,94 @@
+@model List<PatientIncidentEvent>
+
+<table id="incidentTable">
+    <thead>
+        <tr>
+            <th>
+
+            </th>
+            <th>
+                Incident Type
+            </th>
+            <th>
+                Date
+            </th>
+            <th>
+                Time
+            </th>
+            <th>
+                Reported to State
+            </th>
+            <th>
+                State in Building
+            </th>
+            <th>
+                Regional Nurse Closed
+            </th>
+            <th>
+                Incident Details
+            </th>
+            <th>
+                Edit
+            </th>
+            <th>
+                Delete
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var incident in Model)
+        {
+            <tr>
+                <td>
+                    @incident.PatientIncidentEventId
+                </td>
+                <td>
+                    @incident.IncidentType.PatientIncidentName
+                </td>
+                <td>
+                    @incident.IncidentDateTime.ToString("d")
+                </td>
+                <td>
+                    @incident.IncidentDateTime.ToString("hh:mm tt").TrimStart('0')
+                </td>
+                <td>
+                    @if (incident.ReportedToStateFlg)
+                    {
+                        @:Yes
+                    }
+                    else
+                    {
+                        @:No
+
+                    }
+                </td>
+                <td>
+                    @if (incident.StateInBuildingFlg)
+                    {
+                        @:Yes
+                    }
+                    else
+                    {
+                        @:No
+
+                    }
+                </td>
+                <td>
+                    @if(incident.RegionalNurse != null)
+                    {
+                        @(incident.RegionalNurse.LastName + ", " + incident.RegionalNurse.FirstName)
+                    }
+                </td>
+                <td>
+                    @incident.IncidentDetails
+                </td>
+                <td>
+                    @Html.ActionLink("Edit","EditIncident",new { incidentEventId = incident.PatientIncidentEventId, patientId = incident.PatientId }, new { @class="edit"} )
+                </td>
+                <td>
+                    @Html.ActionLink("Delete", "DeleteRow", new { rowId = incident.PatientIncidentEventId }, new { @class = "delete" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

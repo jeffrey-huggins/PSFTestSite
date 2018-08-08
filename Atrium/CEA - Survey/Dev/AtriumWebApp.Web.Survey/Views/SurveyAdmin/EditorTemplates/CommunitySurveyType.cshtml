@@ -1,0 +1,9 @@
+@model AtriumWebApp.Web.Survey.Models.CommunitySurveyType
+
+<form asp-action="NewSurveyType" asp-controller="SurveyAdmin">
+    <input asp-for="SurveyTypeDesc" placeholder="Type Description" />
+    <span asp-validation-for="SurveyTypeDesc" class="text-danger"></span>
+    <label>Survey Complaint Type:</label>
+    <input asp-for="ComplaintFlg" />
+    <input type="submit" value="Add" />
+</form>

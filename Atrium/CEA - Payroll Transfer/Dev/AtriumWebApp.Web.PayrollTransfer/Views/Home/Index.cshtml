@@ -1,0 +1,43 @@
+﻿@model AtriumWebApp.Models.ViewModel.HomeViewModel
+@{
+    ViewBag.Title = "Payroll Transfer";
+}
+<script>
+    $(document).ready(function () {
+        $("a").live('click', function () {
+            window.ShowProgress();
+        });
+    })
+</script>
+<div class="a-center">
+    <table id="homeButtonTable" >
+        <tr>
+            @if (Model.HasAccessTo("PRTR"))
+            {
+                <td>
+                    <a href="~/PayrollTransfer/" id="PRTRLink">
+                        <p>Payroll Transfer <br />and Adjustment</p>
+                    </a>
+                </td>
+            }
+            @*@if (Model.HasAccessTo("POR"))
+                {
+                    <td>
+                        <a href="~/PurchaseOrder/" id="PORLink">
+                            <p>Purchase Order</p>
+                        </a>
+                    </td>
+                }*@
+        </tr>
+        <tr>
+            @*@if (Model.HasAccessTo("CON"))
+                {
+                    <td>
+                        <a href="~/ContractManagement/" id="CONLink">
+                            <p>Contract Management</p>
+                        </a>
+                    </td>
+                }*@
+        </tr>
+    </table>
+</div>

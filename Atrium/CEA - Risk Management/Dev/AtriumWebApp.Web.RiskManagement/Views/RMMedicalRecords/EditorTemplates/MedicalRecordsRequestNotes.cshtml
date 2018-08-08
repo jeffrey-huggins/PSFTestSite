@@ -1,0 +1,9 @@
+@model AtriumWebApp.Web.RiskManagement.Models.MedicalRecordsRequestNotes
+<div>
+    <input type="hidden" asp-for="InsertedDate" />
+    <input type="hidden" asp-for="Requestid" />
+    <input type="hidden" asp-for="RequestNoteId" />
+    <input type="hidden" asp-for="UserName" />
+    <textarea asp-for="Notes" cols="35" rows="4"></textarea>
+    <input type="button" value="Add" id="submitNote" />
+</div>

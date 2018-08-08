@@ -1,0 +1,32 @@
+@model List<AtriumWebApp.Models.Budget.OtherExpensesGLCalcValueMaster>
+
+<div id="CalcValueEditor">
+    <div style="border:solid thin black">
+        <div style="display:inline-block" id="CalcValueEditSection">
+            
+            @*@foreach (var generalLedger in Model.GeneralLedgers)
+            {
+                @Html.EditorFor(a => generalLedger, "", "", new { LaborGLGroups = laborGLGroups, AccountTypes = accountTypes, PayGrpCds = payGrpCds })
+            }*@
+        </div>
+    </div>
+    <div class="recordSelection">
+        Record: <i class="fa fa-fast-backward selector" id="CalcValueFirst"></i>
+        <i class="fa fa-backward selector" aria-hidden="true" id="CalcValueBack"></i>
+        <input id="CalcValueSelector" />
+        <i class="fa fa-forward selector" aria-hidden="true" id="CalcValueForward"></i>
+        <i class="fa fa-fast-forward selector" aria-hidden="true" id="CalcValueLast"></i>
+        <i class="fa fa-plus selector" aria-hidden="true" id="newCalcValueButton" style="color:green"></i>
+        <i class="fa fa-times selector" aria-hidden="true" id="deleteCalcValue" style="color:red;"></i>
+        <select id="selectedCalcValue">
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                var pt = Model[i];
+                @:<option value="@pt.CalcValueID" rowNum="@(i + 1)">@pt.CalcValueNm</option>
+            }
+        </select>
+    </div>
+</div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

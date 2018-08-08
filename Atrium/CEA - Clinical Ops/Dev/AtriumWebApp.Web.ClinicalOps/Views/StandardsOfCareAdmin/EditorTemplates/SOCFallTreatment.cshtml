@@ -1,0 +1,13 @@
+@model SOCFallTreatment
+
+@if (Model.SOCFallTreatmentId == 0)
+{
+    Model.DataEntryFlg = true;
+}
+
+<form asp-action="NewTreatment" asp-controller="StandardsOfCareAdmin">
+    <input asp-for="SOCFallTreatmentName" placeholder="New Fall Treatment" />
+    <span asp-validation-for="SOCFallTreatmentName" class="text-danger"></span>
+    <input asp-for="DataEntryFlg" hidden="hidden" />
+    <input type="submit" value="Add" />
+</form>

@@ -1,0 +1,109 @@
+﻿@model AtriumWebApp.Models.ViewModel.AdminViewModel
+
+@{
+    ViewBag.Title = "Unemployment Compensation Admin Page";
+}
+<style type="text/css">
+    .content-wrapper {
+        max-width: 1366px;
+    }
+
+    .dataTables_wrapper {
+        border: solid thin black;
+    }
+
+    .dataTables_scrollBody {
+        overflow: auto;
+        height: auto !important;
+        max-height: 300px;
+        width: 100%;
+    }
+</style>
+
+<h2 style="padding-bottom: 30px;">@ViewBag.Title</h2>
+
+
+
+@using (Html.BeginForm("SaveLookback", "RMUnemploymentAdmin", FormMethod.Post, new { id = "SaveLookback" }))
+{
+    <table>
+        <thead>
+            <tr style="font-weight: bold">
+                <th>Lookback Days</th>
+            </tr>
+        </thead>
+        <tr>
+            <td>@Html.Label("Adjust Lookback Days:")</td>
+            @{
+                string lookbackDays;
+                Context.Session.TryGetObject("RMULookbackDays", out lookbackDays);
+            }
+
+            <td>@Html.TextBox("LookbackDays", lookbackDays)</td>
+            <td>
+                <input id="submit" name="submit" type="submit" value="Update" />
+            </td>
+        </tr>
+    </table>
+}
+
+<div id="tabs" style="min-height:500px">
+    <ul class="adminTabNav">
+        <li><a href="#communityTab">Communities</a></li>
+        <li><a href="#stateTab">State Pay Cycles</a></li>
+    </ul>
+    <div id="communityTab">
+        <table id="CommunityTable">
+            <thead>
+                <tr>
+                    <th>Facility</th>
+                    <th>State</th>
+                    <th>Region</th>
+                    <th>Use in Display</th>
+                    <th>Report Flag</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var com in Model.Communities.OrderByDescending(c => c.IsCommunityFlg).ThenBy(c => c.CommunityShortName))
+            {
+                    <tr>
+                        <td>@com.CommunityShortName</td>
+                        <td>@com.StateCd</td>
+                        <td>@Model.Regions.Single(r => r.RegionId == com.RegionId).RegionName</td>
+                        <td>@Html.CheckBoxFor(x => x.ApplicationCommunityInfos.Single(aci => aci.CommunityId == com.CommunityId).DataEntryFlg, new { id = com.CommunityId, @class = "checkbox" })</td>
+                        <td>@Html.CheckBoxFor(x => x.ApplicationCommunityInfos.Single(aci => aci.CommunityId == com.CommunityId).ReportFlg, new { id = com.CommunityId, @class = "checkboxReport" })</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div id="stateTab">
+        @using (Html.BeginForm("SavePayPeriod", "RMUnemploymentAdmin", FormMethod.Post))
+        {
+            @Html.Hidden("StateName")
+            <table style="border:solid thin black;">
+                <tr>
+                    <td>
+                        @Html.Label("State Pay Cycle:")
+                    </td>
+                    <td>
+                        @Html.DropDownList("States")
+                    </td>
+                    <td>
+                        @Html.DropDownList("PayPeriods")
+                    </td>
+                    <td>
+                        <input type="submit" value="Save" />
+                    </td>
+                </tr>
+            </table>
+        }
+    </div>
+</div>
+
+<environment names="Development">
+    <script type="text/javascript" src="~/js/UnemploymentAdmin.js" asp-append-version="true"></script>
+</environment>
+<environment names="Testing,Production,Training">
+    <script type="text/javascript" src="~/js/UnemploymentAdmin.min.js" asp-append-version="true"></script>
+</environment>

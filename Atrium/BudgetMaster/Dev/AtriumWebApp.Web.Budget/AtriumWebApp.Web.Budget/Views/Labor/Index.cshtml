@@ -1,0 +1,201 @@
+@model AtriumWebApp.Models.Budget.ViewModels.PayrollViewModel
+
+Payer Group Filters
+
+<div id="payrollFilters">
+    <input type="checkbox" checked="checked" id="IL" />
+    <label>Independent Living</label>
+    <input type="checkbox" checked="checked" id="MRD" />
+    <label>MR</label>
+    <input type="checkbox" checked="checked" id="RST" />
+    <label>Assisted Living</label>
+    <input type="checkbox" checked="checked" id="SNF" />
+    <label>Skilled Nursing Facility</label>
+</div>
+
+<table id="laborTable">
+    <thead>
+        <tr>
+            <th>
+                Account #
+            </th>
+            <th>
+                Account Desc
+            </th>
+            <th>
+                Hrs PPD
+            </th>
+            <th>
+                AWR
+            </th>
+            <th>
+                Holiday %
+            </th>
+            <th>
+                PTO %
+            </th>
+            <th>
+                WI
+            </th>
+            <th>
+                WIM
+            </th>
+            <th>
+                Bene Flag
+            </th>
+            <th>
+                Payer Group
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            var j = 0;
+        }
+        @foreach (var payroll in Model.PayrollAccounts)
+        {
+            j++;
+            SelectList month = new SelectList(Model.Months, "MonthID", "MonthNm", payroll.WageIncreaseMonth);
+            SelectList payerGroup = new SelectList(Model.PayerGroups, "PayGrpCd", "PayGrpCd", payroll.GeneralLedger.PayGrpCd);
+            <tr id="@j" gl="@payroll.GLAccountIndex">
+
+                <td>
+                    <select class="laborGL glDropdown">
+                        @for (int i = 0; i < Model.GLAccounts.Count; i++)
+                        {
+                            var ledger = Model.GLAccounts[i];
+                            string selected = string.Empty;
+                            if(ledger.GLAccountIndex == payroll.GLAccountIndex)
+                            {
+                                selected = "selected=selected";
+
+                            }
+                        @:<option value="@ledger.GLAccountIndex" @selected desc="@ledger.GLAccountNm" number="@ledger.GLAccountNb" payergroup="@ledger.PayGrpCd">@ledger.DisplayName</option>
+                        }
+                    </select>
+                </td>
+                <td>
+                    @Html.TextAreaFor(a => payroll.GeneralLedger.GLAccountNm, new { @class = "glaccount" })
+                </td>
+                <td>
+                    @Html.TextBoxFor(a => payroll.HoursPPD, new { @class = "smallDisplayField hours" })
+                </td>
+                <td>
+                    @Html.TextBoxFor(a => payroll.AverageWageRate, "{0:C}", new { @class = "smallDisplayField awr" })
+                </td>
+                <td>
+                    @Html.TextBoxFor(a => payroll.HolidayPercentage, "{0:P2}", new { @class = "smallDisplayField holiday" })
+                </td>
+                <td>
+                    @Html.TextBoxFor(a => payroll.PTOPercentage, "{0:P2}", new { @class = "smallDisplayField pto" })
+                </td>
+                <td>
+                    @Html.TextBoxFor(a => payroll.WageIncreaseCd, new { @class = "smallDisplayField wi" })
+                </td>
+                <td>
+                    <select asp-items="month" class="wim"></select>
+                </td>
+                <td>
+                    @Html.CheckBoxFor(a => payroll.BenefitCalculationFlag, new { @class = "bene" })
+                </td>
+                <td>
+                    <div>
+                        @Html.TextBoxFor(a => payroll.GeneralLedger.PayGrpCd, new { @class = "smallDisplayField paygroup", disabled = "disabled" })
+                        <i class="fa fa-times selector" id="deleteLaborRow" style="color:red;font-size:18px;float:right;"></i>
+                    </div>
+                </td>
+            </tr>
+
+        }
+    </tbody>
+    <tfoot>
+        @{
+            SelectList blankMonth = new SelectList(Model.Months, "MonthID", "MonthNm");
+        }
+        <tr class="newRow">
+            <td>
+                <i class="fa fa-asterisk"></i>
+                <select class="laborGL glDropdown">
+                    @for (int i = 0; i < Model.GLAccounts.Count; i++)
+                    {
+                        var ledger = Model.GLAccounts[i];
+                        @:
+                        <option value="@ledger.GLAccountIndex" desc="@ledger.GLAccountNm" number="@ledger.GLAccountNb" payergroup="@ledger.PayGrpCd">@ledger.DisplayName</option>
+                    }
+                </select>
+            </td>
+            <td>
+                <textarea class="glaccount">@Model.GLAccounts.First().GLAccountNm </textarea>
+            </td>
+            <td>
+                <input type="text" class="smallDisplayField hours" />
+            </td>
+            <td>
+                <input type="text" class="smallDisplayField awr" />
+            </td>
+            <td>
+                <input type="text" class="smallDisplayField holiday" />
+            </td>
+            <td>
+                <input type="text" class="smallDisplayField pto" />
+            </td>
+            <td>
+                <input type="text" class="smallDisplayField wi" value="1" />
+            </td>
+            <td>
+
+                <select asp-items="blankMonth" class="wim"></select>
+            </td>
+            <td>
+                <input type="checkbox" class="bene" />
+            </td>
+            <td>
+                <input type="text" class="smallDisplayField paygroup" disabled="disabled" value="@Model.GLAccounts.First().PayGrpCd" />
+                <input type="button" value="Add" class="addPayroll" />
+            </td>
+
+        </tr>
+        @*<tr class="blankRow" style="display:none">
+            <td>
+                <select class="laborGL glDropdown">
+                    @for (int i = 0; i < Model.GLAccounts.Count; i++)
+                    {
+                        var ledger = Model.GLAccounts[i];
+                        string selected = string.Empty;
+                        @:
+                        <option value="@ledger.GLAccountIndex" desc="@ledger.GLAccountNm" payergroup="@ledger.PayGrpCd">@ledger.DisplayName</option>
+                    }
+                </select>
+            </td>
+            <td>
+                <input type="text" value="@Model.GLAccounts.First().GLAccountNm" />
+            </td>
+            <td>
+                <input type="text" class="smallDisplayField hours" />
+            </td>
+            <td>
+                <input type="text" class="smallDisplayField awr" />
+            </td>
+            <td>
+                <input type="text" class="smallDisplayField holiday" />
+            </td>
+            <td>
+                <input type="text" class="smallDisplayField pto" />
+            </td>
+            <td>
+                <input type="text" class="smallDisplayField wi" value="1" />
+            </td>
+            <td>
+                <select asp-items="blankMonth" class="wim"></select>
+            </td>
+            <td>
+                <input type="checkbox" class="bene" />
+            </td>
+            <td>
+                <input type="text" class="smallDisplayField paygroup" disabled="disabled" value="@Model.GLAccounts.First().PayGrpCd" />
+                <input type="button" value="Add" />
+            </td>
+        </tr>*@
+
+    </tfoot>
+</table>

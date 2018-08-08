@@ -1,0 +1,34 @@
+﻿@model AtriumWebApp.Web.HR.Models.STNATrainingClass
+
+@{
+    ViewBag.Title = "Edit STNA Training Class";
+}
+
+<h2>Edit Training Class</h2>
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>STNATrainingClass</legend>
+
+        @Html.EditorForModel()
+
+        <p>
+            <input type="submit" value="Save" />
+        </p>
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        $(".isDate").datepicker();
+        $("#STNATrainingFacilityList").val(@Model.STNATrainingFacilityId);
+    });
+</script>

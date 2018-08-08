@@ -1,0 +1,140 @@
+﻿@model AtriumWebApp.Web.Financial.Models.ViewModel.WriteOffViewModel
+
+@{
+    ViewBag.Title = "Create";
+}
+<h2>Create</h2>
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>WriteOff</legend>
+
+        @Html.Partial("WriteOffViewModel")
+        @*<div class="editor-label">
+
+        </div>
+        <div class="editor-field">
+            @Html.LabelFor(model => model.CommunityId)
+            @Html.DropDownListFor(model => model.CommunityId, new SelectList(Model.Communities, "CommunityId", "CommunityShortName"), "Select a Community", new { id = "Communities" })
+            @Html.ValidationMessageFor(model => model.CommunityId)
+        </div>
+
+        <div class="editor-label">
+
+        </div>
+        <div class="editor-field">
+            @Html.LabelFor(model => model.PatientId)
+            @Html.DropDownListFor(model => model.PatientId, ViewData["ResidentList"] as SelectList, "Select a Resident", new {@id = "residents" })
+            @Html.ValidationMessageFor(model => model.PatientId)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.PayerId)
+            @Html.DropDownListFor(model => model.PayerId, ViewData["PayerList"] as SelectList, "Select a Payer", new { @id = "payers" })
+            @Html.ValidationMessageFor(model => model.PayerId)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.WriteOffAmt)
+            @Html.TextBoxFor(model => model.WriteOffAmt)
+            @Html.ValidationMessageFor(model => model.WriteOffAmt)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.DOSYear)
+            @Html.EditorFor(model => model.DOSYear)
+            @Html.ValidationMessageFor(model => model.DOSYear)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.DOSMonth)
+            @Html.DropDownListFor(model => model.DOSMonth, new List<SelectListItem> {
+                   new SelectListItem { Text = "January", Value ="01" },
+                   new SelectListItem { Text = "February", Value ="02" },
+                   new SelectListItem { Text = "March", Value ="03" },
+                   new SelectListItem { Text = "April", Value ="04" },
+                   new SelectListItem { Text = "May", Value ="05" },
+                   new SelectListItem { Text = "June", Value ="06" },
+                   new SelectListItem { Text = "July", Value ="07" },
+                   new SelectListItem { Text = "August", Value ="08" },
+                   new SelectListItem { Text = "September", Value ="09" },
+                   new SelectListItem { Text = "October", Value ="10" },
+                   new SelectListItem { Text = "November", Value ="11" },
+                   new SelectListItem { Text = "December", Value ="12" }
+               })
+            @Html.ValidationMessageFor(model => model.DOSMonth)
+        </div>
+
+        <div class="editor-label">
+            @Html.Label("Our Fault?")
+            @Html.EditorFor(model => model.OurFaultFlg)
+            @Html.ValidationMessageFor(model => model.OurFaultFlg)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Notes)
+            @Html.EditorFor(model => model.Notes)
+            @Html.ValidationMessageFor(model => model.Notes)
+        </div>*@
+
+        <p>
+            <input type="submit" value="Create" />
+        </p>
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        $("fieldset").on("change", "#Communities", function (data) {
+            ShowProgress();
+            //var payrollTransferItem = $(data.target).parents(".payroll-transfer-item");
+            var selectedValue = $(data.target).find("option:selected").val();
+
+            //Sync Destination Community (in case just want to change the General ledger... saves a click)
+            //payrollTransferItem.find(".destination-community").val(selectedValue);
+
+            $.ajax({
+                url: "GetCommunityPatientsAndPayers",
+                dataType: "json",
+                cache: false,
+                type: "POST",
+                data: { communityId: selectedValue }, //communityId: $("#SourceCommunity option:selected").val() },
+                success: function (result) {
+                    var optionHTML = "<option value=''>Select an Employee</option>";
+                    $("#payers")[0].innerHTML = "";
+                    $("#residents")[0].innerHTML = "";
+
+                    for (x = 0; x < result.Payers.length; x++) {
+                        $("#payers")[0].options[x] = new Option(result.Payers[x].Text, result.Payers[x].Value);
+                    }
+
+                    for (x = 0; x < result.Patients.length; x++) {
+                        $("#residents")[0].options[x] = new Option(result.Patients[x].Text, result.Patients[x].Value);
+                    }
+                    ////Clear list
+                    //payrollTransferItem.find(".employee-list")[0].innerHTML = ""
+                    //payrollTransferItem.find(".employee-list")[0].options[0] = new Option("Select an Employee", "");
+                    //for (x = 0; x < result.length; x++) {
+                    //    payrollTransferItem.find(".employee-list")[0].options[x + 1] = new Option(result[x].Text, result[x].Value);
+                    //    $(payrollTransferItem.find(".employee-list")[0].options[x + 1]).data("gl-id", result[x].JobClassID);
+                    //}
+
+                    //payrollTransferItem.find(".source-ledger").val("");
+                    //payrollTransferItem.find(".destination-ledger").val("");
+                    HideProgress();
+                },
+                error: function (data, error, errortext) { HideProgress(); }
+            }); //end of ajax call
+
+        });
+
+    });
+</script>

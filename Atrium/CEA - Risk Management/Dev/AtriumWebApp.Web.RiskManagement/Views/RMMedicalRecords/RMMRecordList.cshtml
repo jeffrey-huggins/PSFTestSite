@@ -1,0 +1,34 @@
+@model List<AtriumWebApp.Web.RiskManagement.Models.MedicalRecordsRequest>
+
+<table id="recordTable">
+    <thead>
+        <tr>
+            <th>Date Opened</th>
+            <th>Date Closed</th>
+            <th>Lawsuit Filed</th>
+            <th>Arbitration</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null)
+        {
+            foreach (var request in Model)
+            {
+                <tr id="@request.Requestid">
+                    <td>@request.OpenDate.ToString("d")</td>
+                    <td>@string.Format("{0:d}", request.ClosedDate)</td>
+                    <td>@(request.LawSuitFiledFlg ? "Yes" : "No")</td>
+                    <td>@(request.ArbitrationAgreementFlg ? "Yes" : "No")</td>
+                    <td>
+                        @Html.ActionLink("Edit", "EditOrCreateRMMRecord", new { patientId = request.PatientId, recordId = request.Requestid }, new { @class = "edit" })
+                    </td>
+                    <td>
+                        @Html.ActionLink("Delete", "DeleteRow", new { rowId = request.Requestid }, new { @class = "delete" })
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

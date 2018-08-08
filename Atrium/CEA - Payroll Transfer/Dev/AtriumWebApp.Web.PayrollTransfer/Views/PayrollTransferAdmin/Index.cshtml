@@ -1,0 +1,142 @@
+@model AtriumWebApp.Web.PayrollTransfer.Models.ViewModel.PayrollTransferAdminViewModel
+
+@{
+    ViewBag.Title = "Payroll Transfer Admin";
+}
+<style type="text/css">
+    .dataTables_scrollBody {
+        overflow: auto;
+        height: auto !important;
+        max-height: 300px;
+        width: 100%;
+    }
+
+    .content-wrapper {
+        max-width: 1366px;
+    }
+
+    .dataTables_wrapper {
+        border: solid thin black;
+    }
+
+    #admin-body {
+        width: 100%;
+    }
+</style>
+<h2>Payroll Transfer Admin</h2>
+
+@using (Html.BeginForm("SaveLookback", "PayrollTransferAdmin", FormMethod.Post, new { id = "SaveLookback" }))
+{
+    <table>
+        <thead>
+            <tr style="font-weight: bold">
+                <th>Lookback Days</th>
+            </tr>
+        </thead>
+        <tr>
+            <td>@Html.Label("Adjust Lookback Days:")</td>
+            @{
+                string lookbackDays;
+                Context.Session.TryGetObject("PRTRLookbackDays", out lookbackDays);
+            }
+            <td>@Html.TextBox("LookbackDays", lookbackDays)</td>
+            <td>
+                <input id="submit" name="submit" type="submit" value="Update" />
+            </td>
+        </tr>
+    </table>
+}
+
+<div id="tabs" style="min-height:500px;">
+    <ul>
+        <li>
+            <a href="#communityTab">Communities</a>
+        </li>
+        <li>
+            <a href="#contractorTab">Contractors</a>
+        </li>
+    </ul>
+    <div id="admin-body">
+        <div id="communityTab">
+            <table id="CommunityTable">
+                <thead>
+                    <tr>
+                        <th>Facility</th>
+                        <th>State</th>
+                        <th>Region</th>
+                        <th>Use in Display</th>
+                        <th>Report Flag</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var com in Model.AdminViewModel.Communities.OrderByDescending(c => c.IsCommunityFlg).ThenBy(c => c.CommunityShortName))
+            {
+                    <tr>
+                        <td>@com.CommunityShortName</td>
+                        <td>@com.StateCd</td>
+                        <td>@Model.AdminViewModel.Regions.Single(r => r.RegionId == com.RegionId).RegionName</td>
+                        <td>@Html.CheckBoxFor(x => x.AdminViewModel.ApplicationCommunityInfos.Single(aci => aci.CommunityId == com.CommunityId).DataEntryFlg, new { id = com.CommunityId, @class = "checkboxDisplay" })</td>
+                        <td>@Html.CheckBoxFor(x => x.AdminViewModel.ApplicationCommunityInfos.Single(aci => aci.CommunityId == com.CommunityId).ReportFlg, new { id = com.CommunityId, @class = "checkboxReport" })</td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div id="contractorTab">
+            <table id="contractor-table">
+                <thead>
+                    <tr>
+                        <th>
+                            First Name
+                        </th>
+                        <th>
+                            Last Name
+                        </th>
+                        <th>
+                            Vendor Nbr
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Contractors)
+            {
+                        <tr id="@item.PTContractorId">
+                            <td>
+                                @Html.DisplayFor(modelItem => item.FirstName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.LastName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.VendorNbr)
+                            </td>
+                            <td>
+                                <a class="edit" href="">Edit</a> |
+                                @Html.ActionLink("Associate Communities", "GetCommunityAssociations", new { id = item.PTContractorId }, new { @class = "select-communities" })
+                                 | <a href="" class="delete">Delete</a>
+                                
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            @Html.EditorFor(a => a.NewContract, "", "")
+        </div>
+    </div>
+</div>
+<div id="communityAssocationModal">
+
+</div>
+<environment names="Development">
+    <script src="~/js/PayrollTransferAdmin.js" asp-append-version="true"></script>
+</environment>
+<environment names="Testing,Production,Training">
+    <script src="~/js/PayrollTransferAdmin.min.js" asp-append-version="true"></script>
+</environment>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

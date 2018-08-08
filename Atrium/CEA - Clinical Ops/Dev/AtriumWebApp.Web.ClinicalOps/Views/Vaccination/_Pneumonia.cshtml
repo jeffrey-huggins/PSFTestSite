@@ -1,0 +1,50 @@
+﻿@model AtriumWebApp.Web.ClinicalOps.Models.ViewModel.VaccinationViewModel
+<div id="pneumonia" class="vaccineModal">
+    <button class="float-right" id="btnClose_Pneumonia">X</button>
+    <h2 class="margin_separator" style="text-align: center">Pneumonia Vaccination</h2>
+    @using (Html.BeginForm("SaveVaccinePneumonia", "Vaccination", FormMethod.Post, new { id = "SaveVaccinePneumonia" }))
+    {
+        @Html.Hidden("VaccineId")
+        @Html.Hidden("VaccineType")
+        @Html.HiddenFor(m => m.PatientId)
+        @Html.HiddenFor(m => m.IsEmployeeVaccine)
+        @Html.HiddenFor(m => m.RoomId)
+        @Html.HiddenFor(m => m.PayerId)
+        <fieldset class="note">
+            <legend>Pneumonia</legend>
+            <div class="container_16 bottom_pad">
+                <div class="grid_2">@Html.Label("Vaccine Type:")</div>
+                <div class="grid_2">@Html.DropDownList("PneumoniaVaccineTypes", new SelectList(Model.VaccinePneumoniaTypes, "VaccinePneumoniaTypeId", "VaccinePneumoniaTypeName"), "Select a Type")</div>
+                <div class="grid_3">@Html.Label("Consent Signed:")</div>
+                <div class="grid_1">@Html.CheckBox("ConsentSignedFlg")</div>
+            </div>
+            <div class="container_16 bottom_pad">
+                <div class="grid_2">@Html.Label("Date:")</div>
+                <div class="grid_2">@Html.TextBox("VaccineDate", "", new { @class = "isDate date dateUS", @id = "VaccineDate_Pneumonia" })</div>
+                <div class="grid_3">@Html.Label("Offered and Refused:")</div>
+                <div class="grid_1">@Html.CheckBox("OfferedRefusedFlg")</div>
+                <div class="grid_2 offeredRefusedDateShow" style="display: none">@Html.TextBox("OfferedRefusedDate", "", new { @class = "isDate date", @id = "OfferedRefusedDate_Pneumonia" })</div>
+            </div>
+            <div class="container_16 bottom_pad">
+                <div class="grid_2">@Html.Label("Next Due Date:")</div>
+                <div class="grid_2">@Html.TextBox("NextDueDate", "", new { @class = "isDate date dateUS" })</div>
+                <div class="grid_3">@Html.Label("Prior to Admission:")</div>
+                <div class="grid_1">@Html.CheckBox("ImmunizationPriorToAdmissionFlg")</div>
+            </div>
+            <div class="container_16 bottom_pad">
+                <div class="grid_2">@Html.Label("Lot #:")</div>
+                <div class="grid_2">@Html.TextBox("LotNumber", "", new { @id = "LotNumber_Pneumonia", style = "width: 75px;", maxlength = "16" })</div>
+            </div>
+        </fieldset>
+        <br />
+        <div class="container_16 bottom_pad">
+            <div class="grid_3">&nbsp;</div>
+            <div class="grid_2">
+                <button type="button" id="btnSave_Pneumonia">Save</button>
+            </div>
+            <div class="grid_2">
+                <button type="button" id="btnClear_Pneumonia">Clear</button>
+            </div>
+        </div>
+    }
+</div>

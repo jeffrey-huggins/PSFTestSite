@@ -1,0 +1,54 @@
+@model AtriumWebApp.Models.Budget.OtherExpensesGLCalcValueMaster
+<form id="editCalcValue" asp-action="SaveOtherCalcValues" asp-controller="AdminCalcs">
+    <table>
+        <tr>
+            <td>
+                Calc Value ID
+            </td>
+            <td>
+
+                    <input asp-for="CalcValueID" disabled="disabled" />
+                    <input asp-for="CalcValueID" hidden="hidden" />
+                <br />
+                <span asp-validation-for="CalcValueID"></span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Calc Value Name
+            </td>
+            <td>
+                <input asp-for="CalcValueNm" />
+                <br />
+                <span asp-validation-for="CalcValueNm"></span>
+            </td>
+        </tr>
+    </table>
+</form>
+<script>
+
+    $("#editCalcValue").on("change", "input, select", function () {
+        var form = $(this).closest("form");
+        var url = form.attr("action");
+        if (form.valid()) {
+            $.post(url, form.serialize(), function (data) {
+                if (data.Success) {
+                    if ($("#CalcValueID").val() == "0") {
+                        $("#calcValuesDialog").dialog("close");
+                        $("#adminExpCalcValue").click();
+                    }
+                } else {
+                    alert(data.Message);
+                }
+            }).fail(function () {
+                alert("Server is not responding, please try again.");
+            });
+        }
+    });
+
+    $.validator.setDefaults({ ignore: [] });
+    $("#editCalcValue").removeData("validator");
+    $("#editCalcValue").removeData("unobtrusiveValidation");
+    $.validator.unobtrusive.parse($("#editCalcValue")); 
+    $("#editCalcValue").validate();
+</script>

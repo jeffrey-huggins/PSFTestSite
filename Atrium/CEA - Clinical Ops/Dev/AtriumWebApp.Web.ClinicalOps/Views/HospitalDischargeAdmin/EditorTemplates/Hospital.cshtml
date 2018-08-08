@@ -1,0 +1,16 @@
+@model Hospital
+
+@if(Model.Id == 0)
+{
+    Model.AllowDataEntry = true;
+    Model.AllowReporting = true;
+
+}
+
+<form asp-action="NewHospital" asp-controller="HospitalDischargeAdmin">
+    <input asp-for="Name" placeholder="Hospital Name" />
+    <span asp-validation-for="Name" class="text-danger"></span>
+    <input asp-for="AllowDataEntry" />
+    <input asp-for="AllowReporting" />
+    <input type="submit" value="Add" />
+</form>

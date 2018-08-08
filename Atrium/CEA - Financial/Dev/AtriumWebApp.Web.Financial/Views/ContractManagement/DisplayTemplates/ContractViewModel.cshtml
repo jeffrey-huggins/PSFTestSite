@@ -1,0 +1,67 @@
+﻿@model AtriumWebApp.Models.ViewModel.ContractViewModel
+@Html.HiddenFor(m => m.Id)
+
+<section id="ContractCommunityAssociations" class="table-cell">
+
+</section>
+
+<section class="table-cell">
+<h3 class="contractManagementTitle">View Contract</h3>
+<div class="container_16">
+    <div class="grid_7">@Html.LabelFor(m => m.Providers)</div>
+    <div class="grid_3">@Html.LabelFor(m => m.ContractCategoryId)</div>
+    <div class="grid_3">@Html.LabelFor(m => m.ContractSubCategoryId)</div>
+    <div class="grid_3" style="text-align: center;">@Html.LabelFor(m => m.ArchiveFlg)</div>
+</div>
+<div class="container_16 bottom_pad">
+    <div class="grid_7">@Html.DropDownListFor(m => m.ContractProviderId, new SelectList(Model.Providers, "Id", "Name", Model.ContractProviderId), new { @class = "Providers", disabled = "disabled", style = "max-width: 400px;" })</div>
+    <div class="grid_3">@Html.DropDownListFor(m => m.ContractCategoryId, new SelectList(Model.Categories, "Id", "Name", Model.ContractCategoryId), new { disabled="disabled", @style = "max-width: 165px;" })</div>
+    <div class="grid_3">@Html.DropDownListFor(m => m.ContractSubCategoryId, new SelectList(Model.SubCategories, "Id", "Name", Model.ContractSubCategoryId), new { disabled = "disabled", @style = "max-width: 180px;" })</div>
+    <div class="grid_3">@Html.CheckBoxFor(m => m.ArchiveFlg, new { disabled = "disabled" })</div>
+</div>
+
+<h3>Communities</h3>
+<table id="contractCommunities" class="margin-separator">
+    <thead>
+        <tr>
+            <th>Community</th>
+            <th>Start</th>
+            <th>End</th>
+            <th>Renewal</th>
+            <th>Term Notice</th>
+            <th>Payment Term</th>
+            <th>Expire</th>
+            <th style="display: none !important;"></th>
+            <th>Credentialling</th>
+            <th>Archive</th>
+        </tr>
+    </thead>
+    <tbody>  
+        @Html.DisplayFor(m => m.ContractCommunities)                  
+    </tbody>
+</table> 
+
+<h3>Documents</h3>
+<table id="contractDocuments" class="margin-separator">
+    <thead>
+        <tr>
+            <th></th>
+            <th><span style="text-align: center;">Archive?</span></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>  
+        @Html.DisplayFor(m => m.Documents)                  
+    </tbody>
+</table> 
+
+
+<div class="container_16 top_pad bottom_pad"></div>
+<div class="container_16">
+    <div class="grid_7"><br /></div>
+    <div class="grid_3"></div>
+    <div class="grid_3"><button type="button" id="clearContract">Cancel</button></div>
+    <div class="grid_3"></div>
+</div>
+</section>
+<div class="clear"></div>

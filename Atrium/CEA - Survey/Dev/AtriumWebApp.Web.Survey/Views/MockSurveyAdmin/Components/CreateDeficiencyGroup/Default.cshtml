@@ -1,0 +1,21 @@
+@model AtriumWebApp.Web.Survey.Models.ViewModel.DeficiencyGroupViewModel
+
+<form asp-action="CreateDeficiencyGroup" asp-controller="MockSurveyAdmin">
+    @{ 
+        var selectList = new SelectList(AtriumWebApp.Web.Survey.Models.ViewModel.DeficiencyGroupViewModel.ValidGroupTypes, Model.GroupType);
+    }
+    <select asp-for="GroupType" asp-items="selectList" ></select>
+    <input asp-for="Description" placeholder="Description" />
+    <span asp-validation-for="Description"></span>
+    <input type="submit" value="Add" class="add-button" />
+</form>
+
+@*@using (Html.BeginForm("CreateDeficiencyGroup","MockSurveyAdmin"))
+{
+    <div>
+        New Deficiency Group:
+        @Html.DropDownListFor(m => m.GroupType, new SelectList(AtriumWebApp.Web.Survey.Models.ViewModel.DeficiencyGroupViewModel.ValidGroupTypes, Model.GroupType))
+        @Html.TextBoxFor(m => m.Description)
+        <input type="submit" value="Add" class="add-button" />
+    </div>
+}*@

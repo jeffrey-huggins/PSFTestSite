@@ -1,0 +1,160 @@
+﻿@model AtriumWebApp.Models.ViewModel.StandardsOfCareViewModel
+<div id="antipsychotic" align="center">
+    <button class="float-right" id="closeAnti">X</button>
+    <h2 class="margin_separator">Antipsychotic Record</h2>
+    @using (Html.BeginForm("SaveAntipsychotic", "StandardsOfCare", FormMethod.Post, new { id = "SaveAntipsychotic" }))
+    {
+        @Html.Hidden("AntiEditingId")
+        @Html.Hidden("IncludeNote", false, new { @class = "IncludeNote" })
+        @Html.HiddenFor(m => m.PatientId)
+        @Html.HiddenFor(m => m.RoomId)
+        @Html.HiddenFor(m => m.PatientGroupPayerId)
+
+        <div class="container_16 bottom_pad">
+            @*<div class="grid_1">&nbsp;</div>*@
+            <div class="grid_3 right">@Html.Label("","Date Occurred:", new { id = "DateOccurredLabel" })</div>
+            <div class="grid_2 date-occurred-container"></div>
+            <div class="grid_1">&nbsp;</div>
+            <div class="grid_2 right">@Html.Label("Date Resolved:")</div>
+            <div class="grid_2 date-resolved-container"></div>
+        </div>
+        <div class="clear">&nbsp;</div>
+        <div class="container_16 bottom_pad">
+            @*<div class="grid_1">&nbsp;</div>
+                <div class="grid_2 right">@Html.Label("Date Resolved:")</div>
+                <div class="grid_2 date-resolved-container"></div>*@
+        </div>
+        @*<div class="with-diagnosis-only">
+                <div class="grid_1">&nbsp;</div>
+                <div class="grid_3 right">@Html.Label("Consent Date:")</div>
+                <div class="grid_2">@Html.TextBox("ConsentDateAnti", "", new { @class = "isDate" })</div>
+            </div>*@
+        <div class="clear">&nbsp;</div>
+        <div class="container_16 bottom_pad">
+            <div class="with-diagnosis-only">
+                @*<div class="grid_1">&nbsp;</div>*@
+                <div class="grid_3 right">@Html.Label("Consent Date:")</div>
+
+                @if (Model.SOCEventAntiPsychotic != null)
+                {
+                    <div class="grid_2">@Html.TextBoxFor(x => x.SOCEventAntiPsychotic.ConsentDate, "{0:d}", new { @class = "isDate", @id = "ConsentDateAnti" })</div>
+                }
+                else
+                {
+                    <div class="grid_2">@Html.TextBox("SOCEventAntiPsychotic.ConsentDate", "", new { @class = "isDate", @id = "ConsentDateAnti" })</div>
+                }
+            </div>
+            <div class="grid_1">&nbsp;</div>
+            <div class="grid_2 right">@Html.Label("Antipsychotic:")</div>
+            @if (Model.SOCEventAntiPsychotic == null)
+            {
+                <div class="grid_2">@Html.DropDownListFor(x => x.SOCEventAntiPsychotic.AntiPsychoticMedicationId, (SelectList)ViewData["AntiPsychotics"], "Select an AntiPsychotic")</div>
+            }
+            else
+            {
+                <div class="grid_2">@Html.DropDownListFor(x => x.SOCEventAntiPsychotic.AntiPsychoticMedicationId, new SelectList(Model.AntipsychoticTypes, "AntiPsychoticMedicationId", "AntiPsychoticMedicationName", Model.SOCEventAntiPsychotic.AntiPsychoticMedicationId), new { disabled = "disabled" })</div>
+                @Html.Hidden("antiMedicationId", Model.SOCEventAntiPsychotic.AntiPsychoticMedicationId)
+                @*@Html.HiddenFor(x => x.SOCEventAntiPsychotic.AntiPsychoticMedicationId, new { @id = "antiMedicationId" })*@
+            }
+        </div>
+        <div class="container_16 bottom_pad">
+            <div class="grid_3 right">@Html.Label("Diagnosis (256 max):")</div>
+            @if (Model.SOCEventAntiPsychotic == null)
+            {
+                <div class="grid_2">
+                    @Html.DropDownListFor(x => x.SOCEventAntiPsychotic.AntiPsychoticDiagnosisId, (SelectList)ViewData["AntiPsychoticDiagnoses"], "Select an AntiPsychotic Diagnosis") <br />
+                    @Html.TextAreaFor(x => x.SOCEventAntiPsychotic.OtherDiagnosisDetail, 2, 60, new { maxlength = "256" })
+                </div>
+            }
+            else
+            {
+
+                <div class="grid_2">
+                    @Html.DropDownListFor(x => x.SOCEventAntiPsychotic.AntiPsychoticDiagnosisId, new SelectList(Model.AntiPsychoticDiagnoses, "AntiPsychoticDiagnosisId", "AntiPsychoticDiagnosisDesc", Model.SOCEventAntiPsychotic.AntiPsychoticDiagnosisId)) <br />
+                    @Html.Hidden("antiDiagnosisId", Model.SOCEventAntiPsychotic.AntiPsychoticDiagnosisId)
+                    @*@Html.HiddenFor(x => x.SOCEventAntiPsychotic.AntiPsychoticDiagnosisId, new { @id = "antiDiagnosisId" })*@
+                    @Html.TextAreaFor(x => x.SOCEventAntiPsychotic.OtherDiagnosisDetail, 2, 60, new { maxlength = "256" })
+                </div>
+            }
+        </div>
+        <button class="show-note margin_separator">Create Note</button>
+        <fieldset class="note">
+            <legend>Note</legend>
+            <button class="dismiss-note float-right">&times;</button>
+            <div class="container_16 bottom_pad">
+                @*<div class="grid_1">&nbsp;</div>*@
+                <div class="grid_3 right">@Html.Label("Date:")</div>
+                <div class="grid_2">@Html.TextBox("DateAntipsychotic", "", new { @class = "isDate" })</div>
+            </div>
+            <div class="container_16 bottom_pad">
+                @*<div class="grid_1">&nbsp;</div>*@
+                @*<div class="grid_3 right">@Html.Label("IDT Reviewed:", new { id = "ReviewedLabel" })</div>
+                <div class="grid_1">@Html.CheckBox("ReviewedAnti")</div>
+                <div class="grid_2">@Html.TextBox("DateReviewedAnti", "", new { @class = "isDate hidden" })</div>*@
+                <div class="hidden" id="reducedShow">
+                    @*<div class="grid_1">&nbsp;</div>*@
+                    <div class="grid_3 right">@Html.Label("","Reduced:", new { id = "ReducedLabel" })</div>
+                    <div class="grid_1">@Html.CheckBox("ReducedAnti")</div>
+                    <div class="grid_2">@Html.TextBox("DateReducedAnti", "", new { @class = "isDate hidden" })</div>
+                </div>
+            </div>
+
+            <div class="container_16 bottom_pad">
+                @*<div class="grid_3 right">@Html.Label("Quarterly Assessment:")</div>
+                <div class="grid_1">@Html.CheckBox("QrtrlyAssessment")</div>*@
+                <div class="with-diagnosis-only">
+                    @*<div class="grid_1">&nbsp;</div>*@
+                    <div class="grid_3 right">@Html.Label("Last AIMS Test:")</div>
+                    <div class="grid_2">@Html.TextBox("DateAIMS", "", new { @class = "isDate" })</div>
+                </div>
+            </div>
+
+            <div class="container_16 bottom_pad">
+                <div class="grid_1">&nbsp;</div>
+                <div class="grid_2 right">@Html.Label("Recommendation (256 max):")</div>
+                <div class="grid_2">@Html.TextArea("Recommendation", "", 2, 60, new { maxlength = "256" })</div>
+            </div>
+            <div class="container_16 margin_separator with-diagnosis-only">
+                @*<div class="grid_1">&nbsp;</div>*@
+                <div class="grid_3 right">@Html.Label("Targeted Behavior (256 max):")</div>
+                <div class="grid_2">@Html.TextArea("TargetedBehavior", "", 2, 60, new { maxlength = "256" })</div>
+            </div>
+        </fieldset>
+        <div class="container_16 bottom_pad">
+            <div class="grid_5">&nbsp;</div>
+            <div class="grid_2">
+                <button type="button" id="saveAnti">Save</button>
+            </div>
+            <div class="grid_2">
+                <button type="button" id="clearAnti">Clear</button>
+            </div>
+        </div>
+    }
+
+    <table id="antiTable">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Recommendation</th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.SOCEventAntiPsychoticNoted != null)
+            {
+                foreach (var noted in Model.SOCEventAntiPsychoticNoted)
+                {
+                    <tr id="@noted.SOCEventAntiPsychoticNotedId">
+                        <td>@noted.NotedDate.ToString("d")</td>
+                        <td>@noted.RecommendationDesc</td>
+                        <td><a class="copy" href="">Copy</a></td>
+                        <td><a class="edit" href="">Edit</a></td>
+                        <td><a class="delete" href="">Delete</a></td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>

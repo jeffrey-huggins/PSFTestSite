@@ -1,0 +1,113 @@
+@model AtriumWebApp.Web.HR.Models.MasterNewHireChecklist
+<style>
+    #checklistForm input{
+        width: 80px;
+    }
+</style>
+<div class="container-fluid">
+    <form asp-action="SaveNewHireChecklist" id="checklistForm">
+        <input type="hidden" asp-for="NewHireChecklistId" />
+        <div class="row">
+            <label asp-for="CheckListName"  class="col-sm-4"></label>
+            <div class="col-sm-8">
+                <textarea asp-for="CheckListName" data-rule-exists="true"></textarea>
+                <br />
+                <span asp-validation-for="CheckListName" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row">
+            <label asp-for="SortOrder" class="col-sm-4"></label>
+            <div class="col-sm-8">
+                <input asp-for="SortOrder" min="0" />
+                <br />
+                <span asp-validation-for="SortOrder" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row">
+            <label asp-for="EffectiveBeginDate" class="col-sm-4"></label>
+            <div class="col-sm-8">
+                <input asp-for="EffectiveBeginDate" type="text" class="isDate" />
+                <br />
+                <span asp-validation-for="EffectiveBeginDate" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row">
+            <label asp-for="EffectiveEndDate" class="col-sm-4"></label>
+            <div class="col-sm-8">
+                <input asp-for="EffectiveEndDate" data-rule-end-date-larger="true" type="text" class="isDate" />
+                <br />
+                <span asp-validation-for="EffectiveEndDate" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 text-center">
+                <input type="submit" value="Save" id="saveChecklist" />
+            </div>
+        </div>
+    </form>
+</div>
+<script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+<script>
+    $(document).ready(function () {
+        var id = $("#NewHireChecklistId").val();
+        if (id == "0") {
+            $("#EffectiveBeginDate").val("");
+            $("#EffectiveEndDate").val("");
+        }
+        $(".isDate").datepicker();
+    });
+
+    $("#saveChecklist").on("click", function (e) {
+        e.preventDefault();
+        var form = $("#checklistForm");
+        if (!form.valid()) {
+            return;
+        }
+        form.ajaxSubmit({
+            success: function (result) {
+                if (result.success) {
+                    $("#modal").dialog("close");
+                    getCheckListListing();
+                }
+                else {
+                    alert("Error: Event not found in database");
+                }
+
+            },
+            error: function (data, error, errortext) {
+                alert("Server is not responding. Please reload page and try again");
+            }
+
+        });
+    });
+
+    $.extend($.expr[':'], {
+        'texti': function (elem, i, match, array) {
+            return ($.trim((elem.textContent || elem.innerText || '').toLowerCase()) === $.trim((match[3] || "").toLowerCase()));
+        }
+    });
+
+    $.validator.addMethod("end-date-larger", function (value, element) {
+        var beginDate = new Date($("#EffectiveBeginDate").val());
+        var endDate = new Date($("#EffectiveEndDate").val());
+        return beginDate < endDate;
+    }, "End Date must be later than the Begin Date.");
+
+    $.validator.addMethod("exists", function (value, element) {
+        var match = $(".checkListName:texti('" + value + "')");
+        var id = $("#NewHireChecklistId").val();
+        if (match.length > 0) {
+            if (match.attr("checklistId") != id) {
+                return false;
+            }
+        }
+        return true;
+    },"A checklist item with that name already exists.")
+
+    $.validator.setDefaults({ ignore: [] });
+    $("#checklistForm").removeData("validator");
+    $("#checklistForm").removeData("unobtrusiveValidation");
+    $.validator.unobtrusive.parse($("#checklistForm"));
+    $("#checklistForm").validate();
+</script>

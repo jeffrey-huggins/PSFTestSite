@@ -1,0 +1,48 @@
+@model List<KeyValuePair<string, AtriumWebApp.Web.Financial.Library.ExportContractDocumentsStatus>>
+
+
+@if (Model.Count > 0)
+{
+    <div>
+        <b>Files being processed</b>
+        <b style="color:red;font-size:8px">Files can only be downloaded once.</b>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>
+                    Start Time
+                </th>
+                <th>
+                    Status
+                </th>
+                <th>
+                    Progress
+                </th>
+                <th><input type="button" id="refreshProgress" value="Refresh Status" /></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var status in Model)
+            {
+                <tr>
+                    <td>
+                        @status.Value.StartTime
+                    </td>
+                    <td>
+                        @status.Value.ProgressStatus
+                    </td>
+                    <td>
+                        @status.Value.Progress%
+                    </td>
+                    <td>
+                        @if(status.Value.Progress == 100)
+                        {
+                            @Html.ActionLink("Download", "GetExportFile", new { id = status.Key })
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

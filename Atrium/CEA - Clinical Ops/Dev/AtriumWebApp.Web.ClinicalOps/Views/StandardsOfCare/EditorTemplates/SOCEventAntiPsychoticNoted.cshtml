@@ -1,0 +1,58 @@
+@model SOCEventAntiPsychoticNoted
+<form asp-action="AntiPsychoticNote" asp-controller="StandardsOfCare" method="post" id="antiPsychoticNote">
+    <input type="hidden" asp-for="SOCEventAntiPsychoticNotedId" id="notedID" />
+    <input type="hidden" asp-for="SOCEventId" />
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12 text-right">
+                <span class="ui-button-icon ui-icon ui-icon-closethick" id="closeNote"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-3 text-right">
+                Date:
+            </div>
+            <div class="col-sm-3">
+                <input asp-for="NotedDate" class="isDate" data-rule-SOC_NoteDateExists="true" asp-format="{0:d}" />
+                <br />
+                <span asp-validation-for="NotedDate" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-3 text-right">
+                GDR:
+            </div>
+            <div class="col-sm-3">
+                <input asp-for="ReducedDate" class="isDate" asp-format="{0:d}" />
+                <span asp-validation-for="ReducedDate" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-3 text-right">
+                Last AIMS Test:
+            </div>
+            <div class="col-sm-3">
+                <input asp-for="LastAimsTestDate" class="isDate" asp-format="{0:d}" />
+                <span asp-validation-for="LastAimsTestDate" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-3 text-right">
+                Recommendation (256 max):
+            </div>
+            <div class="col-sm-9 text-left">
+                <textarea asp-for="RecommendationDesc" id="Recomendation" rows="2" cols="60" maxLength="256"></textarea>
+                <span asp-validation-for="RecommendationDesc" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-3 text-right">
+                Targeted Behavior (256 max):
+            </div>
+            <div class="col-sm-9 text-left">
+                <textarea asp-for="TargetedBehaviors" maxlength="256" rows="2" cols="60" id="TargetedBehavior"></textarea>
+                <span asp-validation-for="TargetedBehaviors" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+</form>

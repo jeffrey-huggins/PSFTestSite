@@ -1,0 +1,5 @@
+﻿@model AtriumWebApp.Models.ViewModel.ProviderViewModel
+@using (Html.BeginForm("CreateProvider", "ContractProvider", FormMethod.Post, new { id = "providerEditForm", enctype = "multipart/form-data" }))
+{
+    @Html.EditorForModel()
+}

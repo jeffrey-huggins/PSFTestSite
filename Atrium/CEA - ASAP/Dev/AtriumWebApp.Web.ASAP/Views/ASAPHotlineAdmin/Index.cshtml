@@ -1,0 +1,169 @@
+@model AtriumWebApp.Models.ViewModel.ASAPHotlineAdminViewModel
+@using AtriumWebApp.Web.Base.Library
+@{
+    ViewBag.Title = "ASAP Hotline Admin";
+}
+
+<style type="text/css">
+    .dataTables_scrollBody {
+        overflow: auto;
+        height: auto !important;
+        max-height: 300px;
+        width: 100%;
+    }
+
+    .content-wrapper {
+        max-width: 1366px;
+    }
+
+    .dataTables_wrapper {
+        border: solid thin black;
+    }
+    #admin-body{
+        width:100%;
+    }
+</style>
+<h2 id="title" style="margin-left: 200px">Standards of Care Admin Page</h2>
+@using (Html.BeginForm("SaveLookback", "ASAPHotlineAdmin", FormMethod.Post, new { id = "SaveLookback" }))
+            {
+    <table>
+        <thead>
+            <tr style="font-weight: bold">
+                <th>Lookback Days</th>
+            </tr>
+        </thead>
+        <tr>
+            <td>@Html.Label("Adjust Lookback Days:")</td>
+            @{
+                int ASAPLookbackDays;
+                Context.Session.TryGetObject("ASAPLookbackDays", out ASAPLookbackDays);
+            }
+
+            <td>@Html.TextBox("LookbackDays", ASAPLookbackDays)</td>
+            <td>
+                <input id="submit" name="submit" type="submit" value="Update" />
+            </td>
+        </tr>
+    </table>
+                }
+
+<div id="tabs" style="min-height:500px;">
+    <ul class="adminTabNav">
+        <li>
+            <a href="#CommunityTableWrapper">Communities</a>
+        </li>
+        <li>
+            <a href="#contactsTab">Contacts</a>
+        </li>
+        <li>
+            <a href="#complaintsTab">Complaints</a>
+        </li>
+    </ul>
+    <div id="admin-body" class="float-left">
+        <div id="contactsTab">
+
+            <table id="contacts">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var contact in Model.ContactList)
+            {
+                        <tr id="@contact.ASAPContactId">
+                            @*@{
+                            var employee = Model.ActiveEmployees.Find(e => e.EmployeeId == contact.EmployeeId);
+                            var name = employee.LastName + ", " + employee.FirstName;
+                        }*@
+                            <td>@contact.LastName, @contact.FirstName</td>
+                            <td>@contact.eMail</td>
+                            <td><a class="delete" href="">Delete</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            @Html.EditorFor(a => a.NewContact);
+        </div>
+        <div id="complaintsTab">
+            <table id="complaintTypes">
+                <thead>
+                    <tr>
+                        <th>Complaint</th>
+                        <th>Sort Order</th>
+                        <th>Enabled</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var complaint in Model.ComplaintTypes)
+            {
+                        <tr id="@complaint.ASAPComplaintTypeId">
+                            <td>@complaint.ASAPComplaintTypeDesc</td>
+                            <td>@complaint.SortOrder</td>
+                            <td>@Html.CheckBox("EnableDisable", complaint.DataEntryFlg, new { @class = "EnableDisable" })</td>
+                            <td><a class="edit" href="">Edit</a></td>
+                            <td><a class="delete" href="">Delete</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            @Html.EditorFor(a => a.NewComplaintType)
+
+        </div>
+
+        <div id="CommunityTableWrapper">
+
+            <table id="CommunityTable">
+                <thead>
+                <th>
+                    Facility
+                </th>
+                <th>
+                    State
+                </th>
+                <th>
+                    Region
+                </th>
+                <th>
+                    Use in Display
+                </th>
+                <th>
+                    Report Flag
+                </th>
+                </thead>
+                <tbody>
+                    @foreach (var com in Model.AdminViewModel.Communities.OrderByDescending(c => c.IsCommunityFlg).ThenBy(c => c.CommunityShortName))
+            {
+                        <tr>
+                            <td>@com.CommunityShortName</td>
+                            <td>@com.StateCd</td>
+                            <td>@Model.AdminViewModel.Regions.Single(r => r.RegionId == com.RegionId).RegionName</td>
+                            <td>@Html.CheckBoxFor(x => x.AdminViewModel.ApplicationCommunityInfos.Single(aci => aci.CommunityId == com.CommunityId).DataEntryFlg, new { id = com.CommunityId, @class = "checkbox" })</td>
+                            <td>@Html.CheckBoxFor(x => x.AdminViewModel.ApplicationCommunityInfos.Single(aci => aci.CommunityId == com.CommunityId).ReportFlg, new { id = com.CommunityId, @class = "checkboxReport" })</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<div class="clear"></div>
+
+
+<environment names="Development">
+    <script src="~/js/ASAPHotlineAdmin.js" asp-append-version="true"></script>
+</environment>
+<environment names="Testing,Production,Training">
+    <script src="~/js/ASAPHotlineAdmin.min.js" asp-append-version="true"></script>
+</environment>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

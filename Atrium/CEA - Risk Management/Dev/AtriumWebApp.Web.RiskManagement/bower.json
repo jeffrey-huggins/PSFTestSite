@@ -1,0 +1,19 @@
+{
+  "name": "asp.net",
+  "private": true,
+  "dependencies": {
+    "jquery": "3.2.1",
+    "jquery-validation": "1.16.0",
+    "jquery-validation-unobtrusive": "3.2.6",
+    "DataTables": "datatable#RELEASE_1_9_4",
+    "jquery-ui": "1.12.1",
+    "jquery-form": "v4.2.2",
+    "font-awesome": "Font-Awesome#v4.7.0",
+    "bootstrap": "v3.3.7",
+    "moment": "momentjs#2.19.1"
+  },
+  "resolutions": {
+    "jquery": ">=3.2.1",
+    "jquery-validation": "1.16.0"
+  }
+}

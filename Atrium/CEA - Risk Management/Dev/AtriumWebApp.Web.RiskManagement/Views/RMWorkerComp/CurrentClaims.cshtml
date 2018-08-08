@@ -1,0 +1,137 @@
+﻿@model AtriumWebApp.Web.RiskManagement.Models.ViewModel.CurrentClaimListViewModel
+@using AtriumWebApp.Web.Base.Library
+@{
+    ViewBag.Title = "Current Claims";
+    Context.Session.SetTimeout(360);
+    string RMWoccurredRangeFrom;
+    Context.Session.TryGetObject("RMWoccurredRangeFrom", out RMWoccurredRangeFrom);
+    string RMWoccurredRangeTo;
+    Context.Session.TryGetObject("RMWoccurredRangeTo", out RMWoccurredRangeTo);
+    string RMWCurrentCommunity;
+    Context.Session.TryGetObject("RMWCurrentCommunity", out RMWCurrentCommunity);
+}
+
+<script>
+    $(document).ready(function () {
+        var oTable = $('#currentClaims').dataTable({
+            "bAutoWidth": false,
+            "bDeferRender": true,
+            "oSearch": {
+                "bSmart": false
+            },
+            "sDom": "rtS",
+            "iDisplayLength": -1,
+            "aoColumns": [
+                {
+                    "bVisible": false,
+                    "bSortable": false
+                },
+                {
+                    "bSearchable": false,
+                },
+                {
+                    "bSearchable": false,
+                },
+                {
+                    "bSearchable": false,
+                },
+                {
+                    "bSearchable": false,
+                },
+                {
+                    "bSearchable": false,
+                },
+                {
+                    "bSearchable": false,
+                    "bSortable": false,
+                }
+            ],
+            "oLanguage": {
+                "sEmptyTable": "No current claims for Community"
+            }
+        });
+        var currentCom = $(".CurrentCommunity").val();
+
+        oTable.fnFilter("^" + currentCom + "$", 0, true);
+
+        oTable.fnSort([[1, 'desc']]);
+
+        oTable.show();
+
+        $("#Communities").change(function () {
+            var newCom = $("#Communities option:selected").val();
+            $(".CurrentCommunity").val(newCom);
+            oTable.fnFilter("^" + newCom + "$", 0, true);
+        });
+
+        $("#currentClaims").on("click","a.openClaim", function (e) {
+            e.preventDefault();
+
+            var nRowId = $(this).closest('tr').attr("id");
+
+            $.ajax({
+                url: path + "RMWorkerComp/SetClaimId",
+                dataType: "json",
+                cache: false,
+                type: 'POST',
+                data: { claimId: nRowId },
+                success: function () {
+                    var url = path + "RMWorkerComp/";
+                    ShowProgress();
+                    window.location = url;
+                },
+                error: function (data, error, errortext) {
+                    alert("Server is not responding. Please reload page and try again");
+                }
+            });
+        });
+    });
+</script>
+@Html.HiddenFor(x => x.CommunityId)
+<div class="table-cell">
+    @Html.Partial("~/Views/Partial/SideBarSelectionWorkersCompClaimsSelect.cshtml")
+</div>
+<div class="table-cell" id="currentClaimsDiv">
+    @using (Html.BeginForm("UpdateRange", "RMWorkerComp", FormMethod.Post, new { id = "UpdateRange", style = "margin-left: 200px" }))
+    {
+        @Html.Label("Reported to Carrier Date Range - From: ")
+        @Html.TextBox("occurredRangeFrom", RMWoccurredRangeFrom, new { @Value = RMWoccurredRangeFrom, size = "10", @class = "isDate" })
+        @Html.Label("To: ")
+        @Html.TextBox("occurredRangeTo", RMWoccurredRangeTo, new { @Value = RMWoccurredRangeTo, size = "10", @class = "isDate" })
+        @Html.Hidden("returnUrl", Context.UrlPath());
+        @Html.Hidden("CurrentCommunity", RMWCurrentCommunity, new { @class = "CurrentCommunity" })
+        <input id="submit" name="submit" type="submit" value="Update" />
+    }
+    <table id="currentClaims" style="display:none;">
+        <thead>
+            <tr>
+                <th>ComId</th>
+                <th>Reported to Carrier</th>
+                <th>First</th>
+                <th>Last</th>
+                <th>SS#</th>
+                <th>Birth Date</th>
+                <th>Open Claim</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null)
+            {
+                foreach (var claim in Model.Claims)
+                {
+                <tr id="@claim.ClaimId">
+                    <td>@claim.CommunityId</td>
+                    <td>@claim.ReportedToCarrierDate.ToString("d")</td>
+                    <td>@claim.FirstName</td>
+                    <td>@claim.LastName</td>
+                    <td>@claim.MaskedSocialSecurityNumber</td>
+                    <td>@claim.BirthDate.ToString("d")</td>
+                    <td>
+                        <a class="openClaim" href="">Open Claim</a>
+                    </td>
+                </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,254 @@
+@model AtriumWebApp.Web.Survey.Models.ViewModel.SurveyAdminViewModel
+@{
+    ViewBag.Title = "Survey Admin Page";
+}
+<style type="text/css">
+    .dataTables_wrapper {
+        border: solid thin black;
+    }
+
+    td > textarea {
+        width: 100%;
+    }
+    form > textarea {
+        width: 350px;
+        height: 100px;
+    }
+
+    .content-wrapper {
+        max-width: 1366px;
+    }
+
+    table.dataTable thead th {
+        border: none;
+    }
+
+    #CommunityTable, #SurveyTypes, #SAS, #FedDefs, #StateDefs, #SafetyDefs {
+        border-top: solid thin black;
+    }
+
+    .dataTables_scrollBody {
+        overflow: auto;
+        height: auto !important;
+        max-height: 300px;
+        width: 100%;
+    }
+</style>
+
+<h2 id="title" style="margin-left: 200px">Survey Admin Page</h2>
+<div id="tabs" style="min-height:500px;">
+    <ul class="adminTabNav">
+        <li>
+            <a href="#communities">Communities</a>
+        </li>
+        <li>
+            <a href="#survey">Survey Types</a>
+        </li>
+        <li>
+            <a href="#sasCode">SAS</a>
+        </li>
+        <li>
+            <a href="#fedTags">Federal Tags</a>
+
+        </li>
+        <li>
+            <a href="#stateCode">State Codes</a>
+        </li>
+        <li>
+            <a href="#safetyCodes">Safety Tag Codes</a>
+
+        </li>
+    </ul>
+
+
+    <div id="admin-body">
+
+        <div id="survey">
+            <table id="SurveyTypes" class="adminTable">
+                <thead>
+                    <tr>
+                        <th>Type Description</th>
+                        <th>Complaint</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+
+                </thead>
+                <tbody>
+                    @foreach (var sType in Model.SurveyTypes)
+                    {
+                        <tr id="@sType.SurveyTypeId">
+                            <td>@sType.SurveyTypeDesc</td>
+                            <td>@Html.CheckBoxFor(surveyTypeComplaintFlag => surveyTypeComplaintFlag.SurveyTypes.Single(x => x.SurveyTypeId == sType.SurveyTypeId).ComplaintFlg, new { id = sType.SurveyTypeId, @class = "checkboxComplaint" })</td>
+                            <td><a class="edit" href="">Edit</a></td>
+                            <td><a class="delete" href="">Delete</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <br />
+            @Html.EditorFor(a => a.SurveyType)
+        </div>
+        <div id="sasCode">
+            <table id="SAS" class="adminTable">
+                <thead>
+                    <tr>
+                        <th>SAS Code</th>
+                        <th>Scope</th>
+                        <th>Severity Level</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var sas in Model.SASs)
+                    {
+                        <tr id="@sas.SASId">
+                            <td>@sas.SASCode</td>
+                            <td>@sas.Scope</td>
+                            <td>@sas.SeverityLevel</td>
+                            <td><a class="edit" href="">Edit</a></td>
+                            <td><a class="delete" href="">Delete</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            @Html.EditorFor(a => a.SASModel)
+        </div>
+        <div id="fedTags">
+            <table id="FedDefs" class="adminTable">
+                <thead>
+                    <tr>
+                        <th>Federal Tag Code</th>
+                        <th>Payer Group</th>
+                        <th>Description</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var fed in Model.FederalDeficiencies)
+                    {
+                        <tr id="@fed.Id">
+                            <td>@fed.TagCode</td>
+                            <td data-select-value="@fed.AtriumPayerGroupCode">@fed.AtriumPayerGroup.AtriumPayerGroupName</td>
+                            <td>@fed.Description@*<a class="description" href="">Description...</a>*@</td>
+                            <td><a class="edit" href="">Edit</a></td>
+                            <td><a class="delete" href="">Delete</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            @Html.EditorFor(a => a.FedDef)
+        </div>
+        <div id="stateCode">
+            <table id="StateDefs" class="adminTable">
+                <thead>
+                    <tr>
+                        <th>State Code</th>
+                        <th>State Tag Code</th>
+                        <th>Description</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var state in Model.StateDeficiencies)
+                    {
+                        <tr id="@state.Id">
+                            <td>@state.StateCode</td>
+                            <td>@state.TagCode</td>
+                            <td>@state.Description</td>
+                            <td><a class="edit" href="">Edit</a></td>
+                            <td><a class="delete" href="">Delete</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            @Html.EditorFor(a => a.StateDef)
+        </div>
+        <div id="safetyCodes">
+            <table id="SafetyDefs" class="adminTable">
+                <thead>
+                    <tr>
+                        <th>Safety Tag Code</th>
+                        <th>Description</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var safety in Model.SafetyDeficiencies)
+                    {
+                        <tr id="@safety.Id">
+                            <td>@safety.TagCode</td>
+                            <td>@safety.Description</td>
+                            <td><a class="edit" href="">Edit</a></td>
+                            <td><a class="delete" href="">Delete</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            @Html.EditorFor(a => a.SafetyDef)
+
+        </div>
+        <div id="communities">
+            <div id="CommunityTableWrapper">
+                <table id="CommunityTable" class="adminTable">
+                    <thead>
+                        <tr>
+                            <th>Facility</th>
+                            <th>State</th>
+                            <th>Region</th>
+                            <th>Use in Display</th>
+                            <th>Report Flag</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var com in Model.AdminViewModel.Communities.OrderByDescending(c => c.IsCommunityFlg).ThenBy(c => c.CommunityShortName))
+                        {
+                            <tr>
+                                <td>@com.CommunityShortName</td>
+                                <td>@com.StateCd</td>
+                                <td>@Model.AdminViewModel.Regions.Single(r => r.RegionId == com.RegionId).RegionName</td>
+                                <td>@Html.CheckBoxFor(x => x.AdminViewModel.ApplicationCommunityInfos.Single(aci => aci.CommunityId == com.CommunityId).DataEntryFlg, new { id = com.CommunityId, @class = "checkbox" })</td>
+                                <td>@Html.CheckBoxFor(x => x.AdminViewModel.ApplicationCommunityInfos.Single(aci => aci.CommunityId == com.CommunityId).ReportFlg, new { id = com.CommunityId, @class = "checkboxReport" })</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="Description">
+    @Html.Hidden("EditingId")
+    @Html.Hidden("TableName")
+    <button class="float-right" type="button" id="close">X</button>
+    <div class="container_16">
+        <div class="grid_1">&nbsp;</div>
+        <div class="grid_4">
+            <h2 class="margin_separator" style="margin-left: 10px">Edit Description</h2>
+        </div>
+    </div>
+    <div class="container_16">
+        <div class="grid_2">@Html.TextArea("Description", "", 6, 42, null)</div>
+    </div>
+    <div class="container_16">
+        <div class="grid_2">&nbsp;</div>
+        <div class="grid_2">
+            <button id="saveDescription" style="margin-left: 20px; margin-top: 20px;">Save</button>
+        </div>
+    </div>
+</div>
+<environment names="Development">
+    <script src="~/js/SurveyAdmin.js" asp-append-version="true"></script>
+</environment>
+<environment names="Testing,Production,Training">
+    <script src="~/js/SurveyAdmin.min.js" asp-append-version="true"></script>
+</environment>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

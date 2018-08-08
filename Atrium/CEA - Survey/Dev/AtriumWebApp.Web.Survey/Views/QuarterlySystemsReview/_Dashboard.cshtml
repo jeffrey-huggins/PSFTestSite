@@ -1,0 +1,127 @@
+﻿@model AtriumWebApp.Web.Survey.Models.ViewModel.ReviewViewModel
+@{
+    object nursingCheckboxAttributes;
+    object nursingSignatureAttributes = null;
+    if (Model.CloseNursing && !Model.CanCloseNursing)
+    {
+        nursingCheckboxAttributes = new { @class = "float-right", disabled = "disabled" };
+        nursingSignatureAttributes = new { disabled = "disabled" };
+    }
+    else
+    {
+        nursingCheckboxAttributes = new { @class = "float-right" };
+    }
+    object dietaryCheckboxAttributes;
+    object dietarySignatureAttributes = null;
+    if (Model.CloseDietary && !Model.CanCloseDietary)
+    {
+        dietaryCheckboxAttributes = new { @class = "float-right", disabled = "disabled" };
+        dietarySignatureAttributes = new { disabled = "disabled" };
+    }
+    else
+    {
+        dietaryCheckboxAttributes = new { @class = "float-right" };
+    }
+    ViewBag.Title = "Quarterly Systems Review";
+}
+<div class="container_16 margin_separator">
+    <div class="grid_16">
+        <h2>@ViewBag.Title</h2>
+    </div>
+</div>
+@using (Html.BeginForm("Edit", "QuarterlySystemsReview", FormMethod.Post, new { id = "Review" }))
+{
+    @Html.HiddenFor(m => m.ReviewId)
+    <div class="container_16 margin_separator">
+        <div class="grid_4">
+            @Html.HiddenFor(m => m.ReviewDate)
+            @Html.LabelFor(m => m.ReviewDate)
+            
+
+            <span id="Date">
+
+                @if (Model.CanEditDate)
+                {
+                    @Html.EditorFor(m => m.ReviewDate, new { size = "10", @class = "isDate", id = "ReviewDateEntry" })
+                }
+                else
+                {
+                    @Model.ReviewDate.ToShortDateString()
+                }
+            
+            
+            
+            </span> - <span id="Quarter">
+                @Html.HiddenFor(m => m.Quarter)
+                @Html.DisplayFor(m => m.Quarter, new { id = "ReviewQuarter" })
+            </span>
+        </div>
+        <div class="grid_12">
+            <div class="float-right">
+                <span>
+                    Sample Data Range - 
+                    @Html.LabelFor(m => m.BeginSampleDate):
+                    @Html.EditorFor(m => m.BeginSampleDate, new { id = "BeginSampleDate", @class = "isDate", size = "10" })
+                    @Html.LabelFor(m => m.EndSampleDate):
+                    @Html.EditorFor(m => m.EndSampleDate, new { id = "EndSampleDate", @class = "isDate", size = "10" })
+                </span>
+            </div>
+        </div>
+    </div>
+    @Html.EditorFor(m => m.Sections)
+    <div class="container_16 margin_separator">
+        <div class="grid_10">
+            <strong>Additional Questions</strong>
+        </div>
+        <div class="grid_3">
+            <strong class="float-right">Point Adjustment: <span class="SectionEarnedPoints">@Model.PointAdjustment</span></strong>
+        </div>
+        <div class="grid_3">
+            <button id="AdditionalQuestionsReviewCriteria" class="float-right" data-button-url="@Url.Action("AdditionalQuestions", new { id = Model.ReviewId })">Review Criteria</button>
+        </div>
+    </div>
+    <div class="container_16 totals margin_separator">
+        <div class="grid_10">
+            Totals
+        </div>
+        <div class="grid_3">
+            <span class="float-right">Earned: @Model.TotalEarnedPoints</span>
+        </div>
+        <div class="grid_3">
+            <span class="float-right">Possible: @Model.TotalPossiblePoints</span>
+        </div>
+    </div>
+    <div class="container_16 margin_separator">
+        <div class="grid_9">&nbsp;</div>
+        <div class="grid_3">
+            @Html.LabelFor(m => m.CloseNursing)
+            @Html.CheckBoxFor(m => m.CloseNursing, nursingCheckboxAttributes)
+        </div>
+        <div class="grid_4">
+            <div class="float-right">
+                @Html.LabelFor(m => m.CloseNursingSignature):
+                @Html.TextBoxFor(m => m.CloseNursingSignature, nursingSignatureAttributes)
+            </div>
+        </div>
+    </div>
+    <div class="container_16 margin_separator">
+        <div class="grid_9">&nbsp;</div>
+        <div class="grid_3">
+            @Html.LabelFor(m => m.CloseDietary)
+            @Html.CheckBoxFor(m => m.CloseDietary, dietaryCheckboxAttributes)
+        </div>
+        <div class="grid_4">
+            <div class="float-right">
+                @Html.LabelFor(m => m.CloseDietarySignature):
+                @Html.TextBoxFor(m => m.CloseDietarySignature, dietarySignatureAttributes)
+            </div>
+        </div>
+    </div>
+    @Html.ValidationSummary(false)
+    @Html.HiddenFor(m => m.CommunityId)
+    <div class="container_16 margin_separator">
+        <div class="grid_16">
+            <button id="Save" class="float-right">Save Review</button>
+        </div>
+    </div>
+}

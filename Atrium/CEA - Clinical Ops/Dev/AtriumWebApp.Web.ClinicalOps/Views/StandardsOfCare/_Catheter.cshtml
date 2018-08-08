@@ -1,0 +1,33 @@
+﻿@model AtriumWebApp.Models.ViewModel.StandardsOfCareViewModel
+<div id="catheter" align="center">
+    <button class="float-right" id="closeCath">X</button>
+    <h2 class="margin_separator">Catheter Record</h2>
+    @using (Html.BeginForm("SaveCatheter", "StandardsOfCare", FormMethod.Post, new { id = "SaveCatheter" }))
+    {
+        @Html.HiddenFor(m => m.PatientId)
+        @Html.HiddenFor(m => m.RoomId)
+        @Html.HiddenFor(m => m.PatientGroupPayerId)
+        <div class="container_16 bottom_pad">
+            <div class="grid_2">@Html.Label("Date Occurred:")</div>
+            <div class="grid_2 date-occurred-container"></div>
+        </div>
+        <div class="clear">&nbsp;</div>
+        <div class="container_16 bottom_pad">
+            <div class="grid_2">@Html.Label("Date Resolved:")</div>
+            <div class="grid_2 date-resolved-container"></div>
+        </div>
+        <div class="clear">&nbsp;</div>
+        <div class="container_16 bottom_pad">
+            <div class="grid_2">@Html.Label("Catheter Type:")</div>
+            @if (Model.SOCEventCatheter == null)
+            {
+                <div class="grid_2">@Html.DropDownListFor(x => x.SOCEventCatheter.SOCCatheterTypeId, (SelectList)ViewData["CatheterTypes"], "Select a Catheter Type")</div>
+            }
+            else
+            {
+                <div class="grid_2">@Html.DropDownListFor(x => x.SOCEventCatheter.SOCCatheterTypeId, (SelectList)ViewData["CatheterTypes"], "Select a Catheter Type", new { disabled = "disabled" })</div>
+            }
+        </div>
+        <button class="margin_separator" type="button" id="saveCath">Save</button>
+    }
+</div>

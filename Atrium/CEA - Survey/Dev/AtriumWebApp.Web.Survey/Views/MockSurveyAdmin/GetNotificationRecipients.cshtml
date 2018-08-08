@@ -1,0 +1,29 @@
+﻿@model AtriumWebApp.Web.Survey.Models.ViewModel.MockSurveyNotificationRecipientListViewModel
+<button class="float-right" id="close">X</button>
+<h2>@Html.DisplayFor(m => m.CommunityShortName)</h2>
+<table id="recipients">
+    <thead>
+        <tr>
+            <th>Email Address</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var recipients in Model.Items)
+        {
+            <tr id="@recipients.Id">
+                <td>@recipients.EmailAddress</td>
+                <td>@Html.ActionLink("Delete", "DeleteNotificationRecipient", new { id = recipients.Id }, new { @class = "delete-recipient" })</td>
+            </tr>
+        }
+    </tbody>
+</table>
+@using (Html.BeginForm("CreateNotificationRecipient", "MockSurveyAdmin"))
+{
+    @Html.HiddenFor(m => m.CommunityId)
+    <div>
+        New Notification Recipient:
+        @Html.TextBox("EmailAddress")
+        <input type="submit" value="Add" id="add-notification-recipient" class="add-button" />
+    </div>
+}

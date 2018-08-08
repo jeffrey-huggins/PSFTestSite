@@ -1,0 +1,52 @@
+@model List<AtriumWebApp.Web.RiskManagement.Models.MedicalRecordsRequestNotes>
+<table id="notesTable">
+    <thead>
+        <tr>
+            <th>
+                User
+            </th>
+            <th>
+                Date
+            </th>
+            <th>
+                Notes
+            </th>
+            <th>
+                Edit
+            </th>
+            <th>
+                Delete
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var note in Model.OrderBy(a => a.InsertedDate))
+        {
+            <tr>
+                <td>
+                    @note.UserName
+                </td>
+                <td>
+                    @note.InsertedDate.ToString("g")
+                </td>
+                <td>
+                    @note.Notes.Substring(0, (note.Notes.Length > 20 ? 20 : note.Notes.Length))
+                    @if (note.Notes.Length > 20)
+                    {
+                        <br />
+                                                <a class="moreNotes" href="">More...</a>
+                                                <div id="hiddenNotes" style="display:none;">
+                                                    @note.Notes
+                                                </div>
+                    }
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "EditOrCreateRecordNote", new { requestid = note.Requestid, notesId = note.RequestNoteId }, new { @class = "edit" })
+                </td>
+                <td>
+                    @Html.ActionLink("Delete", "DeleteRecordNote", new { noteId = note.RequestNoteId }, new { @class = "delete" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

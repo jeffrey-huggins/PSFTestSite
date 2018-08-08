@@ -1,0 +1,75 @@
+﻿@model AtriumWebApp.Web.Financial.Models.WriteOff
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<fieldset>
+    <legend>WriteOff</legend>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.CommunityId)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.CommunityId)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.PatientId)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.PatientId)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.PayerId)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.PayerId)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.WriteOffAmt)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.WriteOffAmt)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.DOSYear)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.DOSYear)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.DOSMonth)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.DOSMonth)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.OurFaultFlg)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.OurFaultFlg)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Notes)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Notes)
+    </div>
+</fieldset>
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    <p>
+        <input type="submit" value="Delete" /> |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+}

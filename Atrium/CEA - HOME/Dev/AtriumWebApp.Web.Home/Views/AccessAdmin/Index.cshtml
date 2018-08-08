@@ -1,0 +1,357 @@
+@model AtriumWebApp.Web.Home.Models.ViewModels.AdminUserAppListViewModel
+@{
+    ViewBag.Title = "Access Admin";
+}
+
+<h2>@ViewBag.Title</h2>
+<style>
+    #userAutoList {
+        width: 300px;
+    }
+
+    .accessContainer, .multiSelectContainers {
+        display: inline-block;
+    }
+
+    #currentObjectCommunitiesContainer, .accessContainer, #currentCommunitiesContainer {
+        border: solid thin gray;
+    }
+
+    .accessContainer {
+        max-width: 550px;
+    }
+
+    .multiSelectContainers {
+        max-width: 500px;
+        padding-left: 40px;
+    }
+
+    .adminTabNav {
+        border-bottom: solid thin gray;
+    }
+
+    .dataTables_scrollHead {
+        border-bottom: solid thin black !important;
+    }
+
+    table.dataTable {
+    }
+
+        table.dataTable thead th {
+            border: none;
+        }
+
+    .tableHead {
+        border-bottom: solid thin black;
+    }
+
+    .borderRow {
+        border-left: solid 4px transparent;
+        border-right: solid 4px transparent;
+        border-top: solid 4px transparent;
+    }
+
+        .borderRow:hover {
+            cursor: pointer;
+        }
+
+    #objectAccess thead, #applicationAccess thead, #adminAccess thead {
+        display: none;
+    }
+
+    #adminAccessContainer {
+        width: auto;
+        max-width: none;
+    }
+
+    .highlight {
+        border: solid 4px yellow;
+    }
+
+    table.dataTable {
+        border-collapse: collapse;
+        margin-left: -4px;
+    }
+
+        table.dataTable tr.odd {
+            background-color: #E2E4FF;
+        }
+
+        table.dataTable tr.even {
+            background-color: white;
+        }
+
+    .no-footer.dataTables_wrapper .dataTables_scrollBody {
+        border-bottom: none;
+    }
+</style>
+
+<div id="tabs" style="min-height:500px">
+    <ul class="adminTabNav">
+        <li><a href="#General">General Access</a></li>
+        <li><a href="#Object">Object Access</a></li>
+        <li><a href="#Admin">Admin Access</a></li>
+        <li><a href="#Community">Community App Status</a></li>
+    </ul>
+    <div id="General">
+        <div id="applicationAccessContainer" class="accessContainer">
+            <table id="applicationAccess">
+                <thead>
+                    <tr>
+                        <th>
+                            Application Name
+                        </th>
+                        <th>
+                            Application Code
+                        </th>
+                        <th>
+                            Application Group
+                        </th>
+                        <th>
+                            Allow Access
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var application in Model.ApplicationList)
+                    {
+                    <tr class="borderRow" id="application@(application.ApplicationId)" appid="@application.ApplicationId">
+                        <td>
+                            @application.ApplicationName
+                        </td>
+                        <td>
+                            @application.ApplicationCode
+                        </td>
+                        <td>
+                            @application.MasterApplicationGroup.ApplicationGroupName
+                        </td>
+                        <td>
+                            @if (application.EnabledFlg)
+                                {
+                                <input class="appAccess" type="checkbox" checked="checked" />
+                                }
+                                else
+                                {
+                                <input class="appAccess" type="checkbox" />
+                                }
+
+                        </td>
+
+
+
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="accessContainer" style="">
+            <div style="display:inline-block">
+                <table id="appUsers">
+                    <thead>
+                        <tr>
+                            <th>
+                                User Display Name
+                            </th>
+                            <th>
+                                User Account Name
+                            </th>
+                            <th>
+                                Manage
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div id="Object">
+        <div id="objectAccessContainer" class="accessContainer">
+            <table id="objectAccess">
+                <thead class="tableHead">
+                    <tr>
+                        <th>
+                            Object Description
+                        </th>
+                        <th>
+                            Object Code
+                        </th>
+                        <th>
+                            Application Name
+                        </th>
+                        <th>
+                            Allow Access
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var objectAccess in Model.ObjectAccessList)
+                    {
+                    <tr id="object@(objectAccess.ObjectPermissionId)" class="borderRow" objectid="@objectAccess.ObjectPermissionId">
+                        <td>
+                            @objectAccess.ObjectDesc
+                        </td>
+                        <td>
+                            @objectAccess.ObjectCode
+                        </td>
+                        <td>
+                            @objectAccess.Application.ApplicationName
+                        </td>
+                        <td>
+                            @if (objectAccess.UserPermissions.Any(a => a.EnabledFlg))
+                                {
+                                <input class="objectAccess" type="checkbox" checked="checked" />
+                                }
+                                else
+                                {
+                                <input class="objectAccess" type="checkbox" />
+                                }
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="accessContainer" style="">
+            <div style="display:inline-block">
+                <table id="objectUsers">
+                    <thead>
+                        <tr>
+                            <th>
+                                User Display Name
+                            </th>
+                            <th>
+                                User Account Name
+                            </th>
+                            <th>
+                                Manage
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div id="Admin">
+        <div id="adminAccessContainer" class="accessContainer">
+            <table id="adminAccess">
+                <thead>
+                    <tr>
+                        <th>
+                            Application Name
+                        </th>
+                        <th>
+                            Application Code
+                        </th>
+                        <th>
+                            Application Group
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var application in Model.ApplicationList)
+                    {
+                    <tr class="borderRow adminRow" id="adminapplication@(application.ApplicationId)" adminappid="@application.ApplicationId">
+                        <td>
+                            @application.ApplicationName
+                        </td>
+                        <td>
+                            @application.ApplicationCode
+                        </td>
+                        <td>
+                            @application.MasterApplicationGroup.ApplicationGroupName
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="accessContainer" style="">
+            <div style="display:inline-block">
+                <table id="adminUsers">
+                    <thead>
+                        <tr>
+                            <th>
+                                User Display Name
+                            </th>
+                            <th>
+                                User Account Name
+                            </th>
+                            <th>
+                                Manage
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div id="Community">
+        @{
+            SelectList applications = new SelectList(Model.CommunityList.OrderByDescending(a => a.IsCommunityFlg).ThenBy(a => a.CommunityShortName).ToList(), "CommunityId", "CommunityShortName", Model.CommunityList.Last().CommunityId);
+        }
+        <select asp-items="applications" id="applicationStatus"></select>
+        <br />
+        <div style="border:solid thin black;">
+            <table id="communityTable">
+                <thead>
+                    <tr>
+                        <th>
+                            Application Name
+                        </th>
+                        <th>
+                            Data Entry Flag
+                        </th>
+                        <th>
+                            Report Flag
+                        </th>
+                        <th>
+                            Row Exists
+                        </th>
+                    </tr>
+                    <tr>
+                        <td>
+                            All
+                        </td>
+                        <td>
+                            <input type="checkbox" class="allDataEntry" />
+                        </td>
+                        <td>
+                            <input type="checkbox" class="allReport" />
+                        </td>
+                        <td></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var application in Model.ApplicationList)
+                {
+                <tr id="@application.ApplicationId">
+                    <td>
+                        @application.ApplicationName
+                    </td>
+                    <td>
+                        <input type="checkbox" class="dataFlag" />
+                    </td>
+                    <td>
+                        <input type="checkbox" class="reportFlag" />
+                    </td>
+                    <td>
+                        <i class="fa fa-times-circle notExists" style="color:red;display:none;" aria-hidden="true"></i>
+                        <i class="fa fa-check-square-o exists" aria-hidden="true" style="color:green;display:none;"></i>
+                    </td>
+                </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<environment names="Development">
+    <script src="~/js/AccessAdmin.js" asp-append-version="true"></script>
+</environment>
+<environment names="Testing,Production,Training">
+    <script src="~/js/AccessAdmin.min.js" asp-append-version="true"></script>
+</environment>
+

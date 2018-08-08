@@ -1,0 +1,68 @@
+﻿@model List<VaccineHistoryViewModel>
+
+<table id="vaccineTable">
+    <thead>
+        <tr>
+            <th>
+                Type
+            </th>
+            <th>
+                Date
+            </th>
+            <th>
+                Refused
+            </th>
+            <th>
+                Consent
+            </th>
+            <th>
+                Edit
+            </th>
+            <th>
+                Delete
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var vaccine in Model)
+        {
+            <tr vaccineId="@vaccine.PatientVaccineId">
+                <td>
+                    @vaccine.VaccineType.VaccineTypeName
+                </td>
+                <td>
+                    @(vaccine.VaccineDate.HasValue ? vaccine.VaccineDate.Value.ToString("d") : "Prior to Admission")
+                </td>
+                <td>
+                    @if (vaccine.OfferedRefusedFlg)
+                    {
+                        @:Yes
+                    }
+                    else
+                    {
+                        @:No
+
+                    }
+                </td>
+                <td>
+                    @if (vaccine.ConsentSignedFlg)
+                    {
+                        @:Yes
+                    }
+                    else
+                    {
+                        @:No
+
+                    }
+                </td>
+                <td>
+                    <a href="#" class="edit">Edit</a>
+                </td>
+                <td>
+                    <a href="#" class="delete">Delete</a>
+                </td>
+            </tr>
+
+        }
+    </tbody>
+</table>

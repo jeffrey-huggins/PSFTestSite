@@ -1,0 +1,71 @@
+﻿@model AtriumWebApp.Web.Schedule.Models.ViewModel.TextOpenShift
+@*@Styles.Render("~/Content/Schedule.css")*@
+@{
+    ViewBag.Title = "Open Shift Notification";
+    var year = DateTime.Now.Year.ToString();
+}
+@*<script type="text/javascript" src="~/Scripts/maxlength.js"></script>*@
+<button class="float-right top" id="close">X</button>
+<h2>@ViewBag.Title</h2>
+@*@using (Html.BeginForm("UpdateTextOpenShift", "Schedule", FormMethod.Post, new { id = "TestOpenShiftSelectionForm" }))
+{*@
+    @*@{
+        string titleFacilityAndDate = String.Format("{0} - {1}", Model.CommunityName, Model.PayPeriodDateFormatted);
+    }*@
+    @Html.HiddenFor(m => Model.CommunityId)
+    @Html.HiddenFor(m => Model.CommunityName)
+    <h2>@Model.CommunityName</h2>
+    <div id="TextOpenShiftModal_Inner" align="center">
+        <table id="TextOpenShiftJobTypeTable">
+            <thead>
+                <tr>
+                    <th>Selected Job Roles</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var jobType in Model.jobType)
+                {
+                    <tr id="@jobType.JobTypeId" class="textOpenShiftJobType">
+                        <td>&nbsp;&nbsp;@jobType.JobTypeName</td>
+                        <td>
+                            @Html.CheckBoxFor(m => jobType.Selected, new { @class = "selectJobType" })
+                            @Html.HiddenFor(m => jobType.JobTypeId)
+                            @Html.HiddenFor(m => jobType.JobTypeName)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <table id="TextOpenShiftEmployeeTable">
+            <thead>
+                <tr>
+                    <th>Selected Employees</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var employee in Model.Employees.textOpenShiftEmployees)
+                {
+                    <tr id="@employee.EmployeeId" class="textOpenShiftEmployee">
+                        <td>&nbsp;&nbsp;@employee.EmployeeName</td>
+                        <td>@Html.CheckBoxFor(m => employee.Selected, new { @class = "selectEmployee" })</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <br />
+        <div class="grid_8 forcedWidth">
+            <div class="grid_2">
+                @Html.LabelFor(m => Model.Message)
+            </div>
+            <div class="grid_6">
+                @Html.TextAreaFor(m => Model.Message, new { @maxlength = "100" })
+            </div>
+        </div>
+        <br />
+        <hr />
+        @*<input id="btnTextOpenShift" type="submit" value=" Send Notification " />*@
+        <button id="btnTextOpenShift" type="submit" class="right bottom"> Send Notification </button>
+    </div>
+@*}*@

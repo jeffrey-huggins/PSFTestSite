@@ -1,0 +1,15 @@
+@model AtriumWebApp.Models.ContractTerminationNotice
+
+@if (Model.Id == 0)
+{
+    Model.IsDataEntry = true;
+    Model.IsReportable = true;
+}
+
+<form asp-action="CreateTerminationNotice" asp-controller="ContractAdmin">
+    <input asp-for="Name" placeholder="New Termination Notice" />
+    <span asp-validation-for="Name" class="text-danger"></span>
+    <input asp-for="IsDataEntry" hidden="hidden" />
+    <input asp-for="IsReportable" hidden="hidden" />
+    <input type="submit" value="Add" id="newTerminationNotice" />
+</form>

@@ -1,0 +1,144 @@
+﻿@model AtriumWebApp.Web.ClinicalOps.Models.ViewModel.VaccinationViewModel
+<div id="tb_initial" class="vaccineModal">
+    <button class="float-right" id="btnClose_TB_Initial">X</button>
+    <h2 class="margin_separator" style="text-align: center">TB Initial 2-Step Vaccination</h2>
+    @using (Html.BeginForm("SaveVaccineTBInitial2Step", "Vaccination", FormMethod.Post, new { id = "SaveVaccineTBInitial2Step" }))
+    {
+        @Html.Hidden("VaccineId")
+        @Html.Hidden("VaccineType")
+        @Html.HiddenFor(m => m.PatientId)
+        @Html.HiddenFor(m => m.IsEmployeeVaccine)
+        @Html.HiddenFor(m => m.RoomId)
+        @Html.HiddenFor(m => m.PayerId)
+        if (!Model.IsEmployeeVaccine)
+        {
+            <fieldset class="borderTop">
+                <legend>System</legend>
+                <div class="container_16 bottom_pad">
+                    <div class="grid_1">&nbsp;</div>
+                    <div class="grid_2">@Html.Label("Consent Signed:")</div>
+                    <div class="grid_2">@Html.CheckBox("ConsentSignedFlg")</div>
+                </div>
+            </fieldset>
+        }
+        <fieldset class="note">
+            <legend>PPD Step 1</legend>
+            <div class="container_16 bottom_pad">
+                <div class="grid_1">&nbsp;</div>
+                <div class="grid_3">@Html.Label("","PPD Step 1", new { @style = "font-weight: bold" })</div>
+            </div>
+            <div class="container_16 bottom_pad">
+                <div class="grid_1">&nbsp;</div>
+                <div class="grid_2">@Html.Label("Given Date:")</div>
+                <div class="grid_2">@Html.TextBox("PPDStep1GivenDate", "", new { @class = "isDate date" })</div>
+            </div>
+            <div class="container_16 bottom_pad">
+                <div class="grid_1">&nbsp;</div>
+                <div class="grid_2">@Html.Label("Site:")</div>
+                <div class="grid_2">@Html.DropDownList("PPDStep1Site", new SelectList(Model.VaccineTBSites, "VaccineTBSiteId", "SiteName"), "Select a Site")</div>
+            </div>
+            <div class="container_16 bottom_pad">
+                <div class="grid_1">&nbsp;</div>
+                <div class="grid_2">@Html.Label("Read Date:")</div>
+                <div class="grid_2">@Html.TextBox("PPDStep1ReadDate", "", new { @class = "isDate date" })</div>
+            </div>
+            <div class="container_16 bottom_pad">
+                <div class="grid_1">&nbsp;</div>
+                <div class="grid_2">@Html.Label("Reaction:")</div>
+                <div class="grid_2">@Html.CheckBox("PPDStep1ReactionFlg")</div>
+            </div>
+            <div class="container_16 bottom_pad reactionMeasurementStep1Show" style="display: none;">
+                <div class="grid_1">&nbsp;</div>
+                <div class="grid_2">@Html.Label("Measurement:")</div>
+                <div class="grid_2">@Html.DropDownList("PPDStep1ReactionMeasurement", new SelectList(Model.VaccineTBReactionMeasurements, "VaccineTBReactionMeasurementId", "Description"), "Select a Measurement")</div>
+            </div>
+            @if (!Model.IsEmployeeVaccine)
+            {
+                <div class="container_16 bottom_pad">
+                    <div class="grid_1">&nbsp;</div>
+                    <div class="grid_2">@Html.Label("Lot #:")</div>
+                    <div class="grid_2">@Html.TextBox("PPDStep1LotNumber", "", new { style = "width: 75px;", maxlength = "16" })</div>
+                </div>
+            }
+        </fieldset>
+        <fieldset>
+            <legend>PPD Step 2</legend>
+            <div class="container_16 bottom_pad">
+                <div class="grid_1">&nbsp;</div>
+                <div class="grid_3">@Html.Label("", "PPD Step 2", new { @style = "font-weight: bold" })</div>
+            </div>
+            <div class="container_16 bottom_pad">
+                <div class="grid_1">&nbsp;</div>
+                <div class="grid_2">@Html.Label("Given Date:")</div>
+                <div class="grid_2">@Html.TextBox("PPDStep2GivenDate", "", new { @class = "isDate date" })</div>
+            </div>
+            <div class="container_16 bottom_pad">
+                <div class="grid_1">&nbsp;</div>
+                <div class="grid_2">@Html.Label("Site:")</div>
+                <div class="grid_2">@Html.DropDownList("PPDStep2Site", new SelectList(Model.VaccineTBSites, "VaccineTBSiteId", "SiteName"), "Select a Site")</div>
+            </div>
+            <div class="container_16 bottom_pad">
+                <div class="grid_1">&nbsp;</div>
+                <div class="grid_2">@Html.Label("Read Date:")</div>
+                <div class="grid_2">@Html.TextBox("PPDStep2ReadDate", "", new { @class = "isDate date" })</div>
+            </div>
+            <div class="container_16 bottom_pad">
+                <div class="grid_1">&nbsp;</div>
+                <div class="grid_2">@Html.Label("Reaction:")</div>
+                <div class="grid_2">@Html.CheckBox("PPDStep2ReactionFlg")</div>
+            </div>
+            <div class="container_16 bottom_pad reactionMeasurementStep2Show" style="display: none;">
+                <div class="grid_1">&nbsp;</div>
+                <div class="grid_2">@Html.Label("Measurement:")</div>
+                <div class="grid_2">@Html.DropDownList("PPDStep2ReactionMeasurement", new SelectList(Model.VaccineTBReactionMeasurements, "VaccineTBReactionMeasurementId", "Description"), "Select a Measurement")</div>
+            </div>
+            @if (!Model.IsEmployeeVaccine)
+            {
+                <div class="container_16 bottom_pad">
+                    <div class="grid_1">&nbsp;</div>
+                    <div class="grid_2">@Html.Label("Lot #:")</div>
+                    <div class="grid_2">@Html.TextBox("PPDStep2LotNumber", "", new { style = "width: 75px;", maxlength = "16" })</div>
+                </div>
+            }
+        </fieldset>
+        <fieldset class="note">
+            <legend>Other</legend>
+            <div class="container_16 bottom_pad">
+                <div class="grid_1">&nbsp;</div>
+                <div class="grid_2">@Html.Label("", "Chest X-Ray:", new { @style = "font-weight: normal" })</div>
+                <div class="grid_3">
+                    @Html.RadioButton("ChestXRayFlg", "Y", false, new { @id = "ChestXRayFlg_Y" }) Yes
+                    @Html.RadioButton("ChestXRayFlg", "N", false, new { @id = "ChestXRayFlg_N" }) No
+                    @Html.RadioButton("ChestXRayFlg", "", true, new { @id = "ChestXRayFlg_NA" }) N/A
+                </div>
+            </div>
+            <div class="container_16 bottom_pad chestXRayDateShow" style="display: none">
+                <div class="grid_1">&nbsp;</div>
+                <div class="grid_2">@Html.Label("Date Taken:")</div>
+                <div class="grid_2">@Html.TextBox("ChestXRayDate", "", new { @class = "isDate date" })</div>
+            </div>
+            <div class="container_16 bottom_pad questionnaireShow" style="display: none">
+                <div class="grid_1">&nbsp;</div>
+                <div class="grid_2">@Html.Label("Questionnaire Complete:")</div>
+                <div class="grid_1">@Html.CheckBox("ChestXRayQuestionnaireCompleteFlg")</div>
+                <div class="grid_2 questionnaireDateShow" style="display: none">@Html.TextBox("ChestXRayQuestionnaireCompleteDate", "", new { @class = "isDate date" })</div>
+            </div>
+            <div class="container_16 bottom_pad">
+                <div class="grid_1">&nbsp;</div>
+                <div class="grid_2">@Html.Label("", "BMAT:", new { @style = "font-weight: normal" })</div>
+                <div class="grid_1">@Html.CheckBox("BMATFlg")</div>
+                <div class="grid_2 bmatDateShow" style="display: none">@Html.TextBox("BMATDate", "", new { @class = "isDate date", @id = "BMATDate_Initial" })</div>
+            </div>
+        </fieldset>
+        <br />
+        <div class="container_16 bottom_pad">
+            <div class="grid_3">&nbsp;</div>
+            <div class="grid_2">
+                <button type="button" id="btnSave_TB_Initial">Save</button>
+            </div>
+            <div class="grid_2">
+                <button type="button" id="btnClear_TB_Initial">Clear</button>
+            </div>
+        </div>
+    }
+</div>

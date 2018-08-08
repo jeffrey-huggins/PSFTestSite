@@ -1,0 +1,92 @@
+﻿@model VaccinationInfluenzaViewModel
+
+<div align="center" class="container-fluid" style="min-width:660px;">
+    <h2 class="margin_separator">Flu Vaccination</h2>
+
+    <form method="post" id="saveFluVaccine" asp-controller="Vaccination" asp-action="SaveInfluenzaVaccine">
+        <input type="hidden" asp-for="CurrentPayerId" />
+        <input type="hidden" asp-for="PersonId" />
+        <input type="hidden" asp-for="RoomId" />
+        <input type="hidden" asp-for="VaccineId" />
+        <input type="hidden" asp-for="VaccineTypeId" />
+        <input type="hidden" asp-for="IsEmployee" />
+        <hr />
+        <div class="row">
+            <div class="col-sm-3 text-right">
+                Date:
+            </div>
+            <div class="col-sm-3 text-left">
+                <input asp-for="VaccineDate" asp-format="{0:d}" type="text" data-rule-no_future_date="true" class="isDate" />
+                <br />
+                <span asp-validation-for="VaccineDate" class="text-danger"></span>
+            </div>
+            @if (!Model.IsEmployee)
+            {
+                <div class="col-sm-3 text-right">
+                    Consent Signed:
+                </div>
+                <div class="col-sm-3 text-left">
+                    <input asp-for="ConsentSignedFlg" />
+                    <br />
+                    <span asp-validation-for="ConsentSignedFlg" class="text-danger"></span>
+                </div>
+            }
+        </div>
+        <div class="row">
+            <div class="col-sm-3 text-right">
+                Lot #:
+            </div>
+            <div class="col-sm-3 text-left">
+                <input asp-for="LotNumber" />
+                <span asp-validation-for="LotNumber" class="text-danger"></span>
+            </div>
+
+            <div class="col-sm-3 text-right">
+                Offered and Refused:
+            </div>
+            <div class="col-sm-3 text-left">
+                <div class="row">
+                    <div class="col-sm-3">
+                        <input asp-for="OfferedRefusedFlg" />
+                    </div>
+                    <div class="col-sm-9">
+                        <input asp-for="OfferedRefusedDate" data-rule-no_future_date="true" asp-format="{0:d}" class="isDate refusedDate" type="text" style="display:none;" />
+                    </div>
+                    <br />
+                </div>
+                <span asp-validation-for="OfferedRefusedFlg" class="text-danger"></span>
+                <span asp-validation-for="OfferedRefusedDate" class="text-danger"></span>
+            </div>
+
+        </div>
+        @if (!Model.IsEmployee)
+        {
+            <div class="row">
+                <div class="col-sm-offset-6 col-sm-3 text-right">
+                    Prior to Admission:
+                </div>
+                <div class="col-sm-3 text-left">
+                    <input asp-for="ImmunizationPriorToAdmissionFlg" />
+                    <span asp-validation-for="ImmunizationPriorToAdmissionFlg" class="text-danger"></span>
+                </div>
+            </div>
+        }
+        <hr />
+        <div class="row">
+            <div class="col-sm-12 text-center">
+                <input type="submit" id="saveVaccine" value="Save" />
+            </div>
+
+        </div>
+    </form>
+</div>
+<script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+<environment names="Development">
+    <script src="~/js/AdditionalValidation.js" asp-append-version="true"></script>
+    <script src="~/js/Vaccination/Influenza.js" asp-append-version="true"></script>
+</environment>
+<environment names="Testing,Production,Training">
+    <script src="~/js/AdditionalValidation.min.js" asp-append-version="true"></script>
+    <script src="~/js/Vaccination/Influenza.min.js" asp-append-version="true"></script>
+</environment>

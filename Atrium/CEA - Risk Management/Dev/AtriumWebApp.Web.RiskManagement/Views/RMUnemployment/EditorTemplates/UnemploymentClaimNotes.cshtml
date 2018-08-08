@@ -1,0 +1,35 @@
+@model UnemploymentClaimNotes
+
+<form asp-action="SaveNote" id="noteForm">
+    <input type="hidden" asp-for="ClaimId" />
+    <input type="hidden" asp-for="ClaimNoteId" />
+    <input type="hidden" asp-for="InsertedDate" />
+    <input type="hidden" asp-for="UserName" />
+    <div class="row">
+        <div class="col-sm-12">
+            <label class="bold">Notes</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-8">
+            <textarea asp-for="Notes" style="width:100%"></textarea>
+            <br />
+            <span asp-validation-for="Notes"></span>
+        </div>
+        <div class="col-sm-4">
+            <input type="submit" id="noteSubmit" value="Add" />
+
+            <input type="button" id="noteClear" value="Cancel" />
+        </div>
+    </div>
+</form>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+<script>
+    $.validator.setDefaults({ ignore: [] });
+    $("#noteForm").removeData("validator");
+    $("#noteForm").removeData("unobtrusiveValidation");
+    $.validator.unobtrusive.parse($("#noteForm"));
+    $("#noteForm").validate();
+</script>

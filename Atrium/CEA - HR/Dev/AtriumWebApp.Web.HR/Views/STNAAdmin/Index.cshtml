@@ -1,0 +1,162 @@
+@model AtriumWebApp.Web.HR.Models.ViewModel.STNATrainingAdminViewModel
+
+@{
+    ViewBag.Title = "STNA Training Admin";
+}
+
+<style type="text/css">
+
+</style>
+
+<h2>STNA Training Admin</h2>
+<div class="admin-table-wrapper">
+
+</div>
+<div id="communityAssocationModal" align="center"></div>
+<div style="display:none;">
+    <div id="facilityCreateModal" style="background-color:#EFEEEF;height:330px;width:650px;">
+        @Html.EditorFor(a => a.NewFacility, "", "")
+    </div>
+    <div id="facilityEditModal" style="background-color:#EFEEEF;height:330px;width:650px;">
+
+    </div>
+</div>
+
+
+<div id="tabs" style="min-height:500px;">
+    <ul>
+        <li>
+            <a href="#communityTab">Communities</a>
+        </li>
+        <li>
+            <a href="#trainingFacilityTab">Training Facilities</a>
+        </li>
+    </ul>
+    <div id="admin-body">
+        <div id="communityTab">
+            <table id="CommunityTable">
+                <thead>
+                    <tr>
+                        <th>
+                            Facility
+                        </th>
+                        <th>
+                            State
+                        </th>
+                        <th>
+                            Region
+                        </th>
+                        <th>
+                            Use in Display
+                        </th>
+                        <th>
+                            Report Flag
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var com in Model.AdminViewModel.Communities.OrderByDescending(c => c.IsCommunityFlg).ThenBy(c => c.CommunityShortName))
+            {
+                        <tr id="@com.CommunityId">
+                            <td>@com.CommunityShortName</td>
+                            <td>@com.StateCd</td>
+                            <td>@Model.AdminViewModel.Regions.Single(r => r.RegionId == com.RegionId).RegionName</td>
+                            <td>@Html.CheckBoxFor(x => x.AdminViewModel.ApplicationCommunityInfos.Single(aci => aci.CommunityId == com.CommunityId).DataEntryFlg, new { id = com.CommunityId, @class = "checkbox" })</td>
+                            <td>@Html.CheckBoxFor(x => x.AdminViewModel.ApplicationCommunityInfos.Single(aci => aci.CommunityId == com.CommunityId).ReportFlg, new { id = com.CommunityId, @class = "checkboxReport" })</td>
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div id="trainingFacilityTab">
+            <table id="training-facility-table">
+                <thead>
+                    <tr>
+                        <th>Training Facility Name</th>
+                        <th>Address 1</th>
+                        <th>
+                            Address 2
+                        </th>
+                        <th>
+                            City
+                        </th>
+                        <th>
+                            State
+                        </th>
+                        <th>
+                            Zip Code
+                        </th>
+                        <th>
+                            Contact Name
+                        </th>
+                        <th>
+                            Contact Phone
+                        </th>
+                        <th>
+                            Contact Email
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.TrainingFacilities)
+            {
+                        <tr id="@item.STNATrainingFacilityId">
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TrainingFacilityName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Address1)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Address2)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.City)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.StateCd)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ZipCode)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ContactName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ContactPhone)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ContactEmail)
+                            </td>
+                            <td>
+                                @Html.ActionLink("Edit", "Edit", new { id = item.STNATrainingFacilityId },new { @class="edit" }) |
+                                @*@Html.ActionLink("Delete", "Delete", new { id = item.STNATrainingFacilityId }) |*@
+                                @Html.ActionLink("Associate Communities", "GetCommunityAssociations", new { id = item.STNATrainingFacilityId }, new { @class = "select-communities" })
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+
+            <p>
+                <a asp-action="Create" id="newFacility">Create New Training Facility</a>
+                @*@Html.ActionLink("Create New Training Facility", "Create")*@
+            </p>
+        </div>
+    </div>
+</div>
+
+
+<environment names="Development">
+    <script src="~/js/STNAAdmin.js" asp-append-version="true"></script>
+</environment>
+<environment names="Testing,Production,Training">
+    <script src="~/js/STNAAdmin.min.js" asp-append-version="true"></script>
+</environment>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

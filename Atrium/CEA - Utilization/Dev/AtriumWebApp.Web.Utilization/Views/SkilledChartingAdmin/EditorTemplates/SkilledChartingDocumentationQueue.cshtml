@@ -1,0 +1,12 @@
+@model AtriumWebApp.Web.Utilization.Models.SkilledChartingDocumentationQueue
+
+<form asp-action="SaveDocumentationQueue" asp-controller="SkilledChartingAdmin" id="newDocQueueForm">
+    <textarea asp-for="DocumentationQueueName" placeholder="New Documentation Queue" required></textarea>
+    <span asp-validation-for="DocumentationQueueName"></span>
+    <input asp-for="GuidelineId" hidden="hidden" />
+    <input type="submit" id="AddDocQueue" value="Add" />
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

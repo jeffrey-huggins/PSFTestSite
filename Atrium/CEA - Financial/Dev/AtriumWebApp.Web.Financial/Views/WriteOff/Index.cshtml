@@ -1,0 +1,94 @@
+﻿@model AtriumWebApp.Web.Financial.Models.ViewModel.WriteOffIndexViewModel
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table id="WO-Table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayName("Community")
+            </th>
+            <th>
+                @Html.DisplayName("Patient")
+            </th>
+            <th>
+                @Html.DisplayName("Payer")
+            </th>
+            <th>
+                @Html.DisplayName("Write Off Amt")
+            </th>
+            <th>
+                @Html.DisplayName("Year")
+            </th>
+            <th>
+                @Html.DisplayName("Month")
+            </th>
+            <th>
+                @Html.DisplayName("Our Fault?")
+            </th>
+            <th>
+                @Html.DisplayName("Notes")
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Items)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.CommunityName)</td>
+                <td>@Html.DisplayFor(modelItem => item.PatientName)</td>
+                <td>@Html.DisplayFor(modelItem => item.PayerName)</td>
+                <td>@Html.DisplayFor(modelItem => item.WriteOffAmt)</td>
+                <td>@Html.DisplayFor(modelItem => item.DOSYear)</td>
+                <td>@Html.DisplayFor(modelItem => item.DOSMonth)</td>
+                <td>@Html.DisplayFor(modelItem => item.OurFaultFlg)</td>
+                <td>@Html.DisplayFor(modelItem => item.Notes)</td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.WriteOffId }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.WriteOffId })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<script>
+    $(document).ready(function () {
+        var oTable = $('#WO-Table').dataTable({
+            "bAutoWidth": false,
+            "sScrollY": "400px",
+            "sDom": "rt",
+            "iDisplayLength": -1,
+            "aoColumns": [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                {
+                    "bSortable": false
+                },
+                {
+                    "bSortable": false
+                }
+            ],
+            "oLanguage": {
+                "sEmptyTable": "No records within this range."
+            }
+        });
+
+
+
+
+
+    });
+</script>

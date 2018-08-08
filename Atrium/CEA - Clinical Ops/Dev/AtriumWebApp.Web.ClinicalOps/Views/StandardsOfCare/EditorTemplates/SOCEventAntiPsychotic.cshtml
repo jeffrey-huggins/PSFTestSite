@@ -1,0 +1,106 @@
+﻿@model SOCEventAntiPsychotic
+@{
+    var medications = new SelectList((List<SOCAntiPsychoticMedication>)ViewData["Medications"], "AntiPsychoticMedicationId", "AntiPsychoticMedicationName");
+    var diagnosis = new SelectList((List<SOCAntiPsychoticDiagnosis>)ViewData["Diagnosis"], "AntiPsychoticDiagnosisId", "AntiPsychoticDiagnosisDesc");
+}
+<div id="antipsychotic" align="center" class="container-fluid" >
+    <h2 class="margin_separator">Antipsychotic Record</h2>
+    <form method="post" id="SaveAntipsychotic" asp-controller="StandardsOfCare" asp-action="SaveAnti" style="display:none;">
+        <input type="hidden" asp-for="PatientId" />
+        <input type="hidden" asp-for="SOCMeasureId" />
+        <input type="hidden" asp-for="RoomId" />
+        <input type="hidden" asp-for="CurrentPayerId" />
+        <input type="hidden" asp-for="SOCEventId" />
+        <input type="hidden" asp-for="OccurredFlg" />
+        <input type="hidden" asp-for="ResolvedFlg" />
+        <div class="row">
+            <div class="col-sm-3 text-right">
+                Date Initial Order:
+            </div>
+            <div class="col-sm-3">
+                <input asp-for="OccurredDate" data-rule-no_future_date="true" asp-format="{0:d}" class="isDate" />
+                <br />
+                <span asp-validation-for="OccurredDate" class="text-danger"></span>
+            </div>
+            <div class="col-sm-3 text-right">Date Resolved:</div>
+            <div class="col-sm-3 date-resolved-container">
+                <input asp-for="ResolvedDate" asp-format="{0:d}" data-rule-no_future_date="true" data-rule-resolved_greater_initial="true" class="isDate" />
+                <br />
+                <span asp-validation-for="ResolvedDate" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="with-diagnosis-only">
+                <div class="col-sm-3 text-right">
+                    Consent Date:
+                </div>
+                <div class="col-sm-3">
+                    <input asp-for="ConsentDate" asp-format="{0:d}" class="isDate" />
+                    <br />
+                    <span asp-validation-for="ConsentDate" class="text-danger"></span>
+                </div>
+                <div class="col-sm-3 text-right">Antipsychotic:</div>
+                <div class="col-sm-3">
+                    <select asp-for="AntiPsychoticMedicationId" asp-items="medications">
+                        <option value="" selected="selected" disabled>
+                            Select an AntiPsychotic
+                        </option>
+                    </select>
+                    <br />
+                    <span asp-validation-for="AntiPsychoticMedicationId" class="text-danger"></span>
+                    <input type="hidden" asp-for="AntiPsychoticMedicationId" />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-3 text-right">
+                Diagnosis (256 max):
+            </div>
+            <div class="col-sm-4">
+                <select asp-for="AntiPsychoticDiagnosisId" asp-items="diagnosis">
+                    <option value="" selected="selected" disabled>
+                        Select an AntiPsychotic Diagnosis
+                    </option>
+                </select>
+                <br />
+                <span asp-validation-for="AntiPsychoticDiagnosisId" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 text-left">
+                <textarea asp-for="OtherDiagnosisDetail" maxlength="256">
+                </textarea>
+                <br />
+                <span asp-validation-for="OtherDiagnosisDetail" class="text-danger"></span>
+            </div>
+        </div>
+    </form>
+    <button id="noteCreation">Create Note</button>
+    <hr />
+    <div id="note">
+
+    </div>
+    <div class="row">
+        <div class="col-sm-2 col-sm-offset-4">
+            <button type="button" id="saveAnti">Save</button>
+        </div>
+        <div class="col-sm-2">
+            <button type="button" id="clearAnti">Clear</button>
+        </div>
+    </div>
+    <div id="NotesArea">
+
+    </div>
+
+</div>
+<script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+
+<environment names="Development">
+    <script src="~/js/AdditionalValidation.js" asp-append-version="true"></script>
+    <script src="~/js/SOC/SOCAntiPsychotic.js" asp-append-version="true"></script>
+</environment>
+<environment names="Testing,Production,Training">
+    <script src="~/js/AdditionalValidation.min.js" asp-append-version="true"></script>
+    <script src="~/js/SOC/SOCAntiPsychotic.min.js" asp-append-version="true"></script>
+</environment>

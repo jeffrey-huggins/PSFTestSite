@@ -1,0 +1,88 @@
+@model AtriumWebApp.Web.Home.Models.ViewModels.ServerStatusViewModel
+@{
+    ViewData["Title"] = "Status";
+}
+
+<h2>Status</h2>
+
+<table id="serverStatus">
+    <thead>
+        <tr>
+            <th>
+                Application
+            </th>
+            <th>
+                Server
+            </th>
+            <th>
+                Database
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr id="" appUrl="/" class="appStatus">
+            <td>
+                Home
+            </td>
+            <td class="server"></td>
+            <td class="database"></td>
+        </tr>
+
+        @foreach (var app in Model.Apps.Select(a => a.MasterApplicationGroup).Distinct().ToList())
+        {
+            <tr id="" appUrl="@app.ApplicationInfo.First().RelativeApplicationURL" class="appStatus">
+                <td>
+                    @app.ApplicationGroupName
+                </td>
+                <td class="server"></td>
+                <td class="database"></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script>
+    if (!String.prototype.endsWith) {
+        String.prototype.endsWith = function (searchString, position) {
+            var subjectString = this.toString();
+            if (typeof position !== 'number' || !isFinite(position) || Math.floor(position) !== position || position > subjectString.length) {
+                position = subjectString.length;
+            }
+            position -= searchString.length;
+            var lastIndex = subjectString.indexOf(searchString, position);
+            return lastIndex !== -1 && lastIndex === position;
+        };
+    }
+
+    $(function () {
+        ShowProgress();
+        $(document).ajaxStop(function () {
+            HideProgress();
+
+        });
+        var apps = $(".appStatus");
+        for (var i = 0; i < apps.length; i++) {
+            var row = $(apps[i]);
+            GetDatabaseInfo(row);
+
+        }
+    });
+    function GetDatabaseInfo(row) {
+        var app = path + row.attr("appUrl").split("/")[1];
+        if (!app.endsWith("/")) {
+            app += "/";
+        }
+        var appUrl = app + "BaseAdmin";
+
+        return $.ajax({
+            url: appUrl + "/GetDatabaseInfo",
+            type: "GET"
+        }).done(function (result) {
+            row.find(".server").text(result.serverName);
+            row.find(".database").text(result.databaseName);
+        }).fail(function () {
+            row.find(".database").text("Not Responding");
+        });
+
+    }
+</script>

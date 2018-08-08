@@ -1,0 +1,52 @@
+@model AtriumWebApp.Models.Budget.ViewModels.OtherExpensesCalcViewModel
+
+Facility Calculation Value Setup
+<table id="facilityCalcs">
+    <thead>
+        <tr>
+            <th>
+                Calc Value Name
+            </th>
+            <th>
+                Month
+            </th>
+            <th>
+                Calc Value
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach( var calc in Model.Calculations)
+        {
+            SelectList valueNames = new SelectList(Model.MasterCalculations, "CalcValueID", "CalcValueNm", calc.OtherExpensesGLCalcValueMaster.CalcValueID);
+            SelectList month = new SelectList(Model.Months, "MonthID", "MonthNm", calc.MonthID);
+            <tr oldMonthId="@calc.MonthID" oldCalcNameId="@calc.CalcValueID">
+                <td><select asp-items="valueNames" class="calcName"></select></td>
+                <td><select asp-items="month" class="calcMonth"></select></td>
+                <td>
+                    @Html.TextBoxFor(a => calc.CalcValue,"",new { @class = "calcValue" })
+                    <i class="fa fa-times selector" id="deleteCalcRow" style="color:red;font-size:18px;margin-left:50px;"></i>
+                </td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            @{
+                SelectList newValueName = new SelectList(Model.MasterCalculations, "CalcValueID", "CalcValueNm");
+                SelectList newMonth = new SelectList(Model.Months, "MonthID", "MonthNm");
+            }
+            <td>
+                <i class="fa fa-asterisk"></i>
+                <select asp-items="newValueName" id="newCalcName"></select>
+            </td>
+            <td>
+                <select asp-items="newMonth" id="newCalcMonth"></select>
+            </td>
+            <td>
+                <input type="text" id="newCalcValue" />
+                <input type="button" id="newCalc" value="Add"/>
+            </td>
+        </tr>
+    </tfoot>
+</table>

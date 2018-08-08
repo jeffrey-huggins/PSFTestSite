@@ -1,0 +1,53 @@
+﻿@model List<EmployeeIFCEvent>
+
+<table id="infectionTable">
+    <thead>
+        <tr>
+            <th>
+
+            </th>
+            <th>
+                Onset Date
+            </th>
+            <th>
+                Work Days Missed
+            </th>
+            <th>
+                Site
+            </th>
+            <th>
+                Edit
+            </th>
+            <th>
+                Delete
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var infection in Model)
+        {
+            <tr infectionId="@infection.EmployeeIFCEventId">
+                <td>
+                    @infection.EmployeeIFCEventId
+                </td>
+                <td>
+                    @infection.OnsetDate.ToString("d")
+                </td>
+                <td>
+                    @infection.MissedWorkDaysCnt
+                    
+                </td>
+                <td>
+                    @infection.Site.PatientIFCSiteName
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "EditOrCreateInfection", new { infectionId = infection.EmployeeIFCEventId }, new { @class="edit" })
+                </td>
+                <td>
+                    @Html.ActionLink("Delete", "DeleteInfection", new { infectionId = infection.EmployeeIFCEventId }, new { @class = "delete" })
+                </td>
+            </tr>
+
+        }
+    </tbody>
+</table>

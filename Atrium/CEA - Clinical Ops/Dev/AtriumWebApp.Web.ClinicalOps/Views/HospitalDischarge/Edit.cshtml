@@ -1,0 +1,157 @@
+﻿@model HospitalDischarge
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit</h2>
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>HospitalDischarge</legend>
+        <table id="HDwindow-table">
+            <thead>
+                <tr>
+                    <th>Resident</th>
+                    @*<th>Admit Source</th>*@
+                    <th>Discharge Date</th>
+                    <th>Discharge</th>
+                    <th>Resident Status</th>
+                    <th>Planned</th>
+                    <th>Diagnosis</th>
+                    <th>Additional Info</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                        <tr id="@Model.PatientId">
+                            <td>
+                                @ViewData["ResidentName"] @*@Model.LastName, @Model.FirstName*@
+                                @Html.HiddenFor(m => m.PatientId)
+                                @Html.HiddenFor(m => m.AdmitDate)
+                                @Html.HiddenFor(m => m.DischargeType)
+                                @Html.HiddenFor(m => m.PatientStatus)
+                                @Html.HiddenFor(m => m.DischargeReasonFlg)
+                                @Html.HiddenFor(m => m.CensusDate)
+                                @Html.HiddenFor(m => m.PayerId)
+                                @Html.HiddenFor(m => m.PlannedFlg)
+                            </td>
+                            @*<td>@Model.AdmitSrc</td>*@
+                            <td>@Model.CensusDate.ToString("MM/dd/yyyy")</td>
+                            <td>@Model.DischargeType</td>
+                            <td>@Model.PatientStatus</td>
+                            <td>@(Model.DischargeReasonFlg ? Model.PlannedFlg ? "Yes" : "No" : "")</td>
+                            <td class="Diagnosis">
+                                @if (Model.DischargeReasonFlg)
+                                {
+                                    <div>
+                                        <strong>ER:</strong>
+                                        @*@Html.HiddenFor(m => m.ERDischargeReasonId, new { @class = "ERDischargeReasonId" })*@
+                                        <span class="ERDischargeReason">
+                                            @Html.DropDownListFor(m => m.ERDischargeReasonId, ViewData["ERDischargeReasons"] as SelectList)
+                                            @*@Model.ERDischargeReasons.Single(d => d.DischargeReasonId == Model.ERDischargeReasonId).DischargeReasonDesc*@
+                                        </span>
+                                        <span class="EditERDischargeReason"></span>
+                                    </div>
+                                    <div>
+                                        <strong>Admission:</strong>
+                                        @*@Html.HiddenFor(m => m.HospitalDischargeReasonId, new { @class = "HospitalDischargeReasonId" })*@
+                                        <span class="HospitalDischargeReason">
+                                            @Html.DropDownListFor(m => m.HospitalDischargeReasonId, ViewData["HospitalDischargeReasons"] as SelectList)
+                                            @*@Model.HospitalDischargeReasons.Single(d => d.DischargeReasonId == Model.HospitalDischargeReasonId).DischargeReasonDesc*@
+                                        </span>
+                                        <span class="EditHospitalDischargeReason"></span>
+                                    </div>
+                                }
+                            </td>
+                            <td class="AdditionalInfo">
+                                @if (Model.DischargeReasonFlg)
+                                {
+                                    <div>
+                                        <strong>Hospital:</strong>
+                                        @*@Html.HiddenFor(m => m.HospitalId, new { @class = "HospitalId" })*@
+                                        <span class="Hospital">
+                                            @Html.DropDownListFor(m => m.HospitalId, ViewData["Hospitals"] as SelectList)
+                                            @*@Model.Hospitals.Single(h => h.Id == Model.HospitalId).Name*@
+                                        </span>
+                                        <span class="EditHospital"></span>
+                                    </div>
+                                    <div>
+                                        <strong>Did Not Return Reason:</strong>
+                                        @*@Html.HiddenFor(m => m.DidNotReturnReasonId, new { @class = "DidNotReturnReasonId" })*@
+                                        <span class="DidNotReturnReason">
+                                            @Html.DropDownListFor(m => m.DidNotReturnReasonId, ViewData["DNRR"] as SelectList)
+                                            @*@Model.DidNotReturnReasons.Single(d => d.DidNotReturnReasonId == Model.DidNotReturnReasonId).DidNotReturnReasonDesc*@
+                                        </span>
+                                        <span class="EditDidNotReturnReason"></span>
+                                    </div>
+                                }
+                            </td>
+                            <td>
+                                
+                            </td>
+                        </tr>
+                   
+            </tbody>
+        </table>
+
+        <p>
+            <input type="submit" value="Save" />
+        </p>
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+<script>
+    $(document).ready(function () {
+        var oTable = $('#HDwindow-table').dataTable({
+            "bFilter": false,
+            "bAutoWidth": false,
+            "sDom": "frtS",
+            "iDisplayLength": -1,
+            "aoColumns": [
+                { "sWidth": '70px' }, //Resident
+                {
+                    "sWidth": '50px' //Discharge Date
+                },
+                {
+                    "bVisible": false //Discharge
+                },
+                {
+                    "sWidth": '50px' //Resident Status
+                },
+                {
+                    "sWidth": '10px' //Planned
+                },
+                {
+                    "bSearchable": false,
+                    "bSortable": false,
+                    "sWidth": '120px' //Diagnosis
+                },
+                {
+                    "bSearchable": false,
+                    "bSortable": false,
+                    "sWidth": '120px'  //Additional Info
+                },
+                {
+                    "bSearchable": false,
+                    "bSortable": false,  //Edit
+                    "sWidth": '40px'
+                }
+            ],
+            "oLanguage": {
+                "sEmptyTable": "No entries for date range selected"
+            }
+        });
+
+        oTable.fnSort([[2, 'desc']]);
+        oTable.fnAdjustColumnSizing();
+    });
+</script>

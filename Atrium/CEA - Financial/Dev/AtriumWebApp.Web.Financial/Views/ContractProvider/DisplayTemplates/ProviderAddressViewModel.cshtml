@@ -1,0 +1,13 @@
+﻿@model AtriumWebApp.Models.ViewModel.ProviderAddressViewModel
+<tr>
+    <td>@Html.TextBoxFor(m => m.AddressLineOne, new { size = "10", data_field = "AddressLineOne", disabled="disabled" })</td>
+    <td>@Html.TextBoxFor(m => m.AddressLineTwo, new { size = "10", data_field = "AddressLineTwo", disabled="disabled" })</td>
+    <td>@Html.TextBoxFor(m => m.City, new { size = "10", data_field = "City", disabled="disabled" })</td>
+    <td>@Html.TextBoxFor(m => m.County, new { size = "10", data_field = "County", disabled="disabled" })</td>
+    <td>@Html.DropDownListFor(m => m.StateId, new SelectList(Model.States, "StateCd", "StateName", Model.StateId), new { data_field = "States", @class = "States", disabled = "disabled" })
+        @Html.HiddenFor(m => m.StateId, new { data_field = "StateId" })
+    </td>
+    <td>@Html.TextBoxFor(m => m.ZipCode, new {size = "10", data_field = "ZipCode", disabled="disabled"})</td>
+    <td>@Html.DropDownListFor(m => m.AddressTypeId, new SelectList(Model.AddressTypes, "Id", "Name", Model.StateId), new { data_field = "AddressTypes", @class = "AddressTypes", disabled = "disabled" })
+        @Html.HiddenFor(m => m.AddressTypeId, new { data_field = "AddressTypeId" })</td>
+</tr>

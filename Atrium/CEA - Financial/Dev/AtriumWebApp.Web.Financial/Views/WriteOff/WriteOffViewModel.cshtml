@@ -1,0 +1,68 @@
+﻿@model AtriumWebApp.Web.Financial.Models.ViewModel.WriteOffViewModel
+
+<div class="editor-label">
+    @Html.HiddenFor(model => model.WriteOffId)
+</div>
+<div class="editor-field">
+    @Html.Label("Community")
+    @Html.DropDownListFor(model => model.CommunityId, new SelectList(Model.Communities, "CommunityId", "CommunityShortName"), "Select a Community", new { id = "Communities" })
+    @Html.ValidationMessageFor(model => model.CommunityId)
+</div>
+
+<div class="editor-label">
+
+</div>
+<div class="editor-field">
+    @Html.Label("Resident")
+    @Html.DropDownListFor(model => model.PatientId, ViewData["ResidentList"] as SelectList, "Select a Resident", new { @id = "residents" })
+    @Html.ValidationMessageFor(model => model.PatientId)
+</div>
+
+<div class="editor-label">
+    @Html.Label("Payer")
+    @Html.DropDownListFor(model => model.PayerId, ViewData["PayerList"] as SelectList, "Select a Payer", new { @id = "payers" })
+    @Html.ValidationMessageFor(model => model.PayerId)
+</div>
+
+<div class="editor-label">
+    @Html.Label("Write Off Amt")
+    @Html.TextBoxFor(model => model.WriteOffAmt, new { @size="15", @class="right" })
+    @Html.ValidationMessageFor(model => model.WriteOffAmt)
+</div>
+
+<div class="editor-label">
+    @Html.Label("Year")
+    @Html.DropDownListFor(model => model.DOSYear, (ViewData["Years"] as SelectList))
+    @Html.ValidationMessageFor(model => model.DOSYear)
+</div>
+
+<div class="editor-label">
+    @Html.Label("Month")
+    @Html.DropDownListFor(model => model.DOSMonth, new List<SelectListItem> {
+                   new SelectListItem { Text = "January", Value ="01" },
+                   new SelectListItem { Text = "February", Value ="02" },
+                   new SelectListItem { Text = "March", Value ="03" },
+                   new SelectListItem { Text = "April", Value ="04" },
+                   new SelectListItem { Text = "May", Value ="05" },
+                   new SelectListItem { Text = "June", Value ="06" },
+                   new SelectListItem { Text = "July", Value ="07" },
+                   new SelectListItem { Text = "August", Value ="08" },
+                   new SelectListItem { Text = "September", Value ="09" },
+                   new SelectListItem { Text = "October", Value ="10" },
+                   new SelectListItem { Text = "November", Value ="11" },
+                   new SelectListItem { Text = "December", Value ="12" }
+               })
+    @Html.ValidationMessageFor(model => model.DOSMonth)
+</div>
+
+<div class="editor-label">
+    @Html.Label("Our Fault?")
+    @Html.EditorFor(model => model.OurFaultFlg)
+    @Html.ValidationMessageFor(model => model.OurFaultFlg)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.Notes)
+    @Html.TextAreaFor(model => model.Notes, new { cols= 90, rows=4, maxlength=512 })
+    @Html.ValidationMessageFor(model => model.Notes)
+</div>

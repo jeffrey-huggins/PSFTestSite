@@ -1,0 +1,123 @@
+﻿@model AtriumWebApp.Web.Utilization.Models.ViewModel.SkilledChartingAdminViewModel
+@{
+    ViewBag.Title = "Skilled Charting Admin Page";
+}
+
+<style type="text/css">
+    .dataTables_scrollBody {
+        overflow: auto;
+        height: auto !important;
+        max-height: 300px;
+        width: 100%;
+    }
+
+    .content-wrapper {
+        max-width: 1366px;
+    }
+
+    .dataTables_wrapper {
+        border: solid thin black;
+    }
+</style>
+
+<h2 id="title" style="margin-left: 200px">Skilled Charting Admin Page</h2>
+@using (Html.BeginForm("SaveLookback", "SkilledChartingAdmin", FormMethod.Post, new { id = "SaveLookback" }))
+{
+    <table>
+        <thead>
+            <tr style="font-weight: bold">
+                <th>Lookback Days</th>
+            </tr>
+        </thead>
+        <tr>
+            <td>@Html.Label("Adjust Lookback Days:")</td>
+            @{
+                string SKCLookbackDays;
+                Context.Session.TryGetObject("SKCLookbackDays", out SKCLookbackDays);
+            }
+            <td>@Html.TextBox("LookbackDays", SKCLookbackDays, new { @style = "width: 35px;", maxlength = "3" })</td>
+            <td><input id="submit" name="submit" type="submit" value="Update" /></td>
+        </tr>
+    </table>
+}
+
+<div id="tabs" style="min-height:500px;">
+    <ul>
+        <li>
+            <a href="#communityTab">Communities</a>
+        </li>
+        <li>
+            <a href="#guidelineTab">Guidelines</a>
+        </li>
+    </ul>
+    <div id="communityTab">
+        <table id="CommunityTable">
+            <thead>
+                <tr>
+                    <th>Facility</th>
+                    <th>State</th>
+                    <th>Region</th>
+                    <th>Use in Display</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var com in Model.AdminViewModel.Communities.OrderByDescending(c => c.IsCommunityFlg).ThenBy(c => c.CommunityShortName))
+            {
+                    <tr id="@com.CommunityId">
+                        <td>@com.CommunityShortName</td>
+                        <td>@com.StateCd</td>
+                        <td>@Model.AdminViewModel.Regions.Single(r => r.RegionId == com.RegionId).RegionName</td>
+                        <td>@Html.CheckBoxFor(x => x.AdminViewModel.ApplicationCommunityInfos.Single(aci => aci.CommunityId == com.CommunityId).DataEntryFlg, new { id = com.CommunityId, @class = "checkbox" })</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div id="guidelineTab">
+        <table id="Guidelines">
+            <thead>
+                <tr>
+                    <th>Guideline</th>
+                    <th>Sort Order</th>
+                    <th>Data Entry Flag</th>
+                    <th>Queues</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var guideline in Model.SkilledChartingGuidlines)
+            {
+                    <tr id="@guideline.GuidelineId">
+                        <td>@guideline.GuidelineName</td>
+                        <td>@guideline.SortOrder</td>
+                        <td>@Html.CheckBox("EnableDisable", guideline.DataEntryFlg, new { @class = "EnableDisable" })</td>
+                        <td><a class="queues" href="@Url.BaseUrlPath()SkilledChartingAdmin/DocumentationQueues?guidelineId=@guideline.GuidelineId">Queues</a></td>
+                        <td>
+                            <a class="edit" href="">Edit</a>
+                            <a class="delete" href="">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        @Html.EditorFor(a => a.NewGuideline,"","")
+
+    </div>
+</div>
+
+<environment names="Development">
+    <script src="~/js/SkilledChartingAdmin.js" asp-append-version="true"></script>
+</environment>
+<environment names="Testing,Production,Training">
+    <script src="~/js/SkilledChartingAdmin.min.js" asp-append-version="true"></script>
+</environment>
+<div class="hidden">
+    <div id="queueModal" style="height:830px;width:600px;">
+
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

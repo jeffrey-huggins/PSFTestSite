@@ -1,0 +1,42 @@
+﻿@model AtriumWebApp.Web.Financial.Models.BudgetItem
+<style>
+    textarea {
+        font-family: inherit;
+        font-size: inherit;
+    }
+</style>
+
+<table id="budget-item-table" style="width:100%">
+    <tr>
+        <td class="">
+            @Html.HiddenFor(m => m.Id, new { id = "budgetItemId" })
+            @Html.HiddenFor(m => m.CommunityId, new { id = "budgetItemCommunityId" })
+            @Html.HiddenFor(m => m.BudgetYear)
+            @Html.HiddenFor(m => m.BudgetQtr)
+            @Html.LabelFor(model => model.Description) <br />
+
+            <textarea id="budgetItemDescription" type="text" size="50"></textarea> <br />
+            <br />
+        
+            @Html.LabelFor(model => model.Comments) <br />
+
+            <textarea id="budgetItemComments"  cols="50" ></textarea>
+        </td>
+
+        <td valign="top">
+            @Html.LabelFor(model => model.BudgetAmt) <br />
+            <input id="budgetItemAmt" type="text" size="10" />
+        </td>
+        <td valign="top" align="center">
+            @Html.LabelFor(model => model.IsSpecialProject) <br />
+            <input id="budgetItemIsSpecialProject" type="checkbox" />
+        </td>
+    </tr>
+</table>
+
+
+
+<div style="margin: 5px; text-align: center;">
+    <button id="commit-budget-item">Save Changes</button>  
+    <button id="cancel-budget-item-changes">Cancel</button>
+</div>

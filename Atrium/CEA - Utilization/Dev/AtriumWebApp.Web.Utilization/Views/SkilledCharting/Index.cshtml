@@ -1,0 +1,198 @@
+@model AtriumWebApp.Web.Utilization.Models.ViewModel.SkilledChartingViewModel
+@{
+    string SKCCurrentResidentName;
+    if (!Context.Session.TryGetObject("SKCCurrentResidentName", out SKCCurrentResidentName))
+    {
+        ViewBag.Title = "Skilled Charting";
+    }
+    else
+    {
+        ViewBag.Title = "Skilled Charting for " + SKCCurrentResidentName;
+    }
+    string SKCCurrentResidentId;
+}
+
+<style type="text/css">
+    .date {
+        width: 75px;
+    }
+    #popupModal {
+        min-height: 350px;
+        width: 700px;
+        display: none;
+        position: fixed;
+        background-color: #EFEEEF;
+        z-index: 999;
+    }
+    .docQueueTable {
+        max-height: 400px;
+        overflow-y: auto;
+        width: 675px;
+    }
+</style>
+
+<div id="title-div">
+    <h2 id="title" style="margin-left: 230px">@ViewBag.Title</h2>
+</div>
+<div id="body-IC">
+    @Html.Partial("_SideBarSelection")
+    <div class="container_16" style="height: 100px;">
+        <div class="grid_10 margin_separator">
+        @if (!Context.Session.TryGetObject("SKCCurrentResidentId", out SKCCurrentResidentId))
+        {
+            <span class="instruction">Select a resident to continue...</span>
+        }
+        else
+        {
+            <table style="float: left;">
+                <tr>
+                    <td>@Html.Label("Skilled Charting Guideline:")</td>
+                </tr>
+                <tr>
+                    <td id="measure-list">@Html.DropDownList("Guidelines", new SelectList(Model.SkilledChartingGuidlines.Where(g => g.DataEntryFlg).ToList(), "GuidelineId", "GuidelineName"), "Select a Guideline")</td>
+                </tr>
+                <tr>
+                    <td><button type="button" id="btnCreate" name="btnCreate">Create</button></td>
+                </tr>
+            </table>
+        }
+        </div>
+    </div>
+    <div class="container_16">
+        <div id="PatientSkilledChartingTable-div">
+            <div class="grid_10">
+                <table id="PatientSkilledChartingTable">
+                    <thead>
+                        <tr>
+                            <th>Guideline</th>
+                            <th></th><!-- Sort Order -->
+                            <th></th><!-- Documentation Queues -->
+                            <th>Edit</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null)
+                        {
+                            var guidelineIds = Model.PatientSkilledChartingRecords.Select(p => p.DocumentationQueue.GuidelineId).Distinct().ToList();
+                            var guidelines = Model.SkilledChartingGuidlines
+                                .Where(g => guidelineIds.Contains(g.GuidelineId))
+                                .OrderBy(g => g.SortOrder)
+                                .ThenBy(g => g.GuidelineName)
+                                .ToList();
+
+                            foreach (var g in guidelines)
+                            {
+                                var recs = Model.PatientSkilledChartingRecords
+                                    .Where(s => s.DocumentationQueue.GuidelineId == g.GuidelineId)
+                                    .Select(s => s.DocumentationQueueId)
+                                    .ToList();
+                                
+                                <tr id="@g.GuidelineId">
+                                    <td>@g.GuidelineName</td>
+                                    <td>@g.SortOrder</td>
+                                    <td>@string.Join(",", recs)</td>
+                                    <td><a class="edit" href="">Edit</a></td>
+                                    <td><a class="delete" href="">Delete</a></td>
+                                </tr>
+                            }
+
+                            if (Model.PatientSkilledChartingCustomRecords.Any())
+                            {
+                                var c = Model.SkilledChartingGuidlines.FirstOrDefault(g => g.GuidelineId == -1);
+                                var recs = Model.PatientSkilledChartingCustomRecords.Select(s => s.CustomQueueText).ToList();
+                                
+                                <tr id="@c.GuidelineId">
+                                    <td>@c.GuidelineName</td>
+                                    <td>@c.SortOrder</td>
+                                    <td>@string.Join(";;", recs)</td>
+                                    <td><a class="edit" href="">Edit</a></td>
+                                    <td><a class="delete" href="">Delete</a></td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="popupModal">
+    <button class="float-right" id="btnClose">X</button>
+    <h2 id="modalTitle" class="margin_separator" style="text-align: center"></h2>
+    @using (Html.BeginForm("SaveSkilledCharting", "SkilledCharting", FormMethod.Post, new { id = "SaveSkilledCharting" }))
+    {
+        @Html.Hidden("PatientId", SKCCurrentResidentId)
+        @Html.Hidden("GuidelineId")
+        @Html.Hidden("EditFlag", "false")
+        <div class="margin_separator" style="margin-left: 10px;">
+            @if (Model != null)
+            {
+                foreach (var guideline in Model.SkilledChartingGuidlines)
+                {
+                    <div id="@string.Format("DocumentationQueues_{0}", guideline.GuidelineId)" class="docQueueTable" style="display: none;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Documentation Queue</th>
+                                </tr>
+                            </thead>
+                            <tbody style="vertical-align: top;">
+                                @if (guideline.GuidelineId != -1)
+                                {
+                                    var queueIds = Model.PatientSkilledChartingRecords.Select(p => p.DocumentationQueueId).Distinct().ToList();
+                                    var queues = guideline.DocumentationQueues
+                                        .Where(q => q.DataEntryFlg || queueIds.Contains(q.DocumentationQueueId))
+                                        .OrderBy(q => q.SortOrder)
+                                        .ThenBy(q => q.DocumentationQueueId)
+                                        .ToList();
+
+                                    foreach (var queue in queues)
+                                    {
+                                        <tr id="@queue.DocumentationQueueId" dataentryflg="@queue.DataEntryFlg">
+                                            <td align="right" width="35px;">@Html.CheckBox("EnableDisable", false, new { @id = string.Format("{0}_{1}", queue.GuidelineId, queue.DocumentationQueueId) })</td>
+                                            <td>@Html.Raw(queue.DocumentationQueueName.Replace("\n", "<br>"))</td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    for (var i = 1; i <= 3; i++)
+                                    {
+                                        <tr id="@i" dataentryflg="true">
+                                            <td align="right" width="35px;">@Html.CheckBox("EnableDisable", false, new { @id = string.Format("{0}_{1}", guideline.GuidelineId, i) })</td>
+                                            <td>@Html.TextArea(String.Format("CustomQueue_{0}", i), "", 5, 70, new { maxlength = "512", style = "margin: 1px 0px;" })</td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            }
+        </div>
+        <br />
+        <div class="container_16 bottom_pad">
+            <div class="grid_4">&nbsp;</div>
+            <div class="grid_2">
+                <button type="button" id="btnSave">Save</button>
+            </div>
+            <div class="grid_2">
+                <button type="button" id="btnClear">Clear</button>
+            </div>
+        </div>
+    }
+</div>
+<environment names="Development">
+    <script src="~/js/SkilledCharting.js" asp-append-version="true"></script>
+</environment>
+<environment names="Testing,Production,Training">
+    <script src="~/js/SkilledCharting.min.js" asp-append-version="true"></script>
+</environment>
+<script>
+    $(document).ready(function () {
+        PreparePage();
+    });
+</script>

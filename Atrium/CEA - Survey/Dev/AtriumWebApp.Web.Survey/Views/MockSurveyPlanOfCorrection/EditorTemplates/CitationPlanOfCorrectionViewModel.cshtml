@@ -1,0 +1,34 @@
+﻿@model AtriumWebApp.Web.Survey.Models.ViewModel.CitationPlanOfCorrectionViewModel
+@Html.HiddenFor(m => m.CitationId)
+<div class="container_16">
+    <div class="grid_13 bottom_pad">
+        @Model.DeficiencyDescription
+    </div>
+    <div class="grid_3">
+        <span class="float-right">Severity: <strong>@Model.MockSeverity</strong></span>
+    </div>
+</div>
+@if (Model.DeficiencyInstructions != null)
+{
+<div class="container_16">
+    <div class="grid_13 bottom_pad">
+        @Model.DeficiencyInstructions
+    </div>
+</div>
+}
+<div class="container_16">
+    <div class="grid_8">
+        Finding Details:
+    </div>
+    <div class="grid_8">
+        @Html.LabelFor(m => m.PlanOfCorrection):
+    </div>
+</div>
+<div class="container_16 margin_separator">
+    <div class="grid_8">
+        @Html.TextAreaFor(m => m.FindingDetails, new { @readonly = "readonly", rows = 12 })
+    </div>
+    <div class="grid_8">
+        @Html.TextAreaFor(m => m.PlanOfCorrection, new { rows = 12 })
+    </div>
+</div>

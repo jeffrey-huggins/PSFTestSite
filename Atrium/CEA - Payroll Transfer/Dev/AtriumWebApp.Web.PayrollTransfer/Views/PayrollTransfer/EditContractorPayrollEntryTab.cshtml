@@ -1,0 +1,204 @@
+﻿@model AtriumWebApp.Web.PayrollTransfer.Models.ViewModel.PayrollTransferIndexViewModel
+
+@using AtriumWebApp.Web.Base.Library
+
+@{
+    string ToDateRangeInvalid;
+    Context.Session.TryGetObject("ToDateRangeInvalid", out ToDateRangeInvalid);
+    string ToDateRangeInFuture;
+    Context.Session.TryGetObject("ToDateRangeInFuture", out ToDateRangeInFuture);
+    string FromDateRangeInvalid;
+    Context.Session.TryGetObject("FromDateRangeInvalid", out FromDateRangeInvalid);
+    string FromDateRangeInFuture;
+    Context.Session.TryGetObject("FromDateRangeInFuture", out FromDateRangeInFuture);
+    string FromAfterTo;
+    Context.Session.TryGetObject("FromAfterTo", out FromAfterTo);
+}
+
+
+<div>
+    <div>
+        <section id="workersCompSideBar" class="half-spacing">
+            @using (Html.BeginForm("SideDDL", "AdditionalDevelopmentRequest", FormMethod.Post, new { id = "SideDDL" }))
+            {
+                @Html.Label("Community:")<br />
+                @Html.DropDownList("ContractorCommunities", new SelectList(Model.Communities, "CommunityId", "CommunityShortName"), "Select a Community", new { id = "ContractorCommunities" })
+                @Html.Hidden("returnUrl", Context.UrlPath());
+            }
+            @{ 
+                string currentFacility;
+                Context.Session.TryGetObject("PRTRCurrentFacility", out currentFacility);
+            }
+            @Html.Hidden("CurrentContractorCommunity", currentFacility, new { @class = "CurrentContractorCommunity" })
+        </section>
+
+        <div class="half-spacing a-right">
+            @{ 
+                string occuredRangeFrom;
+                string occuredRangeTo;
+                Context.Session.TryGetObject(Model.AppCode + "occurredRangeFrom", out occuredRangeFrom);
+                Context.Session.TryGetObject(Model.AppCode + "occurredRangeTo", out occuredRangeTo);
+
+            }
+            @Html.Label("Date Range - From: ")
+            @Html.TextBox("occurredRangeFromContractor", occuredRangeFrom, new { @class = "dateUS", size = "10" })
+            @Html.Label(" To: ")
+            @Html.TextBox("occurredRangeToContractor", occuredRangeTo, new { @class = "dateUS", size = "10" })
+            @Html.Hidden("returnUrl", Url.Content("~/" + Context.Request.Path))
+            <button id="UpdateDateRangeContractor" name="UpdateDateRangeContractor" type="button"> Update </button>
+
+
+            @Html.Hidden("ToDateRangeInvalid", ToDateRangeInvalid)
+            @Html.Hidden("ToDateRangeInFuture", ToDateRangeInFuture)
+            @Html.Hidden("FromDateRangeInvalid", FromDateRangeInvalid)
+            @Html.Hidden("FromDateRangeInFuture", FromDateRangeInFuture)
+            @Html.Hidden("FromAfterTo", FromAfterTo)
+        </div>
+    </div>
+    <div id="content-contractor">
+        <div>
+            <table id="contractor-window-table">
+                <thead>
+                    <tr>
+                        <th>Contractor</th>
+                        <th>Source GL</th>
+                        <th>Transfer Date</th>
+                        @*<th>Destination</th>
+                            <th>Destination GL</th>*@
+                        <th>Hours</th>
+                        <th>Dollars</th>
+                        @*<th>Pay Type</th>*@
+                        <th>PBJ Only</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+
+@*<script>
+        $(document).ready(function () {
+            //var ajaxBaseUri;
+            //if (document.location.pathname.charAt(document.location.pathname.length - 1) != "/") {
+            //    ajaxBaseUri = document.location.pathname + "/";
+            //} else {
+            //    ajaxBaseUri = document.location.pathname
+            //}
+
+
+
+
+            //function getCommunityContractorPayrollItems() {
+            //    ShowProgress();
+            //    //get selected value
+            //    var selectedValue = $("#ContractorCommunities").find("option:selected").val();
+            //    var fromDate = $("#occurredRangeFromContractor").val();
+            //    var toDate = $("#occurredRangeToContractor").val();
+
+            //    //ajax call to get records
+            //    $.ajax({
+            //        url: ajaxBaseUri + "GetCommunityContractorPayrollItems",
+            //        type: "POST",
+            //        dataType: "json",
+            //        data: { communityId: selectedValue, fromDate: fromDate, toDate: toDate },
+            //        contextType: "application/json",
+            //        success: function (result) {
+            //            //on success populate the table with the records
+            //            $("#contractor-window-table tbody")[0].innerHTML = "";
+            //            var transferTable = $("#contractor-window-table tbody")[0];
+
+            //            for (x = 0; x < result.length; x++) {
+            //                var newRow = transferTable.insertRow(-1);
+            //                var employeeCell = newRow.insertCell(0);
+            //                var sourceGlCell = newRow.insertCell(1);
+            //                var transferDateCell = newRow.insertCell(2);
+            //                //var destinationCell = newRow.insertCell(3);
+            //                //var destinationGlCell = newRow.insertCell(4);
+            //                var hoursCell = newRow.insertCell(3);
+            //                var payAmtCell = newRow.insertCell(4);
+            //                //var payTypeCell = newRow.insertCell(7);
+            //                var pbjCell = newRow.insertCell(5);
+            //                var editCell = newRow.insertCell(6);
+            //                var deleteCell = newRow.insertCell(7);
+
+            //                var pbjChecked = " >";
+            //                if (result[x].PBJOnlyFlg == true) {
+            //                    pbjChecked = " checked='checked' >";
+            //                }
+
+            //                var transferDate = new Date(result[x].TransferDate);
+            //                employeeCell.innerHTML = result[x].ContractorName;
+            //                sourceGlCell.innerHTML = result[x].SourceGLAccount.AccountNameNbr;
+            //                transferDateCell.innerHTML = (transferDate.getUTCMonth()+1) + "/" + transferDate.getUTCDate() + "/" + transferDate.getUTCFullYear();
+            //                //destinationCell.innerHTML = result[x].DestinationCommunity.CommunityShortName;
+            //                //destinationGlCell.innerHTML = result[x].DestinationGLAccount.AccountNameNbr;
+            //                hoursCell.innerHTML = result[x].HourCnt.toFixed(2);
+            //                payAmtCell.innerHTML = result[x].PayAmt.toFixed(2);
+            //                //payTypeCell.innerHTML = result[x].PayType;
+            //                pbjCell.innerHTML = "<input class='check-box' disabled='disabled' type='checkbox'" + pbjChecked;
+
+            //                editCell.innerHTML = "<a class='edit-link' id='editPayrollTransfer' href='' data-transfer-id='" + result[x].Id + "' >edit</a>"
+            //                deleteCell.innerHTML = "<a class='delete-link' id='deletePayrollTransfer' href='' data-transfer-id='" + result[x].Id + "' >delete</a>"
+            //            }
+            //            //ActivateCountDown("CountDownPanel", 1800);
+            //            HideProgress();
+            //        },
+            //        error: function (data, error, errorText) {
+            //            alert("There was a problem loading. Please try again.");
+            //            HideProgress();
+            //        }
+            //    });
+            //}
+
+            ////eager load current/selected community's items when page is loaded
+            //if ($("#ContractorCommunities").find("option:selected").val() != "") {
+            //    getCommunityContractorPayrollItems();
+            //} else if ($("#CurrentContractorCommunity").val() != "") {
+            //    $("#ContractorCommunities").val($("#CurrentContractorCommunity").val());
+            //    getCommunityContractorPayrollItems();
+            //}
+
+            //$("#UpdateDateRangeContractor").click(function (e) {
+            //    ShowProgress();
+            //    getCommunityContractorPayrollItems();
+            //    HideProgress();
+            //});
+
+            ////on change get list of items
+            //$("#ContractorCommunities").change(function (e) {
+            //    ShowProgress();
+            //    getCommunityContractorPayrollItems();
+            //    HideProgress();
+            //}); //end Communities.change()
+
+            //$("#contractor-window-table").on("click", "a.edit-link", function (data) {
+            //    data.preventDefault();
+            //    var editLink = $(data.target);
+            //    window.location.assign(ajaxBaseUri + "EditContractorEntry/" + editLink.data("transfer-id"));
+
+            //});
+
+            //$("#contractor-window-table").on("click", "a.delete-link", function (data) {
+            //    data.preventDefault();
+            //    var deleteLink = $(data.target);
+            //    window.location.assign(ajaxBaseUri + "DeleteContractorEntry/" + deleteLink.data("transfer-id"));
+            //});
+
+            //$(function () {
+            //    $("#occurredRangeFromContractor, #occurredRangeToContractor, .isDate").datepicker({
+            //        beforeShow: function (textbox, instance) {
+            //            instance.dpDiv.css({
+            //                marginTop: (-textbox.offsetHeight) + "px",
+            //                marginLeft: textbox.offsetWidth + "px"
+            //            });
+            //        }
+            //    });
+            //});
+        });
+
+    </script>*@

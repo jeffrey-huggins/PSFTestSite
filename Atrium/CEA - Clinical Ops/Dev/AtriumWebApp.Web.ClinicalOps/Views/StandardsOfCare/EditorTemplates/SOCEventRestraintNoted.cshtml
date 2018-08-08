@@ -1,0 +1,62 @@
+@model SOCEventRestraintNoted
+@{
+    var restraintSelection = new SelectList((List<SOCRestraint>)ViewData["RestraintTypes"], "SOCRestraintId", "SOCRestraintName");
+}
+
+<form asp-action="SaveRestraintNote" asp-controller="StandardsOfCare" method="post" id="saveRestraintNoteForm">
+
+    <input type="hidden" asp-for="SOCEventRestraintNotedId" id="notedID" />
+    <input type="hidden" asp-for="SOCEventId" />
+    <div class="float-right"><span class="ui-button-icon ui-icon ui-icon-closethick" id="closeNote"></span></div>
+    <div class="container-fluid" style="border-top:solid thin black;border-bottom:solid thin black;">
+        <br />
+
+        <div class="row">
+            <div class="col-sm-5 text-right">
+                Restraint Type:
+            </div>
+            <div class="col-sm-7 text-left">
+                <select asp-for="SOCRestraintId" asp-items="restraintSelection">
+                    <option value="" selected>Select a Restraint</option>
+                </select>
+                <br />
+                <span asp-validation-for="SOCRestraintId" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-5 text-right">
+                Attempted Reduced Date:
+            </div>
+            <div class="col-sm-7 text-left">
+                <input type="text" asp-for="AttemptedReducedDate" class="isDate" data-rule-reducedateexists="true" asp-format="{0:d}" />
+                <br />
+                <span asp-validation-for="AttemptedReducedDate" class="text-danger"></span>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-sm-5 text-right">
+                Diagnosis Supports Restraint (128 max):
+            </div>
+            <div class="col-sm-7 text-left">
+                <input asp-for="DiagnosisSupportsRestraintFlg" />
+                <br />
+                <textarea asp-for="DiagnosisSupportsRestraintDesc" style="display:none;"></textarea>
+                <br />
+                <span asp-validation-for="DiagnosisSupportsRestraintDesc" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-5 text-right">
+                Comments (128 max):
+            </div>
+            <div class="col-sm-7 text-left">
+                <br />
+                <textarea asp-for="Comments"></textarea>
+                <br />
+                <span asp-validation-for="Comments" class="text-danger"></span>
+            </div>
+
+        </div>
+    </div>
+</form>

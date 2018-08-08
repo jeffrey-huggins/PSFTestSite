@@ -1,0 +1,96 @@
+﻿@model AtriumWebApp.Models.Budget.ViewModels.MainFormViewModel
+@using AtriumWebApp.Models.Budget
+<div>
+    <table>
+        <tr>
+            <td>
+                <label>Facility ID</label>
+            </td>
+            <td>
+                <input asp-for="Facility.FacilityID" disabled="disabled" />
+            </td>
+            <td>
+                <label>Facility # INTACT</label>
+            </td>
+            <td>
+                <input asp-for="Facility.FacilityNb" disabled="disabled" />
+            </td>
+            <td><input asp-for="Facility.Region.RegionNm" disabled="disabled" /></td>
+            <td>
+                <label>State</label>
+            </td>
+            <td>
+                <input asp-for="Facility.State.StateCd" disabled="disabled" />
+            </td>
+            <td>INTACT</td>
+        </tr>
+        <tr>
+            <td><label>Facility Name</label></td>
+            <td colspan="5">
+                <input asp-for="Facility.FacilityNm" disabled="disabled" style="width:100%" />
+            </td>
+            <td><label>Short Name</label></td>
+            <td><input asp-for="Facility.FacilityShortNm" disabled="disabled" /></td>
+        </tr>
+    </table>
+    <div class="budgetSection" style="border:thin solid black">
+        @{
+            //Right now there is only one budget year and only one facility budget
+            FacilityBudget facilityBudget = Model.Facility.FacilityBudgets.FirstOrDefault();
+            SelectList budgetList = new SelectList(Model.Facility.FacilityBudgets, "BudgetID", "Budget.BudgetYr");
+        }
+        <select asp-items="budgetList" id="facilityBudget" hidden="hidden"></select>
+        <label>Budget Id</label>
+        <input value="@facilityBudget.BudgetID" disabled="disabled" />
+        <label>Budget Year</label>
+        <input value="@facilityBudget.Budget.BudgetYr" disabled="disabled" />
+        <label>Budget # INTACT</label>
+        <input value="@facilityBudget.Budget.BudgetNb" disabled="disabled" />
+        <div id="tabs" style="min-height:600px;">
+            <ul>
+                <li><a href="#revenueTab">Revenue</a></li>
+                <li><a href="#laborTab">Labor Budget</a></li>
+                <li><a href="#otherTab">Other Expenses</a></li>
+                <li><a href="#otherCalcTab">Other Expenses Facility Calc Value Setup</a></li>
+                <li><a href="#adminTab">Admin</a></li>
+            </ul>
+            <div id="revenueTab">
+                <div id="censusInfo" style="display:inline-block;width:600px;vertical-align:top;">
+
+                </div>
+                <div id="otherRevenueInfo" style="display:inline-block;min-width:300px;vertical-align:top;">
+
+                </div>
+
+            </div>
+            <div id="laborTab">
+                <div id="laborInfo">
+
+                </div>
+            </div>
+            <div id="otherTab">
+                <div id="otherInfo">
+
+                </div>
+            </div>
+            <div id="otherCalcTab">
+                <div id="otherCalcInfo">
+
+                </div>
+            </div>
+            <div id="adminTab">
+                <div id="adminInfo">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="modals" style="display:none;">
+    <div id="censusNewSelectorModal">
+        <select id="newglAccountID" style="max-width:83px;font-family:monospace,Arial,Helvetica,sans-serif"></select>
+    </div>
+    <div id="otherRevNewSelectorModal">
+        <select id="newOtherRevglAccountID" style="max-width:83px;font-family:monospace,Arial,Helvetica,sans-serif"></select>
+    </div>
+</div>

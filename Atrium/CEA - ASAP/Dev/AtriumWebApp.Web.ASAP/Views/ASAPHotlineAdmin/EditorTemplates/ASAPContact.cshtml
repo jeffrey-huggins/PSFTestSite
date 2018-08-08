@@ -1,0 +1,12 @@
+@model AtriumWebApp.Models.ASAPContact
+
+<form asp-action="SaveContact" asp-controller="ASAPHotlineAdmin">
+    <label>New Contact: </label>
+    <input asp-for="FirstName" placeholder="First Name" name="FirstName" />
+    <span asp-validation-for="FirstName" class="text-danger" data-valmsg-for="FirstName"></span>
+    <input asp-for="LastName" placeholder="Last Name" name="LastName" />
+    <span asp-validation-for="LastName" class="text-danger" data-valmsg-for="LastName"></span>
+    <input asp-for="eMail" placeholder="E-Mail Address" name="eMail" />
+    <span asp-validation-for="eMail" class="text-danger" data-valmsg-for="eMail"></span>
+    <input type="submit" value="Add" />
+</form>

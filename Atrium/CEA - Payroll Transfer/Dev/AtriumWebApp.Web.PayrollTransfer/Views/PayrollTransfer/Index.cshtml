@@ -1,0 +1,408 @@
+﻿@using AtriumWebApp.Web.PayrollTransfer.Models.ViewModel
+@model PayrollTransferIndexViewModel
+@{
+    ViewBag.Title = "Payroll Transfer and Adjustment";
+}
+
+<style>
+    .content-wrapper {
+        max-width: 97%;
+    }
+</style>
+
+<h2 class="center">Payroll Transfer and Adjustment</h2>
+
+<div id="tabs" style="min-height:800px;">
+    <ul>
+        <li><a href="#CreateEntry">Create Employee Entry</a></li>
+        <li><a href="#EditDeleteEntry">Edit Employee Entry</a></li>
+        <li><a href="#CreateContractorEntry">Create Contractor Entry</a></li>
+        <li><a href="#EditDeleteContractorEntry">Edit Contractor Entry</a></li>
+        @if (Model.CanValidatePBJ)
+        {
+            <li><a href="#PBJValidation">PBJ Validation</a></li>
+        }
+    </ul>
+    <div id="CreateEntry">
+
+        @Html.Partial("CreatePayrollTransferEntry", Model)
+        <p></p>
+    </div>
+    <div id="EditDeleteEntry">
+        @Html.Partial("~/Views/Partial/SideBarSelectionEmployee.cshtml", new EmployeeSidebarViewModel { AppCode = "PRTR", AppController = "PayrollTransfer", ChangeCommunityPath = Url.BaseUrlPath() + "PayrollTransfer/GetEmployeeList", SideBarDDLActionName = "EmpSideDDL" })
+
+
+        @Html.Partial("EditPayrollTransferEntry", Model)
+        <p></p>
+
+    </div>
+    <div id="CreateContractorEntry">
+        <div class="a-center">
+            <p class="button">
+                @Html.ActionLink("Create a Contractor Payroll Entry", "CreateContractorEntry")
+            </p>
+        </div>
+    </div>
+    <div id="EditDeleteContractorEntry">
+        @Html.Partial("EditContractorPayrollEntryTab", Model)
+        <p></p>
+
+    </div>
+    @if (Model.CanValidatePBJ)
+    {
+        <div id="PBJValidation">
+            @Html.Partial("ValidateDocuments", new AtriumWebApp.Web.PayrollTransfer.Models.ViewModel.PBJValidationViewModel())
+        </div>
+    }
+</div>
+
+<div class="hidden">
+    <div id="EditModal">
+
+    </div>
+
+    <div id="DeleteModal">
+
+    </div>
+</div>
+<script>
+    $(function () {
+        $("#tabs").tabs();
+        $(".ui-tabs-nav").css("display", "inline-block");
+    });
+</script>
+@if (Model.UseEditTab)
+{
+    <script>
+        $(document).ready(function () {
+            $("#tabs").tabs("option", "active", 1);
+        });
+    </script>
+}
+else if (Model.UseContractorEditTab)
+{
+    <script>
+        $(document).ready(function () {
+            $("#tabs").tabs("option", "active", 3);
+        });
+    </script>
+}
+<script>
+    function getCommunityPayrollTransferItems() {
+
+
+        //get selected value
+        var selectedValue = $("#Communities").find("option:selected").val();
+        var fromDate = $("#occurredRangeFrom").val();
+        var toDate = $("#occurredRangeTo").val();
+        var employeeId = $("#EmployeesDropdown").val();
+        if (!employeeId) {
+            $("#ICwindow-table").dataTable().fnClearTable();
+
+            return;
+        }
+        var ajaxBaseUri;
+        if (document.location.pathname.charAt(document.location.pathname.length - 1) != "/") {
+            ajaxBaseUri = document.location.pathname + "/";
+        } else {
+            ajaxBaseUri = document.location.pathname;
+        }
+        //ajax call to get records
+        $.ajax({
+            url: path + "PayrollTransfer/GetCommunityPayrollTransferItems",
+            type: "POST",
+            dataType: "json",
+            data: { communityId: selectedValue, fromDate: fromDate, toDate: toDate, employeeId: employeeId },
+            contextType: "application/json",
+            success: function (result) {
+
+                var table = $("#ICwindow-table").DataTable();
+                table.fnClearTable();
+                //table.fnDestroy();
+                //on success populate the table with the records
+                //$("#ICwindow-table tbody")[0] = "";
+                //var transferTable = $("#ICwindow-table tbody")[0];
+                var rows = [];
+                for (var i = 0; i < result.length; i++) {
+                    var row = [];
+                    var transferDate = new Date(result[i].TransferDate)
+                    row.push(result[i].EmployeeName);
+                    row.push(result[i].SourceGLAccount.AccountNbr + " - " + result[i].SourceGLAccount.AccountName);
+                    row.push((transferDate.getUTCMonth() + 1) + "/" + transferDate.getUTCDate() + "/" + transferDate.getUTCFullYear());
+                    row.push(result[i].DestinationCommunity.CommunityShortName);
+                    row.push(result[i].DestinationGLAccount.AccountNbr + " - " + result[i].DestinationGLAccount.AccountName);
+                    row.push(result[i].HourCnt.toFixed(2));
+                    row.push(result[i].PayAmt.toFixed(2));
+                    row.push(result[i].PayType);
+                    var pbjChecked = " >";
+                    if (result[i].PBJOnlyFlg == true) {
+                        pbjChecked = " checked='checked' >";
+                    }
+                    var pbjRow = "<input class='check-box' disabled='disabled' type='checkbox'" + pbjChecked;
+                    row.push(pbjRow);
+                    row.push("<a class='edit-link' id='editPayrollTransfer' href='' data-transfer-id='" + result[i].Id + "' >edit</a>");
+                    row.push("<a class='delete-link' id='deletePayrollTransfer' href='' data-transfer-id='" + result[i].Id + "' >delete</a>");
+                    rows.push(row);
+                }
+                table.fnAddData(rows);
+                //for (x = 0; x < result.length; x++) {
+                //    var newRow = transferTable.insertRow(-1);
+                //    var employeeCell = newRow.insertCell(0);
+                //    var sourceGlCell = newRow.insertCell(1);
+                //    var transferDateCell = newRow.insertCell(2);
+                //    var destinationCell = newRow.insertCell(3);
+                //    var destinationGlCell = newRow.insertCell(4);
+                //    var hoursCell = newRow.insertCell(5);
+                //    var payAmtCell = newRow.insertCell(6);
+                //    var payTypeCell = newRow.insertCell(7);
+                //    var pbjCell = newRow.insertCell(8);
+                //    var editCell = newRow.insertCell(9);
+                //    var deleteCell = newRow.insertCell(10);
+
+                //    var pbjChecked = " >";
+                //    if (result[x].PBJOnlyFlg == true) {
+                //        pbjChecked = " checked='checked' >";
+                //    }
+
+                //    var transferDate = new Date(result[x].TransferDate)
+                //    employeeCell.innerHTML = result[x].EmployeeName;
+                //    sourceGlCell.innerHTML = result[x].SourceGLAccount.AccountNameNbr;
+                //    transferDateCell.innerHTML = (transferDate.getUTCMonth() + 1) + "/" + transferDate.getUTCDate() + "/" + transferDate.getUTCFullYear();
+                //    destinationCell.innerHTML = result[x].DestinationCommunity.CommunityShortName;
+                //    destinationGlCell.innerHTML = result[x].DestinationGLAccount.AccountNameNbr;
+                //    hoursCell.innerHTML = result[x].HourCnt.toFixed(2);
+                //    payAmtCell.innerHTML = result[x].PayAmt.toFixed(2);
+                //    payTypeCell.innerHTML = result[x].PayType;
+                //    pbjCell.innerHTML = "<input class='check-box' disabled='disabled' type='checkbox'" + pbjChecked;
+
+                //    editCell.innerHTML = "<a class='edit-link' id='editPayrollTransfer' href='' data-transfer-id='" + result[x].Id + "' >edit</a>";
+                //    deleteCell.innerHTML = "<a class='delete-link' id='deletePayrollTransfer' href='' data-transfer-id='" + result[x].Id + "' >delete</a>";
+
+
+
+                //    $(hoursCell).addClass("a-right");
+                //    $(payAmtCell).addClass("a-right");
+                //    $(pbjCell).addClass("a-center");
+                //}
+                //setTable();
+                $(".delete-link").click(function (event) {
+                    event.preventDefault();
+                    deletePayrollItem($(this).attr("data-transfer-id"));
+                });
+                $(".edit-link").click(function (event) {
+                    event.preventDefault();
+                    editPayrollItem($(this).attr("data-transfer-id"))
+                });
+                //ActivateCountDown("CountDownPanel", 1800);
+
+            },
+            error: function (data, error, errorText) {
+                alert("There was a problem loading. Please try again.");
+
+            }
+        });
+    }
+
+    function deletePayrollItem(id) {
+
+        $.ajax({
+            url: path + "PayrollTransfer/Delete",
+            type: "get",
+            data: {
+                id: id
+            }
+        }).done(function (result) {
+            $("#DeleteModal").html(result);
+
+            if ($("#DeleteModal").find("#Id").val() != "") {
+                //initialize values
+                $("#DeleteModal").find("#ActiveEmployees").val($("#DeleteModal").find("#EmployeeId").val());
+                $("#DeleteModal").find("#SourceCommunity").val($("#DeleteModal").find("#SourceCommunityId").val());
+                $("#DeleteModal").find("#SourceGLAccount").val($("#DeleteModal").find("#SourceGeneralLedgerId").val());
+                $("#DeleteModal").find("#TransferDate").val();
+                $("#DeleteModal").find("#DestinationGLAccount").val($("#DeleteModal").find("#DestinationGeneralLedgerId").val());
+                $("#DeleteModal").find("#DestinationCommunity").val($("#DeleteModal").find("#DestinationCommunityId").val());
+                $("#DeleteModal").find("#deletePayrollTransfer").click(function () {
+
+                    var $dialog = $("#DeleteModal").dialog("close");
+                    $.ajax({
+                        url: path + "PayrollTransfer/Delete",
+                        type: "post",
+                        data: {
+                            id: id
+                        }
+                    }).done(function (result) {
+                        getCommunityPayrollTransferItems();
+                    });
+                });
+            }
+
+            $("#cancel-button").click(function (e) {
+                e.preventDefault();
+                $("#DeleteModal").dialog("close");
+            });
+            var top = ((Math.max($(window).height()) / 2) - (160));
+            var left = ((Math.max($(window).width()) / 2) - (675));
+
+
+            var $dialog = $("#DeleteModal");
+            $dialog.dialog({
+                dialogClass: "",
+                closeOnEscape: true,
+                modal: true,
+                open: function (event, ui) {
+                    $('div.loading').hide();
+
+                    $(".ui-dialog").css("width", "1350px");
+                    $(".ui-dialog").css("top", top);
+                    $(".ui-dialog").css("left", left)
+                    $(".ui-dialog-titlebar-close", ui.dialog | ui).hide();
+                },
+                close: function (event, ui) {
+                    $('div.loading').hide();
+                }
+            });
+
+            $dialog.dialog("open");
+        });
+    }
+
+    function editPayrollItem(id) {
+
+        $("#EditModal").load(path + "PayrollTransfer/Edit/" + id, function () {
+            $("#EditModal").find(".isDate").on("change", function () {
+                updateGLAfterDateChange($("#EditModal"));
+
+            })
+            $("#EditModal").find(".left-column-picker").height(400);
+            $("#EditModal").find("#cancel-button").click(function (e) {
+                e.preventDefault();
+                $("#EditModal").dialog("close");
+            });
+            $("#EditModal").find("#editSubmit").click(function (e) {
+                $("#EditModal").dialog("close");
+
+                e.preventDefault();
+                $.ajax({
+                    type: 'post',
+                    url: path + 'PayrollTransfer/Edit',
+                    data: $('#EditModal').find("form").serialize(),
+                    success: function () {
+                        getCommunityPayrollTransferItems();
+                    }
+                });
+            });
+            var top = ((Math.max($(window).height()) / 2) - (160));
+            var left = ((Math.max($(window).width()) / 2) - (600));
+            $("#EditModal").dialog({
+                open: function (event, ui) {
+                    $("#EditModal").focus();
+                    $(".ui-dialog").css("width", "1200px");
+                    $(".ui-dialog").css("top", top);
+                    $(".ui-dialog").css("left", left);
+                    $(".ui-dialog-titlebar-close", ui.dialog | ui).hide();
+                },
+                modal: true,
+                close: function (event, ui) {
+                    $('div.loading').hide();
+                }
+            });
+        });
+
+    }
+
+    function setTable() {
+        var table = $("#ICwindow-table").dataTable({
+            "bPaginate": false,
+            "bFilter": false,
+            "oLanguage": {
+                "sEmptyTable": "No entries for date range selected"
+            },
+            "aoColumns": [
+                null,//Employee
+                null,//Source GL
+                null,//Transfer Date
+                null,//Destination
+                null,//Destination GL
+                null,//Hours
+                null,//Dollars
+                null,//Pay Type
+                null,//PBJ
+                {
+                    "bSearchable": false, //Edit
+                    "bSortable": false,
+                    "sWidth": '40px'
+                },
+                {
+                    "bSearchable": false, //Delete
+                    "bSortable": false,
+                    "sWidth": '40px'
+                }
+            ]
+        });
+        table.fnSort([[2, 'desc']]);
+    }
+
+    $(document).ready(function () {
+        $("#workersCompSideBar").remove();
+        setTable();
+        $("#Communities").change(function (e) {
+            $("#EmployeesDropdown").val("");
+            getCommunityPayrollTransferItems();
+
+        });
+        $("#EmployeesDropdown").change(function (e) {
+
+            getCommunityPayrollTransferItems();
+
+        });
+        $("#UpdateDateRange").click(function (e) {
+            getCommunityPayrollTransferItems();
+        });
+        $(".dateUS").datepicker();
+        getCommunityPayrollTransferItems();
+
+    });
+
+    function updateGLAfterDateChange(ptiForm) {
+        var employee = ptiForm.find("#EmployeeId").val();
+        var transferDate = ptiForm.find(".isDate").val();
+        $.ajax({
+            url: path + "PayrollTransfer/GetEmployeeLedgersForDate?employeeId=" + employee + "&transferDate=" + transferDate,
+            success: function (data) {
+                var ledgers = ptiForm.find("#SourceGLAccount");
+                var currentVal = ledgers.val();
+                ledgers.empty();
+                ledgers.append($("<option><option>").attr("value", "").text("Select a Job Role")[0].outerHTML);
+
+                for (var i = 0; i < data.length; i++) {
+                    var displayName = data[i].AccountNbr + " - " + data[i].AccountName;
+                    var value = data[i].GeneralLedgerId;
+                    if (currentVal == value) {
+                        ledgers.append($("<option><option>").attr("value", value).attr("selected", "selected").text(displayName)[0].outerHTML);
+                    }
+                    else {
+                        ledgers.append($("<option><option>").attr("value", value).text(displayName)[0].outerHTML);
+                    }
+                }
+            }
+        });
+    }
+    $("#fileValidation").on("click", function (e) {
+        e.preventDefault();
+        var form = $(this).closest("form");
+        form.ajaxSubmit({
+            dataType: "html",
+            iframe: true,
+            success: function (result) {
+                $("#errorSection").html(result);
+            },
+            error: function (data, error, errortext) {
+                alert("Server is not responding. Please reload page and try again.");
+
+            }
+
+        })
+
+    });
+</script>

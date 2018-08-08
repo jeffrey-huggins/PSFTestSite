@@ -1,0 +1,97 @@
+﻿@model AtriumWebApp.Web.PayrollTransfer.Models.EmployeePayrollTransfer
+@{
+    var sourceGLAccounts = (List<AtriumWebApp.Models.GeneralLedgerAccount>)ViewData["SourceLedgers"];
+
+    var sourceGLList = new SelectList(sourceGLAccounts.Distinct().Select(a => new SelectListItem()
+    {
+        Text = a.AccountNbr + " - " + a.AccountName,
+        Value = a.GeneralLedgerId.ToString()
+    }).OrderBy(a => a.Text), "Value", "Text", Model.SourceGeneralLedgerId);
+    var destinationGLAccounts = (List<AtriumWebApp.Models.GeneralLedgerAccount>)ViewData["DestinationLedgers"];
+    var destinationGLList = new SelectList(destinationGLAccounts.Select(a => new SelectListItem()
+    {
+        Text = a.AccountNbr + " - " + a.AccountName,
+        Value = a.GeneralLedgerId.ToString()
+    }).OrderBy(a => a.Text), "Value", "Text", Model.DestinationGeneralLedgerId);
+    var communitiesList = (List<AtriumWebApp.Models.Community>)ViewData["Communities"];
+    var sourceCommunities = new SelectList(communitiesList, "CommunityId", "CommunityShortName", Model.SourceCommunityId);
+    var destinationCommunities = new SelectList(communitiesList, "CommunityId", "CommunityShortName", Model.DestinationCommunityId);
+    var activeEmployees = (List<AtriumWebApp.Models.Employee>)ViewData["Employees"];//ViewData["PRTRActiveEmployeeList"] as SelectList;
+    var activeEmployeeList = new SelectList(activeEmployees.Select(a => new SelectListItem()
+    {
+       Text = a.LastName + ", " + a.FirstName,
+       Value = a.EmployeeId.ToString()
+
+    }).OrderBy(a => a.Text),"Value","Text",Model.EmployeeId);
+    var payTypes = new List<SelectListItem>(){
+        new SelectListItem {Text = "Regular", Value = "Regular", Selected = true},
+        new SelectListItem {Text = "Overtime", Value = "Overtime"}
+    };
+}
+
+<form asp-action="SavePayrollTransfer" class="payrollTransferForm">
+    <fieldset>
+        <div class="payroll-transfer-item">
+            <input type="hidden" asp-for="Id" />
+            <div id="source">
+                <div class="editor-field">
+                    <label>Source Community</label>
+                    <input type="hidden" asp-for="SourceCommunityId" />
+                    <select asp-for="SourceCommunityId" asp-items="sourceCommunities" disabled="disabled">
+                        <option selected="selected" value="">Select a Community</option>
+                    </select>
+                    
+                </div>
+                <div class="editor-field">
+                    <label>Employee:</label>
+                    <input type="hidden" asp-for="EmployeeId" />
+                    <select asp-for="EmployeeId" asp-items="activeEmployeeList" disabled="disabled">
+                        <option selected="selected" value="">Select an Employee</option>
+                    </select>
+                </div>
+                <div class="editor-field">
+                    <label>Source General Ledger</label>
+                    <select asp-for="SourceGeneralLedgerId" asp-items="sourceGLList">
+                        <option value="" selected="selected">Select a Job Role</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <div class="editor-field">
+                    <label>Transfer Date</label>
+                    <input type="text" asp-for="TransferDate" asp-format="{0:d}" size="10" maxlength="10" id="" class="isDate transfer-date" />
+                </div>
+                <div class="editor-field">
+                    <label>Destination Community</label>
+                    <select asp-for="DestinationCommunityId" asp-items="destinationCommunities">
+                        <option selected="selected" value="">Select a Destination</option>
+                    </select>
+                </div>
+                <div class="editor-field">
+                    <label>Destination General Ledger</label>
+                    <select asp-for="DestinationGeneralLedgerId" asp-items="destinationGLList">
+                        <option value="" selected="selected">Select a Job Role</option>
+                    </select>
+                </div>
+                <div class="editor-field">
+                    <label>Hours</label>
+                    <input type="text" asp-for="HourCnt" size="5" value="0" />
+                </div>
+                <div class="editor-field">
+                    <label>Dollars</label>
+                    <input type="text" asp-for="PayAmt" size="5" value="0" />
+                </div>
+                <div class="editor-field">
+                    <label>PayType</label>
+                    <select asp-for="PayType" asp-items="payTypes"></select>
+                </div>
+                <div class="editor-field">
+                    <label>PBJ Only</label>
+                    <input asp-for="PBJOnlyFlg" />
+                </div>
+                <i class="fa fa-times delete largeFaButton" style="" aria-hidden="true" title="Delete Entry"></i>
+                <i class="fa fa-pencil-square-o edit largeFaButton" style="" aria-hidden="true" title="Edit Entry"></i>
+            </div>
+        </div>
+    </fieldset>
+</form>

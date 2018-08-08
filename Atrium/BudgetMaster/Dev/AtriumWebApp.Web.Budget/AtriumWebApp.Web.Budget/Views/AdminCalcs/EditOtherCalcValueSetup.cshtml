@@ -1,0 +1,58 @@
+@model AtriumWebApp.Models.Budget.ViewModels.CalcValueSetupViewModel
+<style>
+    #calcViewList {
+        list-style: none;
+        list-style-position: inside;
+        border: solid thin black;
+        padding: 0;
+    }
+
+        #calcViewList li {
+            list-style-position: inside;
+            border-bottom: solid thin black;
+            height: 22px;
+            text-align: center;
+        }
+
+    #calcValueWrapper {
+        max-height: 256px;
+        overflow-y: scroll;
+        text-align: center;
+    }
+</style>
+Calc Name <input asp-for="Calc.CalcNm" disabled="disabled" />
+<br />
+<br />
+<span style="font-weight: bold;font-size: 12px;">Calculation Values</span>
+<br />
+<br />
+<div id="calcValueWrapper">
+    Calc Value Name
+    <ul id="calcViewList">
+        @foreach (var calcValue in Model.Calc.OtherExpensesGLCalcValueMasters)
+        {
+            SelectList calcValues = new SelectList(Model.MasterCalcs, "CalcValueID", "CalcValueNm", calcValue.CalcValueID);
+            <li><select asp-items="calcValues"></select></li>
+
+        }
+
+        @{
+            SelectList newCalcValues = new SelectList(Model.MasterCalcs, "CalcValueID", "CalcValueNm");
+        }
+        <li>
+            <i class="fa fa-asterisk"></i><select asp-items="newCalcValues">
+                <option selected="selected">New Calc Value</option>
+            </select>
+        </li>
+        @if (Model.Calc.OtherExpensesGLCalcValueMasters.Count < 10)
+        {
+            for (int i = Model.Calc.OtherExpensesGLCalcValueMasters.Count; i < 10; i++)
+            {
+                <li>
+                </li>
+
+            }
+
+        }
+    </ul>
+</div>

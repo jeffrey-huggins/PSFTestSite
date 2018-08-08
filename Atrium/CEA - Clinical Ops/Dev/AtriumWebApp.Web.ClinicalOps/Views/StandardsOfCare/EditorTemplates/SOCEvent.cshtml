@@ -1,0 +1,46 @@
+﻿@model AtriumWebApp.Web.ClinicalOps.Models.SOCEvent
+<div align="center" class="container-fluid">
+    <h2 class="margin_separator">Event Record</h2>
+    <form method="post" id="SaveGenericForm" asp-controller="StandardsOfCare" asp-action="SaveGeneric" style="display:none;">
+        <input type="hidden" asp-for="CurrentPayerId" />
+        <input type="hidden" asp-for="PatientId" />
+        <input type="hidden" asp-for="RoomId" />
+        <input type="hidden" asp-for="SOCEventId" />
+        <input type="hidden" asp-for="SOCMeasureId" />
+        <input type="hidden" asp-for="OccurredFlg" />
+        <input type="hidden" asp-for="ResolvedFlg" />
+        <div class="row">
+            <div class="col-sm-5">
+                Date Occured:
+            </div>
+            <div class="col-sm-7">
+                <input asp-for="OccurredDate" asp-format="{0:d}" data-rule-no_future_date="true" class="isDate" />
+                <br />
+                <span asp-validation-for="OccurredDate" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-5">
+                Date Resolved:
+            </div>
+            <div class="col-sm-7">
+                <input asp-for="ResolvedDate" data-rule-no_future_date="true" data-rule-resolved_greater_initial="true" asp-format="{0:d}" class="isDate" />
+                <br />
+                <span asp-validation-for="ResolvedDate" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row">
+            <input class="col-sm-offset-5 col-sm-3" type="submit" id="saveEvent" value="Save" />
+        </div>
+    </form>
+</div>
+<script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+<environment names="Development">
+    <script src="~/js/AdditionalValidation.js" asp-append-version="true"></script>
+    <script src="~/js/SOC/SOCEvent.js" asp-append-version="true"></script>
+</environment>
+<environment names="Testing,Production,Training">
+    <script src="~/js/AdditionalValidation.min.js" asp-append-version="true"></script>
+    <script src="~/js/SOC/SOCEvent.min.js" asp-append-version="true"></script>
+</environment>

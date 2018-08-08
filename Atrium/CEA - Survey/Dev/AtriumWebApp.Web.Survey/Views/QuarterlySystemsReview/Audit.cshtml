@@ -1,0 +1,46 @@
+@model AtriumWebApp.Web.Survey.Models.ViewModel.ReviewSectionAuditViewModel
+@{
+    string backUrl;
+    if (Model.RequiresPatientSample)
+    {
+        
+        backUrl = Url.Action("Sample", new { id = Model.SectionId, type = Model.SectionType });
+    }
+    else
+    {
+        backUrl = Url.Action("Index");
+    }
+    ViewBag.Title = "Audit";
+}
+<style>
+    textarea {
+        width: 100%;
+    }
+    .Answer.odd {
+        background-color: #E2E4FF;
+    }
+</style>
+<h2>@ViewBag.Title</h2>
+@using (Html.BeginForm())
+{
+    @Html.HiddenFor(m => m.SectionId)
+    @Html.HiddenFor(m => m.SectionType)
+    @Html.EditorFor(m => m.SampleAudits)
+    @Html.ValidationSummary(false)
+    <div class="margin_separator">
+        <button id="back">Back</button>
+        <input type="submit" class="float-right" value="Save" />
+    </div>
+}
+
+<environment names="Development">
+    <script src="~/js/QuarterlySystemsReviewEditPage.js" asp-append-version="true"></script>
+</environment>
+<environment names="Testing,Production,Training">
+    <script src="~/js/QuarterlySystemsReviewEditPage.min.js" asp-append-version="true"></script>
+</environment>
+<script type="text/javascript">
+    $(document).ready(function () {
+        PrepareBackButton('@backUrl');
+    });
+</script>

@@ -1,0 +1,198 @@
+@model AtriumWebApp.Models.Budget.Facility
+<style>
+    #newFacilityForm .panel {
+        width: 49%;
+        display: inline-block;
+        vertical-align: top;
+        height: 100%;
+        margin-bottom: 0;
+        margin-top: 0;
+    }
+
+    #facilityTable {
+        border: solid thin grey;
+    }
+
+        #facilityTable thead {
+            border-bottom: solid thin black;
+        }
+        #facilityTable tbody tr:hover{
+            cursor:pointer;
+        }
+
+</style>
+
+<form id="newFacilityForm" asp-action="AddFacility" asp-controller="admin">
+    <div style="height:420px;">
+        <div class="panel">
+            <div class="panel-title">
+                New Facility Information
+            </div>
+            <input name="CopyFrom" id="newCopyFrom" value="" hidden="hidden" />
+            <table>
+                <tr>
+                    <td>
+                        Facility Number:
+                        <br />
+                        (INTACT)
+                    </td>
+                    <td>
+                        <input asp-for="FacilityNb" />
+                        <br />
+                        <span asp-validation-for="FacilityNb"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Short Name:
+                    </td>
+                    <td>
+                        <input asp-for="FacilityShortNm" />
+                        <br />
+                        <span asp-validation-for="FacilityShortNm"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Long Name:
+                    </td>
+                    <td>
+                        <input asp-for="FacilityNm" />
+                        <br />
+                        <span asp-validation-for="FacilityNm"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        State:
+                    </td>
+                    <td>
+                        <select asp-for="StateID" asp-items="ViewBag.States" required="required"></select>
+                        <br />
+                        <span asp-validation-for="StateID"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Region:
+                    </td>
+                    <td>
+                        <select asp-for="RegionID" asp-items="ViewBag.Regions"></select>
+                        <br />
+                        <span asp-validation-for="RegionID"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Wage Increase Fee %:
+                    </td>
+                    <td>
+                        @Html.TextBox("a", Model.WageIncreasePercentage, "{0:P2}", new { id = "wageIncrease" })
+                        <br />
+                        <input asp-for="WageIncreasePercentage" hidden="hidden" />
+                        <span asp-validation-for="WageIncreasePercentage"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Management Fee %:
+                    </td>
+                    <td>
+                        @Html.TextBox("a", Model.MgtFeeCalcPercent, "{0:P2}", new { id = "mgtFee" })
+                        <br />
+                        <input asp-for="MgtFeeCalcPercent" hidden="hidden" />
+                        <span asp-validation-for="MgtFeeCalcPercent"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Restrict from DW Feed
+                    </td>
+                    <td>
+                        <input asp-for="RestrictFromDwFeed" />
+                        <br />
+                        <span asp-validation-for="RestrictFromDwFeed"></span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="panel">
+            <div class="panel-title">
+                Copy Related Data From This Facility
+            </div>
+            <div style="text-align:center">
+                Select a facility below.  This will allow the system to prepopulate your new facility with existing data associated with another facility.
+            </div>
+            <div style="overflow-y:scroll;height:350px">
+                <table id="facilityTable">
+                    <thead>
+                        <tr>
+                            <td>
+                                StateCode
+                            </td>
+                            <td>
+                                RegionName
+                            </td>
+                            <td>
+                                FacilityNumber
+                            </td>
+                            <td>
+                                FacilityName
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var facility in ViewBag.Facilities)
+                    {
+                    <tr rowNum="@facility.FacilityID">
+                        <td>
+                            @facility.State.StateCd
+                        </td>
+                        <td>
+                            @facility.Region.RegionNm
+                        </td>
+                        <td>
+                            @facility.FacilityNb
+                        </td>
+                        <td style="min-width:340px">
+                            @facility.FacilityNm
+                        </td>
+                    </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div style="margin-left:auto;margin-right:auto;width:200px;margin-top: 5px;">
+        <input type="button" value="Save Facility" id="saveNewFacility" style="float:left;" />
+        <input type="button" value="Cancel" id="cancelNewFacility" style="float:right;" />
+    </div>
+
+</form>
+<script>
+    $("#wageIncrease").change(function () {
+        var value = Number($(this).val().replace("%", "")) / 100;
+        if (!$(this).val()) {
+            value = null;
+
+        }
+        $(this).siblings("#WageIncreasePercentage").attr("value", value);
+        $(this).siblings("#WageIncreasePercentage").valid();
+    });
+    $("#mgtFee").change(function () {
+        var value = Number($(this).val().replace("%", "")) / 100;
+        if (!$(this).val()) {
+            value = null;
+
+        }
+        $(this).siblings("#MgtFeeCalcPercent").attr("value", value);
+        $(this).siblings("#MgtFeeCalcPercent").valid();
+    });
+    $.validator.setDefaults({ ignore: [] });
+    $("#newFacilityForm").removeData("validator");
+    $("#newFacilityForm").removeData("unobtrusiveValidation");
+    $.validator.unobtrusive.parse($("#newFacilityForm"));
+    $("#newFacilityForm").validate();
+</script>

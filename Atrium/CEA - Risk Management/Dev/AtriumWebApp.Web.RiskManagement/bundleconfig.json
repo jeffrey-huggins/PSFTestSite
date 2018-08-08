@@ -1,0 +1,79 @@
+[
+  {
+    "outputFileName": "wwwroot/css/site.min.css",
+    "inputFiles": [
+      "wwwroot/css/site.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/site.min.js",
+    "inputFiles": [
+      "wwwroot/js/site.js",
+      "wwwroot/js/Countdown.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    }
+  },
+  {
+    "outputFileName": "wwwroot/css/CustomStyle_v1.min.css",
+    "inputFiles": [
+      "wwwroot/css/CustomStyle_v1.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/css/CustomStyleIE.min.css",
+    "inputFiles": [
+      "wwwroot/css/CustomStyleIE.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/lib/jquery-ui/themes/base/bundle.css",
+    "inputFiles": [
+      "wwwroot/lib/jquery-ui/themes/base/jquery-ui.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/Unemployment.min.js",
+    "inputFiles": [
+      "wwwroot/js/Unemployment.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/MedicalRecords.min.js",
+    "inputFiles": [
+      "wwwroot/js/MedicalRecords.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/WorkersComp.min.js",
+    "inputFiles": [
+      "wwwroot/js/WorkersComp.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/WorkersCompAdmin.min.js",
+    "inputFiles": [
+      "wwwroot/js/WorkersCompAdmin.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/MedicalRecordsAdmin.min.js",
+    "inputFiles": [
+      "wwwroot/js/MedicalRecordsAdmin.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/UnemploymentAdmin.min.js",
+    "inputFiles": [
+      "wwwroot/js/UnemploymentAdmin.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/AdditionalValidation.min.js",
+    "inputFiles": [
+      "wwwroot/js/AdditionalValidation.js"
+    ]
+  }
+]

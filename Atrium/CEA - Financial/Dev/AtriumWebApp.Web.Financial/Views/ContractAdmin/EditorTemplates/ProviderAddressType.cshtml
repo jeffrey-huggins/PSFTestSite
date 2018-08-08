@@ -1,0 +1,7 @@
+@model AtriumWebApp.Models.ProviderAddressType
+
+<form asp-action="CreateAddressType" asp-controller="ContractAdmin">
+    <input asp-for="Name" placeholder="New Address Type" />
+    <span asp-validation-for="Name" class="text-danger"></span>
+    <input type="submit" value="Add" id="newAddressType" />
+</form>

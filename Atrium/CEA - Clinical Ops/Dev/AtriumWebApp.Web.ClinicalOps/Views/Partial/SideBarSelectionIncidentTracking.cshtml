@@ -1,0 +1,159 @@
+﻿@using System.Globalization;
+@using AtriumWebApp.Web.Base.Library
+@using AtriumWebApp.Models
+@{
+    string ITRLookbackDate;
+    Context.Session.TryGetObject("ITRLookbackDate", out ITRLookbackDate);
+    string ITRCurrentFacility;
+    Context.Session.TryGetObject("ITRCurrentFacility", out ITRCurrentFacility);
+    string ITRCurrentFacilityName;
+    Context.Session.TryGetObject("ITRCurrentResidentFacility", out ITRCurrentFacilityName);
+    string CensusDateInvalid;
+    Context.Session.TryGetObject("CensusDateInvalid", out CensusDateInvalid);
+    string CensusDateInFuture;
+    Context.Session.TryGetObject("CensusDateInFuture", out CensusDateInFuture);
+    IList<Community> ITRFacilityList;
+    Context.Session.TryGetObject("ITRFacilityList", out ITRFacilityList);
+    IList<Patient> ITRResidentList;
+    Context.Session.TryGetObject("ITRResidentList", out ITRResidentList);
+    string ITRCurrentResidentIdString;
+    Context.Session.TryGetObject("ITRCurrentResidentIdString", out ITRCurrentResidentIdString);
+    string ITRCurrentResidentName;
+    Context.Session.TryGetObject("ITRCurrentResidentName", out ITRCurrentResidentName);
+    string ITRCurrentResidentFacility;
+    Context.Session.TryGetObject("CensusDateInFuture", out ITRCurrentResidentFacility);
+    string ITRCurrentResidentRoom;
+    Context.Session.TryGetObject("ITRCurrentResidentRoom", out ITRCurrentResidentRoom);
+    string ITRCurrentResidentBirthdate;
+    Context.Session.TryGetObject("ITRCurrentResidentBirthdate", out ITRCurrentResidentBirthdate);
+    string ITRCurrentResidentAdmitDate;
+    Context.Session.TryGetObject("ITRCurrentResidentAdmitDate", out ITRCurrentResidentAdmitDate);
+    string ITRCurrentResidentCensusDate;
+    Context.Session.TryGetObject("ITRCurrentResidentCensusDate", out ITRCurrentResidentCensusDate);
+    string ITRCurrentResidentAdmissionDiagnosis;
+    Context.Session.TryGetObject("ITRCurrentResidentAdmissionDiagnosis", out ITRCurrentResidentAdmissionDiagnosis);
+    string ITRCurrentResidentDiagnosis1;
+    Context.Session.TryGetObject("ITRCurrentResidentDiagnosis1", out ITRCurrentResidentDiagnosis1);
+    string ITRCurrentResidentDiagnosis2;
+    Context.Session.TryGetObject("ITRCurrentResidentDiagnosis2", out ITRCurrentResidentDiagnosis2);
+    string ITRCurrentResidentDiagnosis3;
+    Context.Session.TryGetObject("ITRCurrentResidentDiagnosis3", out ITRCurrentResidentDiagnosis3);
+    string ToDateRangeInvalid;
+    Context.Session.TryGetObject("ToDateRangeInvalid", out ToDateRangeInvalid);
+    string ToDateRangeInFuture;
+    Context.Session.TryGetObject("ToDateRangeInFuture", out ToDateRangeInFuture);
+    string FromDateRangeInvalid;
+    Context.Session.TryGetObject("FromDateRangeInvalid", out FromDateRangeInvalid);
+    string FromDateRangeInFuture;
+    Context.Session.TryGetObject("FromDateRangeInFuture", out FromDateRangeInFuture);
+    string FromAfterTo;
+    Context.Session.TryGetObject("FromAfterTo", out FromAfterTo);
+    string ITRoccurredRangeFrom;
+    Context.Session.TryGetObject("ITRoccurredRangeFrom", out ITRoccurredRangeFrom);
+    string ITRoccurredRangeTo;
+    Context.Session.TryGetObject("ITRoccurredRangeTo", out ITRoccurredRangeTo);
+}
+<section class="left-column-picker" style="height: 800px">
+
+    @using (Html.BeginForm("Lookback", "IncidentTracking", FormMethod.Post, new { id = "Lookback" }))
+    {
+        @Html.Label("Last Census Date:")<br />
+        @Html.TextBox("LookbackDate",ITRLookbackDate , new { @class = "dateUS", size = "10" })
+        @Html.Hidden("returnUrl", Context.UrlPath())
+        @Html.Hidden("CurrentCommunity", ITRCurrentFacility)
+        <input type="submit" value="Update" onclick="" /> 
+    }
+    @Html.Hidden("CensusDateInvalid", CensusDateInvalid)
+    @Html.Hidden("CensusDateInFuture", CensusDateInFuture)
+    @using (Html.BeginForm("SideDDL", "IncidentTracking", FormMethod.Post, new { id = "SideDDL" }))
+    {
+        @Html.Label("Community:")<br />
+        @Html.DropDownList("Communities", ITRFacilityList as SelectList, new { id = "Communities" })
+        <br />
+        <br />
+        @Html.Label("Resident:")<br />
+        @Html.DropDownList("Residents", ITRResidentList as SelectList, "Select a Resident", new { id = "Residents", onselectedindexchanged = "this.form.submit();" })
+        <br />
+        @Html.Hidden("returnUrl", Context.UrlPath())
+    }
+
+    @Html.Hidden("CurrentResidentId", ITRCurrentResidentIdString)
+
+    @if (!Context.Session.Contains("ITRCurrentResidentName"))
+    {
+        <br />
+        <div style="color: red; font-weight: bold;">Please choose a Resident</div>
+    }
+    <br />@Html.Label("","Current Resident", new { style = "font-weight: bold" })
+    <p>
+        Name/Community:<br />
+        @ITRCurrentResidentName<br />
+        @ITRCurrentFacilityName
+    </p>
+    <p>Rm#: @ITRCurrentResidentRoom</p>
+    <p>Birthdate: @ITRCurrentResidentBirthdate</p>
+    <p>Admit Date: @ITRCurrentResidentAdmitDate</p>
+    <p>Last Census Date: @ITRCurrentResidentCensusDate</p>
+    <p>
+        Admission Diagnosis:<br />
+        @ITRCurrentResidentAdmissionDiagnosis
+    </p>
+    <p>
+        Diagnosis:
+        <br />
+        1. @ITRCurrentResidentDiagnosis1
+        <br />
+        2. @ITRCurrentResidentDiagnosis2
+        <br />
+        3. @ITRCurrentResidentDiagnosis3
+    </p>
+</section>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#LookbackDate").datepicker({
+            beforeShow: function (textbox, instance) {
+                instance.dpDiv.css({
+                    marginTop: '10px',
+                    marginLeft: '0px'
+                });
+            }
+        });
+        $(function () {
+            if ($("#CensusDateInvalid").val() == "1") {
+                alert("Error: Please enter a valid Last Census Date (mm/dd/yyyy)");
+            }
+            if ($("#CensusDateInFuture").val() == "1") {
+                alert("Error: You can not have a Census date that is in the future");
+            }
+        });
+
+
+        var currentCommunity = $("#CurrentCommunity").val();
+        $("#Communities").val(currentCommunity);
+
+        //$("#Residents").CascadingDropDown('#Communities', '../IncidentTracking/Resident',
+        //    {
+        //        promptText: 'Select a Resident',
+        //        postData: function () {
+        //            return { facilityID: $("#Communities option:selected").val() };
+        //        }
+        //    });
+        var currentResident = $("#CurrentResidentId").val();
+        $("#Residents").val(currentResident);
+
+        $("#Residents").change(function () {
+            var resident = $("#Residents option:selected").val();
+            if (resident != "") {
+                $("#SideDDL").submit();
+            }
+        });
+        $("#Communities").change(function () {
+            ShowProgress();
+            $.post("./Base/ChangeCommunityForResident", { appCode: "ITR", facilityId: $("#Communities option:selected").val() }).done(function () {
+                window.location.reload();
+            });
+
+        });
+    });
+</script>

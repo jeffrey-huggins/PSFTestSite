@@ -1,0 +1,197 @@
+@model HospitalDischargeViewModel
+@using AtriumWebApp.Web.Base.Library
+@{
+    ViewBag.Title = "Hospital Discharge";
+}
+
+<div id="content" style="padding-left: 20px; overflow: hidden; width: 1421px;">
+    @{ 
+        string facilityName;
+        Context.Session.TryGetObject("HODCurrentFacilityName", out facilityName);
+        string CensusDateInvalid;
+        Context.Session.TryGetObject("CensusDateInvalid", out CensusDateInvalid);
+        string CensusDateInFuture;
+        Context.Session.TryGetObject("CensusDateInFuture", out CensusDateInFuture);
+        IList<Community> HODFacilityList;
+        Context.Session.TryGetObject("HODFacilityList", out HODFacilityList);
+        string HODCurrentFacility;
+        Context.Session.TryGetObject("HODCurrentFacility", out HODCurrentFacility);
+    }
+    @if (Context.Session.Contains("HODCurrentFacilityName"))
+    {
+        <h2 id="title" style="margin-left: 350px">Hospital Discharge for @facilityName</h2>
+    }
+    else
+    {
+        <h2 id="title" style="margin-left: 350px">Hospital Discharge</h2>
+    }
+    <div id="body-HD">
+        <section class="left-column-picker" style="height: 50px; border-bottom:solid thin black;border-right:0;">
+            @Html.Hidden("CensusDateInvalid", CensusDateInvalid)
+            @Html.Hidden("CensusDateInFuture", CensusDateInFuture)
+            @using (Html.BeginForm("SideDDL", "HospitalDischarge", FormMethod.Post, new { id = "SideDDL" }))
+            {
+                @Html.Label("Community:")<br />
+                @Html.DropDownList("Communities", HODFacilityList as SelectList, new { id = "Communities" })
+                <br />
+                @Html.Hidden("returnUrl", Context.UrlPath())
+            }
+            @Html.Hidden("CurrentCommunity", HODCurrentFacility)
+        </section>
+        <div class="clearfix"></div>
+        <div id="content-IT" style="width: 1300px;">
+            @Html.DropDownList("ERDischargeReason", new SelectList(Model.ERDischargeReasons, "DischargeReasonId", "DischargeReasonDesc"), new { id = "ERDischargeReasons", @style = "display: none" })
+            @Html.DropDownList("HospitalDischargeReason", new SelectList(Model.HospitalDischargeReasons, "DischargeReasonId", "DischargeReasonDesc"), new { id = "HospitalDischargeReasons", @style = "display: none" })
+            @Html.DropDownList("DidNotReturnReasons", new SelectList(Model.DidNotReturnReasons, "DidNotReturnReasonId", "DidNotReturnReasonDesc"), new { id = "DidNotReturnReasons", @style = "display:none" })
+            @Html.DropDownList("Hospitals", new SelectList(Model.Hospitals, "Id", "Name"), new { id = "Hospitals", @style = "display:none" })
+            @using (Html.BeginForm("UpdateRange", "HospitalDischarge", FormMethod.Post, new { id = "UpdateRangeHD" }))
+            {
+                string AppCode = "HOD";
+                string rangeFrom;
+                string rangeTo;
+                
+                Context.Session.TryGetObject(AppCode + "occurredRangeFrom", out rangeFrom);
+                Context.Session.TryGetObject(AppCode + "occurredRangeTo", out rangeTo);
+                
+
+                @Html.Label("Discharge Date Range - From: ")
+                @Html.TextBox("occurredRangeFrom", rangeFrom, new { @class = "dateUS isDate", @Value = rangeFrom, size = "10" })
+                @Html.Label("To: ")
+                @Html.TextBox("occurredRangeTo", rangeTo, new { @class = "dateUS isDate", @Value = rangeTo, size = "10" })
+                @Html.Hidden("returnUrl", Context.UrlPath())
+                <input id="submit" name="submit" type="submit" value="Update" />
+
+    string ToDateRangeInvalid;
+    Context.Session.TryGetObject("ToDateRangeInvalid", out ToDateRangeInvalid);
+    string ToDateRangeInFuture;
+    Context.Session.TryGetObject("ToDateRangeInFuture", out ToDateRangeInFuture);
+    string FromDateRangeInvalid;
+    Context.Session.TryGetObject("FromDateRangeInvalid", out FromDateRangeInvalid);
+    string FromDateRangeInFuture;
+    Context.Session.TryGetObject("FromDateRangeInFuture", out FromDateRangeInFuture);
+    string FromAfterTo;
+    Context.Session.TryGetObject("FromAfterTo", out FromAfterTo);
+
+
+    @Html.Hidden("ToDateRangeInvalid", ToDateRangeInvalid)
+    @Html.Hidden("ToDateRangeInFuture", ToDateRangeInFuture)
+    @Html.Hidden("FromDateRangeInvalid", FromDateRangeInvalid)
+    @Html.Hidden("FromDateRangeInFuture", FromDateRangeInFuture)
+    @Html.Hidden("FromAfterTo", FromAfterTo)
+    }
+            <table id="HDwindow-table">
+                <thead>
+                    <tr>
+                        <th>Resident</th>
+                        <th>Admit Source</th>
+                        <th>Discharge Date</th>
+                        <th>Discharge</th>
+                        <th>Resident Status</th>
+                        <th>Planned</th>
+                        <th>Diagnosis</th>
+                        <th>Additional Info</th>
+                        <th>Edit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.DischargesForFacility != null)
+                    {
+                        for (var i = 0; i < Model.DischargesForFacility.Count; i++)
+                        {
+                            <tr id="@Model.DischargesForFacility[i].PatientId">
+                                <td>@Model.DischargesForFacility[i].LastName, @Model.DischargesForFacility[i].FirstName</td>
+                                <td>@Model.DischargesForFacility[i].AdmitSrc</td>
+                                <td>@Model.DischargesForFacility[i].CensusDate.ToString("MM/dd/yyyy")</td>
+                                <td>@Model.DischargesForFacility[i].DischargeType</td>
+                                <td>@Model.DischargesForFacility[i].PatientStatus</td>
+                                <td>@(Model.DischargesForFacility[i].DischargeReasonFlg ? Model.DischargesForFacility[i].PlannedFlg ? "Yes" : "No" : "")</td>
+                                <td class="Diagnosis">
+                                    @if (Model.DischargesForFacility[i].DischargeReasonFlg)
+                                    {
+                                        <div>
+                                            <strong>ER:</strong>
+                                            @Html.HiddenFor(m => m.DischargesForFacility[i].ERDischargeReasonId, new { @class = "ERDischargeReasonId" })
+                                            @Html.HiddenFor(m => m.DischargesForFacility[i].ERDischargeReasonIsIncluded, new { @class = "ERDischargeReasonIsIncluded" })
+                                            <span class="ERDischargeReason">
+                                                @Model.DischargeReasons.Single(d => d.DischargeReasonId == Model.DischargesForFacility[i].ERDischargeReasonId).DischargeReasonDesc
+                                            </span>
+                                            <span class="EditERDischargeReason"></span>
+                                        </div>
+                                        <div>
+                                            <strong>Admission:</strong>
+                                            @Html.HiddenFor(m => m.DischargesForFacility[i].HospitalDischargeReasonId, new { @class = "HospitalDischargeReasonId" })
+                                            @Html.HiddenFor(m => m.DischargesForFacility[i].HospitalDischargeReasonIsIncluded, new { @class = "HospitalDischargeReasonIsIncluded" })
+                                            <span class="HospitalDischargeReason">
+                                                @Model.DischargeReasons.Single(d => d.DischargeReasonId == Model.DischargesForFacility[i].HospitalDischargeReasonId).DischargeReasonDesc
+                                            </span>
+                                            <span class="EditHospitalDischargeReason"></span>
+                                        </div>
+                                    }
+                                </td>
+                                <td class="AdditionalInfo">
+                                    @if (Model.DischargesForFacility[i].DischargeReasonFlg)
+                                    {
+                                        <div>
+                                            <strong>Hospital:</strong>
+                                            @Html.HiddenFor(m => m.DischargesForFacility[i].HospitalId, new { @class = "HospitalId" })
+                                            @Html.HiddenFor(m => m.DischargesForFacility[i].HospitalIsIncluded, new { @class = "HospitalIsIncluded" })
+                                            <span class="Hospital">
+                                                @Model.AllHospitals.Single(h => h.Id == Model.DischargesForFacility[i].HospitalId).Name
+                                            </span>
+                                            <span class="EditHospital"></span>
+                                        </div>
+                                        <div>
+                                            <strong>Did Not Return Reason:</strong>
+                                            @Html.HiddenFor(m => m.DischargesForFacility[i].DidNotReturnReasonId, new { @class = "DidNotReturnReasonId" })
+                                            <span class="DidNotReturnReason">
+                                                @Model.DidNotReturnReasons.Single(d => d.DidNotReturnReasonId == Model.DischargesForFacility[i].DidNotReturnReasonId).DidNotReturnReasonDesc
+                                            </span>
+                                            <span class="EditDidNotReturnReason"></span>
+                                        </div>
+                                    }
+                                </td>
+                                <td>
+                                    @if (Model.DischargesForFacility[i].DischargeReasonFlg)
+                                    {
+                                        <a class="edit" href="">Edit</a>
+                                        @*@Html.ActionLink("Edit", "Edit", new { @id = Model.DischargesForFacility[i].PatientId, @censusDate = Model.DischargesForFacility[i].CensusDate })*@
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<environment names="Development">
+    <script src="~/js/HospitalDischarge.js" asp-append-version="true"></script>
+</environment>
+<environment names="Testing,Production,Training">
+    <script src="~/js/HospitalDischarge.min.js" asp-append-version="true"></script>
+</environment>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(function () {
+            if ($("#CensusDateInvalid").val() == "1") {
+                alert("Error: Please enter a valid Last Census Date (mm/dd/yyyy)");
+            }
+            if ($("#CensusDateInFuture").val() == "1") {
+                alert("Error: You can not have a Census date that is in the future");
+            }
+        });
+
+        var currentCommunity = $("#CurrentCommunity").val();
+        $("#Communities").val(currentCommunity);
+
+        $("#Communities").change(function () {
+            var facility = $("#Communities option:selected").val();
+            $("#CurrentCommunity").val(facility);
+            if (facility != "") {
+                $("#SideDDL").submit();
+            }
+        });
+    });
+</script>

@@ -1,0 +1,50 @@
+﻿@model AtriumWebApp.Web.HR.Models.STNATrainingFacilityInteraction
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<fieldset>
+    <legend>STNATrainingFacilityInteraction</legend>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.STNATrainingFacilityId)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.STNATrainingFacilityId)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.STNATrainingActionItemId)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.STNATrainingActionItemId)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.InteractionDate)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.InteractionDate)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.InsertedDate)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.InsertedDate)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.LastModifiedDate)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.LastModifiedDate)
+    </div>
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.STNATrainingFacilityInteractionId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

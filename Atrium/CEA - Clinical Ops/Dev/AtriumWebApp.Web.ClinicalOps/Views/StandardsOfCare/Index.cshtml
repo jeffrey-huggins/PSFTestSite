@@ -1,0 +1,73 @@
+@model StandardsOfCareViewModel
+
+@{
+    ViewBag.Title = "Standards Of Care";
+}
+
+<div id="title-div">
+    <h2 id="title" style="margin-left: 180px">Standards Of Care</h2>
+</div>
+<div id="content">
+    <div id="sideBar">
+        @Html.EditorFor(m => m.SideBar)
+    </div>
+
+    <div id="right-side">
+        <div id="left-col">
+
+            <table style="width: 575px; float: left;display:none;" id="measuresSelection">
+                <tr>
+                    <td><label>Quality Measure</label></td>
+                    <td id="measure-list">
+                        <select asp-items="ViewBag.Measures" id="SOCMeasure">
+                            <option value="" selected="selected" disabled>Select a Measure</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <button type="button" id="createSOC" name="createSOC" disabled>Create</button>
+                    </td>
+                </tr>
+            </table>
+
+            <span class="instruction">Select a resident to continue...</span>
+
+        </div>
+        <div id="window-div">
+            <div id="UpdateRange">
+                <label>Occurred Date Range - From: </label>
+                <input asp-for="OccuredFrom" size="10" id="occurredRangeFrom" class="isDate" />
+                <label>To: </label>
+                <input asp-for="OccuredTo" size="10" id="occuredRangeTo" class="isDate" />
+                <input name="submit" type="button" value="Update" id="updateTable" />
+
+            </div>
+            <div id="window">
+
+            </div>
+        </div>
+        <div style="clear: both"></div>
+    </div>
+    <div style="clear: both"></div>
+</div>
+<div style="display:none">
+    <div id="modal">
+
+    </div>
+</div>
+<script src="~/lib/moment/min/moment.min.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+<environment names="Development">
+    <script src="~/lib/jquery-form/src/jquery.form.js"></script>
+    <script src="~/js/AdditionalValidation.js" asp-append-version="true"></script>
+    <script src="~/js/SOC/Index.js" asp-append-version="true"></script>
+    
+</environment>
+<environment names="Testing,Production,Training">
+    <script src="~/lib/jquery-form/dist/jquery.form.min.js"></script>
+    <script src="~/js/AdditionalValidation.min.js" asp-append-version="true"></script>
+    <script src="~/js/SOC/Index.min.js" asp-append-version="true"></script>
+</environment>

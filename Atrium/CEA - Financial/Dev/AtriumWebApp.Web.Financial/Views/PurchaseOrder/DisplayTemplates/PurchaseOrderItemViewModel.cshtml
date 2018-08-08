@@ -1,0 +1,12 @@
+﻿@model AtriumWebApp.Web.Financial.Models.ViewModel.PurchaseOrderItemViewModel
+<tr>
+    <td>@Html.TextBoxFor(m => m.OrderQuantity, new { size = "3", @class = "OrderQuantity", data_field = "OrderQuantity", @readonly = "readonly" })</td>
+    <td>@Html.TextBoxFor(m => m.StockNumber, new { size = "10", @class = "StockNumber", data_field = "StockNumber", @readonly = "readonly" })</td>
+    <td>@Html.TextAreaFor(m => m.ItemDescription, new { @class = "ItemDescription", data_field = "ItemDescription", maxlength = 256, @readonly = "readonly" })</td>
+    <td>@Html.TextBoxFor(m => m.AccountNumber, new { size = "10", @class = "AccountNumber", data_field = "AccountNumber", @readonly = "readonly" })</td>
+    <td>@Html.TextBoxFor(m => m.EstimatedCost, Model.EstimatedCost.ToString("0.00"), new { size = "8", @class = "EstimatedItemCost", data_field = "EstimatedCost", @readonly = "readonly" })</td>
+    <td>@Html.TextBoxFor(m => m.Unit, new { size = "3", @class = "Unit", data_field = "Unit", @readonly = "readonly" })</td>
+    <td>
+        <span class="TotalCost calculated">@Html.DisplayFor(m => m.TotalCost)</span>
+    </td>
+</tr>

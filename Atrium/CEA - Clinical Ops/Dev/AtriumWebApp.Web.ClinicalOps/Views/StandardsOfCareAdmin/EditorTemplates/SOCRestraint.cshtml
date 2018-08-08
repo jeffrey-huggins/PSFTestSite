@@ -1,0 +1,13 @@
+@model SOCRestraint
+
+@if (Model.SOCRestraintId == 0)
+{
+    Model.DataEntryFlg = true;
+}
+
+<form asp-action="NewRestraint" asp-controller="StandardsOfCareAdmin">
+    <input asp-for="SOCRestraintName" placeholder="New Restraint" />
+    <span asp-validation-for="SOCRestraintName" class="text-danger"></span>
+    <input asp-for="DataEntryFlg" hidden="hidden" />
+    <input type="submit" value="Add" />
+</form>

@@ -6,14 +6,24 @@
     <ol class="carousel-indicators">
         <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
         <li data-target="#myCarousel" data-slide-to="1"></li>
+        <li data-target="#myCarousel" data-slide-to="2"></li>
     </ol>
     <div class="carousel-inner" role="listbox">
         <div class="item active">
+            <img src="~/images/zoo.jpg" alt="ASP.NET" class="img-responsive" />
+            <div class="carousel-caption" role="option">
+                <p>
+                    Welcome to Animal Paloooza Zoo! Contact us for more information!
+                    <a class="btn btn-default" asp-controller="Home" asp-action="Contact">Learn More</a>
+                </p>
+            </div>
+        </div>
+        <div class="item">
             <img src="~/images/monkey1.jpeg" alt="ASP.NET" class="img-responsive" />
             <div class="carousel-caption" role="option">
                 <p>
-                    Check out our image gallery!
-                    <a class="btn btn-default" asp-controller="Home" asp-action="About">Learn More</a>
+                    Learn more about monkeys!
+                    <a class="btn btn-default" asp-controller="Home" asp-action="Diet">Learn More</a>
                 </p>
             </div>
         </div>
@@ -21,7 +31,7 @@
             <img src="~/images/babymonkey1.jpg" alt="Visual Studio" class="img-responsive" />
             <div class="carousel-caption" role="option">
                 <p>
-                    View different monkey habitats!
+                    Learn more about bees!
                     <a class="btn btn-default" asp-controller="Home" asp-action="Habitat">Learn More</a>
                 </p>
             </div>
@@ -41,7 +51,7 @@
     <div class="col-md-12">
         <h2>Our Goal</h2>
         <p>
-            Welcome to Monkey Fans!  This is a great place to research everything monkeys!  Whether you’re in middle school and looking for information for your school reports or a parent of a child, look no further than right here!  Please refer to our partners and external links for additional references!
+            Welcome to Animal Paloooza Zoo, is a great place to research everything animal! Whether you’re in middle school and looking for information for your school reports or a parent of a child, look no further than right here!
         </p>
     </div>
 </div>
